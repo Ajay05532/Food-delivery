@@ -24,7 +24,7 @@ const Navbar = () => {
             </div>
 
             <nav className="flex items-center gap-10">
-                <button className="rounded-full bg-gradient-to-r from-orange-500 to-orange-600 px-12 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200">
+                <button className="rounded-full bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200">
                     Home
                 </button>
 
@@ -53,7 +53,7 @@ const Navbar = () => {
                     <span>Cart</span>
                 </button>
 
-                <button className="flex w-auto items-center gap-2.5 rounded-full bg-gradient-to-r from-gray-900 to-gray-800 px-10 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-gray-950 hover:to-gray-900 transition-all duration-200 justify-around">
+                <button className="flex w-auto items-center gap-2.5 rounded-full bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-gray-950 hover:to-gray-900 transition-all duration-200 justify-around">
                     <CircleUserRound className="h-5 w-5 bg-orange-500 rounded-full"/>
                     <span>Signup / Login</span>
                 </button>

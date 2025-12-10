@@ -5,7 +5,7 @@ import noodlesGirl from "../assets/girl2.png";
 export default function Hero() {
   return (
     <section className="w-full py-12 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 bg-gray-100 relative">
+      <div className="max-w-7xl mx-auto px-6 bg-gray-100 relative border-1 border-gray-300 rounded-lg shadow-sm">
         <div className="h-[500px] grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* LEFT SIDE */}
           <div className="space-y-6 z-10">

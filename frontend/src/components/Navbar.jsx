@@ -8,7 +8,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-const Navbar = () => {
+const Navbar = ({ onLoginClick }) => {
   return (
     <header className="w-full border-b border-gray-200 bg-white shadow-sm">
         <div className="flex h-24 items-center justify-between px-12">
@@ -53,7 +53,7 @@ const Navbar = () => {
                     <span>Cart</span>
                 </button>
 
-                <button className="flex w-auto items-center gap-2.5 rounded-full bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-gray-950 hover:to-gray-900 transition-all duration-200 justify-around">
+                <button onClick={onLoginClick} className="flex w-auto items-center gap-2.5 rounded-full bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-gray-950 hover:to-gray-900 transition-all duration-200 justify-around">
                     <CircleUserRound className="h-5 w-5 bg-orange-500 rounded-full"/>
                     <span>Signup / Login</span>
                 </button>

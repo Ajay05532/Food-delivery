@@ -12,8 +12,6 @@ const Layout = ({ children }) => {
 
       {children}
 
-      <Footer />
-
       <AuthDrawer open={authOpen} onClose={() => setAuthOpen(false)} />
     </>
   );

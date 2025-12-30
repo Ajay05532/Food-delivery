@@ -1,5 +1,7 @@
 import React from "react";
-import CartHover from "./CartHover";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../store/slices/userSlice";
+import CartHover from "./cart/CartHover.jsx";
 import {
   CircleUserRound,
   ShoppingCart,
@@ -7,46 +9,20 @@ import {
   BadgeDollarSign,
   LifeBuoy,
   ChevronDown,
+  LogOut,
 } from "lucide-react";
 
 const Navbar = ({ onLoginClick }) => {
+  const dispatch = useDispatch();
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+
   const cartItems = [
-    {
-      name: "Desi Chai",
-      qty: 1,
-      price: 139,
-      img: "https://b.zmtcdn.com/data/dish_photos/4be/6dd5bf06f3842b3a2753c3a1436374be.jpg",
-      restaurant: "Chaayos Chai+Snacks",
-    },
-    {
-      name: "Gur Wali Chai",
-      qty: 2,
-      price: 225,
-      img: "https://b.zmtcdn.com/data/dish_photos/097/26f11211e3c6e58f35d1a578a865d097.jpg",
-      restaurant: "Chaayos Chai+Snacks",
-    },
-    {
-      name: "Paneer Power Chilla",
-      qty: 1,
-      price: 155,
-      img: "https://b.zmtcdn.com/data/dish_photos/676/073b5e3809e660fa95ff8eecc4432676.jpg",
-      restaurant: "Chaayos Chai+Snacks",
-    },
-    {
-      name: "Malai Cheeni Toast",
-      qty: 1,
-      price: 215,
-      img: "https://b.zmtcdn.com/data/dish_photos/57d/cb8b9f3fe7f6209310db1a23b7ad357d.jpg",
-      restaurant: "Chaayos Chai+Snacks",
-    },
-    {
-      name: "Dark Chocolate Brownie",
-      qty: 1,
-      price: 165,
-      img: "https://b.zmtcdn.com/data/dish_photos/f51/6ae79b606e01aa87776e89487bb98f51.jpg",
-      restaurant: "Chaayos Chai+Snacks",
-    },
+    // ... cart items array
   ];
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <header className="w-full border-b border-gray-200 bg-white shadow-sm">
@@ -82,7 +58,7 @@ const Navbar = ({ onLoginClick }) => {
             <span>Help</span>
           </button>
 
-          {/* Cart — group for hover */}
+          {/* Cart */}
           <div className="relative group cursor-pointer">
             <div className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-orange-500 px-3 py-2 rounded-lg hover:bg-gray-50">
               <div className="relative">
@@ -93,18 +69,48 @@ const Navbar = ({ onLoginClick }) => {
               </div>
               <span>Cart</span>
             </div>
-
-            {/* Hover Cart Panel */}
             <CartHover items={cartItems} />
           </div>
 
-          <button
-            onClick={onLoginClick}
-            className="flex w-auto items-center gap-2.5 rounded-full bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-gray-950 hover:to-gray-900 transition-all duration-200 justify-around"
-          >
-            <CircleUserRound className="h-5 w-5 bg-orange-500 rounded-full" />
-            <span>Signup / Login</span>
-          </button>
+          {/* User Profile or Login Button */}
+          {isAuthenticated && user ? (
+            <div className="relative group">
+              <button className="flex items-center gap-2.5 rounded-full bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-gray-950 hover:to-gray-900 transition-all duration-200">
+                <CircleUserRound className="h-5 w-5 bg-orange-500 rounded-full" />
+                <span>{user.name}</span>
+                <ChevronDown className="h-4 w-4" />
+              </button>
+
+              {/* Profile Dropdown */}
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="px-4 py-3 border-b border-gray-200">
+                  <p className="text-sm font-semibold text-gray-900">{user.name}</p>
+                  <p className="text-xs text-gray-500">{user.email}</p>
+                </div>
+                <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                  My Orders
+                </button>
+                <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                  Account Settings
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 border-t border-gray-200"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={onLoginClick}
+              className="flex w-auto items-center gap-2.5 rounded-full bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-gray-950 hover:to-gray-900 transition-all duration-200"
+            >
+              <CircleUserRound className="h-5 w-5 bg-orange-500 rounded-full" />
+              <span>Signup / Login</span>
+            </button>
+          )}
         </nav>
       </div>
     </header>

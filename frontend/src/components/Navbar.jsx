@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../store/slices/userSlice";
+import { logout } from "../redux/slices/userSlice";
 import CartHover from "./cart/CartHover.jsx";
 import {
   CircleUserRound,

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setLoading, setUser, setError } from "../../store/slices/userSlice";
+import { setLoading, setUser, setError } from "../../redux/slices/userSlice";
 
 const SignUp = ({ switchToLogin }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState("");
-  
+
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
@@ -23,12 +23,11 @@ const SignUp = ({ switchToLogin }) => {
     setSuccess("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch("http://localhost:3000/api/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, phone, email }),
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, email, role: "user" }),
       });
 
       const data = await res.json();
@@ -63,7 +62,13 @@ const SignUp = ({ switchToLogin }) => {
     <>
       <h2 className="text-3xl font-bold text-gray-900 mb-2">Sign Up</h2>
       <p className="text-sm text-gray-600 mb-6">
-        Create your account to continue
+        Have an account?{" "}
+        <button
+          onClick={switchToLogin}
+          className="text-orange-600 font-semibold hover:text-orange-700"
+        >
+          Login
+        </button>
       </p>
 
       {/* error and success messages shown from Redux state */}

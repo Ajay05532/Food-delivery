@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setUser, setError } from "../../store/slices/userSlice";
+import { setLoading, setUser, setError } from "../../redux/slices/userSlice";
 
 const Login = ({ switchToSignup }) => {
   const [phone, setPhone] = useState("");
@@ -30,9 +30,8 @@ const Login = ({ switchToSignup }) => {
     try {
       const res = await fetch("http://localhost:3000/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone }),
       });
 

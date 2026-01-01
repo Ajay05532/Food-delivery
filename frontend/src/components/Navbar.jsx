@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../store/slices/userSlice";
+import { logout } from "../redux/slices/userSlice";
 import CartHover from "./cart/CartHover.jsx";
 import {
   CircleUserRound,
@@ -20,8 +20,16 @@ const Navbar = ({ onLoginClick }) => {
     // ... cart items array
   ];
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async() => {
+    try{
+      await fetch ("http://localhost:3000/api/auth/logout", {
+        method:"POST",
+        credentials: "include"
+      });
+      dispatch(logout());
+    }catch(err){
+      console.log("Logout Failed: " , err);
+    }
   };
 
   return (

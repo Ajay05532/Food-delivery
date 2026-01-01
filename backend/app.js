@@ -4,7 +4,10 @@ import authRoutes from "./src/routes/auth.routes.js";
 import restaurantRoutes from "./src/routes/restaurant.routes.js";
 import orderRoutes from "./src/routes/order.routes.js";
 import connectDB from "./src/config/mongo.config.js";
+import authMiddleware from "./src/middleware/auth.middleware.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+
 
 /* Connect to Database */
 dotenv.config();
@@ -17,7 +20,9 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 const app = express();
+
 app.use(cors(corsOptions));
+app.use(cookieParser());
 
 /* Middleware */
 app.use(express.json());
@@ -36,6 +41,10 @@ app.get("/", (req, res) => {
 app.use((err, req, res, next) => {
   console.error("Error:", err);
   res.status(500).json({ message: "Internal server error" });
+});
+
+app.get("/api/auth/me", authMiddleware, (req, res) => {
+  res.json({ user: req.user });
 });
 
 const PORT = process.env.PORT;

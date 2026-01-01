@@ -20,8 +20,16 @@ const Navbar = ({ onLoginClick }) => {
     // ... cart items array
   ];
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async() => {
+    try{
+      await fetch ("http://localhost:3000/api/auth/logout", {
+        method:"POST",
+        credentials: "include"
+      });
+      dispatch(logout());
+    }catch(err){
+      console.log("Logout Failed: " , err);
+    }
   };
 
   return (

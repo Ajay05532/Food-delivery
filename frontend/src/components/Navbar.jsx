@@ -1,7 +1,11 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/slices/userSlice";
+<<<<<<< HEAD
 import CartHover from "./cart/NavCartHover.jsx";
+=======
+import CartHover from "./cart/CartHover.jsx";
+>>>>>>> 78088ce121384810ed12ca3661e5b45e82566914
 import {
   CircleUserRound,
   ShoppingCart,

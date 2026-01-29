@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Chole from "../assets/Chole_Bhature.jpg";
-import Dosa from "../assets/Dosa.jpeg";
-import Samosa from "../assets/Samosa.jpeg";
+import Chole from "../../../assets/Chole_Bhature.jpg";
+import Dosa from "../../../assets/dosa.jpeg";
+import Samosa from "../../../assets/samosa.jpeg";
 
 const Category = () => {
   const scrollRef = useRef(null);

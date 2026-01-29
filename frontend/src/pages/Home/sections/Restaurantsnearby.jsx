@@ -149,7 +149,7 @@ const RestaurantsNearby = () => {
 
   return (
     <div className="w-full bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-15 py-8">
+      <div className="max-w-7xl mx-auto  py-8">
         {/* Header Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">

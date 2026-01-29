@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AuthDrawer from "../components/auth/AuthDrawer";
-import Navbar from "../components/Navbar";
+import Navbar from "./Navbar";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setUser } from "../redux/slices/userSlice";

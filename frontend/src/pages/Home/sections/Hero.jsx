@@ -1,6 +1,6 @@
 import React from "react";
-import pizzaGirl from "../assets/girl1.png";
-import noodlesGirl from "../assets/girl2.png";
+import pizzaGirl from "../../../assets/girl1.png";
+import noodlesGirl from "../../../assets/girl2.png";
 
 export default function Hero() {
   return (

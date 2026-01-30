@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/slices/userSlice.js";
 import CartHover from "../components/cart/NavCartHover.jsx";
+import { useNavigate } from "react-router-dom";
 
 import {
   CircleUserRound,
@@ -13,13 +14,15 @@ import {
   LogOut,
 } from "lucide-react";
 
+
 const Navbar = ({ onLoginClick }) => {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
-  const cartItems = [
-    // ... cart items array
-  ];
+
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+  const cartItems = useSelector((state) => state.cart.items);
 
   const handleLogout = async() => {
     try{
@@ -48,7 +51,8 @@ const Navbar = ({ onLoginClick }) => {
         </div>
 
         <nav className="flex items-center gap-10">
-          <button className="rounded-full bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200">
+          <button className="rounded-full bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200"
+          onClick={() => navigate("/")}>
             Home
           </button>
 
@@ -73,7 +77,7 @@ const Navbar = ({ onLoginClick }) => {
               <div className="relative">
                 <ShoppingCart className="h-6 w-6" />
                 <span className="absolute -top-2 -right-3 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white shadow-md">
-                  {cartItems.length}
+                  {totalQuantity}
                 </span>
               </div>
               <span>Cart</span>

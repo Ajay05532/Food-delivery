@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Star, Clock, MapPin, ChevronDown } from "lucide-react";
 
 const RestaurantsNearby = () => {
@@ -9,7 +10,8 @@ const RestaurantsNearby = () => {
     {
       id: 1,
       name: "Biryani House",
-      image: "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=400&h=250&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=400&h=250&fit=crop",
       rating: 4.4,
       time: "20-25 mins",
       cuisine: "Biryani, Hyderabadi, Andhra",
@@ -20,7 +22,8 @@ const RestaurantsNearby = () => {
     {
       id: 2,
       name: "KFC",
-      image: "https://images.unsplash.com/photo-1585238341710-4dd0bd180ffd?w=400&h=250&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1585238341710-4dd0bd180ffd?w=400&h=250&fit=crop",
       rating: 4.5,
       time: "10-15 mins",
       cuisine: "Burgers, Fast Food, Rolls & Wraps",
@@ -31,7 +34,8 @@ const RestaurantsNearby = () => {
     {
       id: 3,
       name: "Bakingo",
-      image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=250&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=250&fit=crop",
       rating: 4.6,
       time: "35-40 mins",
       cuisine: "Bakery, Desserts, Beverages, Snacks",
@@ -42,7 +46,8 @@ const RestaurantsNearby = () => {
     {
       id: 4,
       name: "Rollsking",
-      image: "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=400&h=250&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=400&h=250&fit=crop",
       rating: 4.4,
       time: "15-20 mins",
       cuisine: "Fast Food, Rolls & Wraps, North Indian",
@@ -53,7 +58,8 @@ const RestaurantsNearby = () => {
     {
       id: 5,
       name: "California Burrito",
-      image: "https://images.unsplash.com/photo-1565903451743-04f6461ef23e?w=400&h=250&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1565903451743-04f6461ef23e?w=400&h=250&fit=crop",
       rating: 4.7,
       time: "35-40 mins",
       cuisine: "Mexican, American, Salads, Burgers",
@@ -64,7 +70,8 @@ const RestaurantsNearby = () => {
     {
       id: 6,
       name: "Taco Bell",
-      image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=250&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=250&fit=crop",
       rating: 4.6,
       time: "15-20 mins",
       cuisine: "Mexican, Fast Food, Snacks",
@@ -75,7 +82,8 @@ const RestaurantsNearby = () => {
     {
       id: 7,
       name: "Faasos - Wraps, Rolls & More",
-      image: "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=400&h=250&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=400&h=250&fit=crop",
       rating: 4.3,
       time: "30-40 mins",
       cuisine: "Kebabs, Fast Food, Snacks, North Indian",
@@ -86,7 +94,8 @@ const RestaurantsNearby = () => {
     {
       id: 8,
       name: "Domino's Pizza",
-      image: "https://images.unsplash.com/photo-1628840042765-356cda07f4ee?w=400&h=250&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1628840042765-356cda07f4ee?w=400&h=250&fit=crop",
       rating: 4.4,
       time: "20-25 mins",
       cuisine: "Pizzas, Italian, Pastas, Desserts",
@@ -97,7 +106,8 @@ const RestaurantsNearby = () => {
     {
       id: 9,
       name: "Burger King",
-      image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=250&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=250&fit=crop",
       rating: 4.2,
       time: "15-25 mins",
       cuisine: "Burgers, Fast Food, Beverages",
@@ -108,7 +118,8 @@ const RestaurantsNearby = () => {
     {
       id: 10,
       name: "Mainland China",
-      image: "https://images.unsplash.com/photo-1609501676725-7186f017a4b5?w=400&h=250&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1609501676725-7186f017a4b5?w=400&h=250&fit=crop",
       rating: 4.5,
       time: "25-30 mins",
       cuisine: "Chinese, Asian, Continental",
@@ -119,7 +130,8 @@ const RestaurantsNearby = () => {
     {
       id: 11,
       name: "Biryani by Kilo",
-      image: "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=400&h=250&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=400&h=250&fit=crop",
       rating: 4.6,
       time: "30-35 mins",
       cuisine: "Biryani, Hyderabadi, Kabab",
@@ -130,7 +142,8 @@ const RestaurantsNearby = () => {
     {
       id: 12,
       name: "Wow! Momo",
-      image: "https://images.unsplash.com/photo-1585238341710-4dd0bd180ffd?w=400&h=250&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1585238341710-4dd0bd180ffd?w=400&h=250&fit=crop",
       rating: 4.4,
       time: "20-25 mins",
       cuisine: "Momos, Asian, Chinese, Tibetan",
@@ -177,7 +190,9 @@ const RestaurantsNearby = () => {
                       setShowSortMenu(false);
                     }}
                     className={`w-full text-left px-4 py-3 hover:bg-gray-100 transition-colors ${
-                      sortBy === option.value ? "bg-orange-50 text-orange-600 font-semibold" : "text-gray-700"
+                      sortBy === option.value
+                        ? "bg-orange-50 text-orange-600 font-semibold"
+                        : "text-gray-700"
                     }`}
                   >
                     {option.label}
@@ -191,14 +206,15 @@ const RestaurantsNearby = () => {
         {/* Restaurants Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {restaurants.map((restaurant, index) => (
-            <div
-              key={restaurant.id}
-              className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
-              style={{
-                animation: `fadeInUp 0.5s ease-out ${index * 0.05}s backwards`,
-              }}
-            >
-              <style>{`
+            <Link key={restaurant.id} to={`/restaurant/${restaurant.id}`}>
+              <div
+                key={restaurant.id}
+                className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
+                style={{
+                  animation: `fadeInUp 0.5s ease-out ${index * 0.05}s backwards`,
+                }}
+              >
+                <style>{`
                 @keyframes fadeInUp {
                   from {
                     opacity: 0;
@@ -211,53 +227,59 @@ const RestaurantsNearby = () => {
                 }
               `}</style>
 
-              {/* Image Container with Badge */}
-              <div className="relative h-40 overflow-hidden bg-gray-200">
-                <img
-                  src={restaurant.image}
-                  alt={restaurant.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  loading="lazy"
-                />
+                {/* Image Container with Badge */}
+                <div className="relative h-40 overflow-hidden bg-gray-200">
+                  <img
+                    src={restaurant.image}
+                    alt={restaurant.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    loading="lazy"
+                  />
 
-                {/* Badge */}
-                <div className={`absolute bottom-0 left-0 right-0 ${restaurant.badgeColor} text-white py-2 px-3 text-xs font-bold`}>
-                  {restaurant.badge}
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-3">
-                {/* Restaurant Name */}
-                <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-1">
-                  {restaurant.name}
-                </h3>
-
-                {/* Rating and Time */}
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="flex items-center gap-1">
-                    <Star size={14} className="text-green-600 fill-green-600" />
-                    <span className="text-sm font-semibold text-gray-800">
-                      {restaurant.rating}
-                    </span>
-                    <span className="text-xs text-gray-600">
-                      • {restaurant.time}
-                    </span>
+                  {/* Badge */}
+                  <div
+                    className={`absolute bottom-0 left-0 right-0 ${restaurant.badgeColor} text-white py-2 px-3 text-xs font-bold`}
+                  >
+                    {restaurant.badge}
                   </div>
                 </div>
 
-                {/* Cuisine */}
-                <p className="text-xs text-gray-600 mb-2 line-clamp-1">
-                  {restaurant.cuisine}
-                </p>
+                {/* Content */}
+                <div className="p-3">
+                  {/* Restaurant Name */}
+                  <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-1">
+                    {restaurant.name}
+                  </h3>
 
-                {/* Location */}
-                <div className="flex items-center gap-1 text-xs text-gray-500">
-                  <MapPin size={12} />
-                  <span className="line-clamp-1">{restaurant.location}</span>
+                  {/* Rating and Time */}
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="flex items-center gap-1">
+                      <Star
+                        size={14}
+                        className="text-green-600 fill-green-600"
+                      />
+                      <span className="text-sm font-semibold text-gray-800">
+                        {restaurant.rating}
+                      </span>
+                      <span className="text-xs text-gray-600">
+                        • {restaurant.time}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Cuisine */}
+                  <p className="text-xs text-gray-600 mb-2 line-clamp-1">
+                    {restaurant.cuisine}
+                  </p>
+
+                  {/* Location */}
+                  <div className="flex items-center gap-1 text-xs text-gray-500">
+                    <MapPin size={12} />
+                    <span className="line-clamp-1">{restaurant.location}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

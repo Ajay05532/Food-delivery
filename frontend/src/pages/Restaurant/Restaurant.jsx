@@ -14,7 +14,7 @@ const Restaurant = () => {
     cuisine: "North Indian, Biryani, Chinese, Rolls, Momos",
     address: "Shop 4, Ground Floor, Janta Market, Jhandewalan, Karol Bagh, New Delhi",
     phone: "+917428772532",
-    bannerImage: "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=1200&h=400&fit=crop",
+    bannerImage: "https://b.zmtcdn.com/data/pictures/9/18198449/f6561b325fd03769300dbc56e530ac22.jpg",
     deliveryRating: 4.1,
     deliveryCount: 6462,
     diningRating: 0,
@@ -25,7 +25,7 @@ const Restaurant = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white py-4">
 
       {/* Restaurant Header */}
       <Header restaurant={restaurant} />

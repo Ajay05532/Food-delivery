@@ -22,7 +22,7 @@ const Header = ({ restaurant }) => {
   const data = restaurant || defaultRestaurant;
 
   return (
-    <div className="bg-white">
+    <div className= "bg-white px-4 shadow-md">
       {/* Banner Section */}
       <div className="relative h-96 bg-gray-200 overflow-hidden">
         <img

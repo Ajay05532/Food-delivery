@@ -1,7 +1,11 @@
+import { useSelector } from "react-redux";
+import { useCart } from "../../redux/hooks/useCart";
 
+const CartHover = () => {
+  const { items, totalQuantity, totalPrice, image } = useCart();
+  const subtotal = totalPrice;
 
-const CartHover = ({ items }) => {
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+  console.log("Cart Image URL:", image);
 
   return (
     <div
@@ -11,15 +15,22 @@ const CartHover = ({ items }) => {
       transition-all duration-200 z-[200]
     "
     >
-      {/* Restaurant Name – optional */}
+      {/* Restaurant Name */}
       <div className="flex items-start gap-3 border-b pb-3">
-        <img
-          src={items[0]?.img}
-          alt=""
-          className="w-14 h-14 rounded-md object-cover"
-        />
+        {image ? (
+          <img
+            src={image}
+            alt="Restaurant"
+            className="w-14 h-14 rounded-md object-cover"
+          />
+        ) : (
+          <div className="w-14 h-14 bg-gray-200 rounded-md animate-pulse" />
+        )}
         <div>
-          <h3 className="font-semibold">{items[0]?.restaurant}</h3>
+          {/* Changed items[0]?.restaurant to items[0]?.restaurantName */}
+          <h3 className="font-semibold">
+            {items[0]?.restaurantName || "Restaurant"}
+          </h3>
           <button className="text-blue-600 text-xs font-medium">
             VIEW FULL MENU
           </button>
@@ -34,9 +45,9 @@ const CartHover = ({ items }) => {
             className="flex justify-between py-1 text-sm text-gray-700"
           >
             <span>
-              {item.name} x {item.qty}
+              {item.name} x {item.quantity}
             </span>
-            <span>₹{item.price * item.qty}</span>
+            <span>₹{item.price * item.quantity}</span>
           </div>
         ))}
       </div>

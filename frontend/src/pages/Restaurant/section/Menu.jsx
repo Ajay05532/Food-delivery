@@ -388,7 +388,7 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
               {totalQuantity} {totalQuantity === 1 ? "item" : "items"} | ₹{totalPrice}
             </div>
             <button
-              onClick={() => navigate("/cart")}
+              onClick={() => navigate("/checkout")}
               className="flex items-center gap-2 font-bold text-sm hover:opacity-90 transition-opacity"
             >
               VIEW CART <span className="text-lg">🛒</span>

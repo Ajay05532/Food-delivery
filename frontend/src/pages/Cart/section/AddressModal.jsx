@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { X, MapPin, Home, Briefcase, MoreHorizontal } from "lucide-react";
+import { X, MapPin } from "lucide-react";
 
 const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
   const [showAddNew, setShowAddNew] = useState(false);
   const [newAddress, setNewAddress] = useState({
+    name: "",
     street: "",
     doorFlat: "",
     landmark: "",
@@ -13,17 +14,14 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
   const [savedAddresses] = useState([
     {
       id: 1,
-      street: "J6M9+3WQ, Inner Cir, Connaught Place...",
-      doorFlat: "Flat 4B",
+      name: "Friends And Family",
+      street: "Flat No 204, Kaveriappa Layout,",
+      street2: "Kasubessanahalli, Bengaluru,",
+      street3: "Karnataka, India",
+      doorFlat: "Flat No 204",
       type: "home",
-      landmark: "Near PVR Cinema",
-    },
-    {
-      id: 2,
-      street: "123 Business District, Sector 15",
-      doorFlat: "Office 301",
-      type: "work",
-      landmark: "Near Metro Station",
+      landmark: "Kaveriappa Layout",
+      deliveryTime: "48 MINS",
     },
   ]);
 
@@ -33,100 +31,146 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
   };
 
   const handleAddNewAddress = () => {
-    if (newAddress.street) {
+    if (newAddress.street && newAddress.name) {
       const addressToAdd = {
         id: savedAddresses.length + 1,
         ...newAddress,
+        deliveryTime: "45 MINS",
       };
       onSelectAddress(addressToAdd);
       setShowAddNew(false);
-      setNewAddress({ street: "", doorFlat: "", landmark: "", type: "home" });
+      setNewAddress({ name: "", street: "", doorFlat: "", landmark: "", type: "home" });
       onClose();
     }
   };
 
   if (!isOpen) return null;
 
-  const getAddressIcon = (type) => {
-    switch (type) {
-      case "home":
-        return <Home size={20} />;
-      case "work":
-        return <Briefcase size={20} />;
-      default:
-        return <MapPin size={20} />;
-    }
-  };
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-12">
+      <div className="bg-white rounded-lg shadow-2xl max-w-lg w-full mx-4 max-h-[85vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white">
-          <h2 className="text-xl font-bold text-gray-900">Select Address</h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded transition-colors"
-          >
-            <X size={24} />
-          </button>
-        </div>
+        {!showAddNew && (
+          <div className="p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
+            <div className="flex items-start justify-between">
+              <div className="flex items-start gap-3">
+                <div className="w-12 h-12 bg-black rounded-sm flex items-center justify-center mt-1">
+                  <MapPin className="text-white" size={24} />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900">Select delivery address</h2>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    You have a saved address in this location
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={onClose}
+                className="p-1 hover:bg-gray-100 rounded transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {showAddNew && (
+          <div className="p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-gray-900">Save delivery address</h2>
+              <button
+                onClick={onClose}
+                className="p-1 hover:bg-gray-100 rounded transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Saved Addresses */}
         {!showAddNew && (
-          <div className="p-6 space-y-4">
+          <div className="p-4 space-y-4">
             {savedAddresses.map((address) => (
               <div
                 key={address.id}
-                onClick={() => handleSelectAddress(address)}
-                className="border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:border-orange-500 hover:bg-orange-50 transition-all group"
+                className="border border-gray-200 rounded-md p-4 bg-white hover:shadow-md transition-shadow"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="text-gray-600 group-hover:text-orange-500">
-                      {getAddressIcon(address.type)}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 capitalize">
-                        {address.type}
-                      </p>
-                      <p className="text-xs text-gray-500">{address.street}</p>
-                    </div>
+                <div className="flex items-start gap-3 mb-3">
+                  <MapPin className="text-gray-600 mt-1" size={18} />
+                  <div className="flex-1">
+                    <h3 className="font-bold text-gray-900 mb-1">{address.name}</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {address.street}
+                      <br />
+                      {address.street2}
+                      <br />
+                      {address.street3}
+                    </p>
                   </div>
-                  <button className="p-1 hover:bg-gray-200 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                    <MoreHorizontal size={18} className="text-gray-500" />
-                  </button>
                 </div>
 
-                {address.doorFlat && (
-                  <p className="text-sm text-gray-600 ml-8 mb-1">
-                    Door/Flat: {address.doorFlat}
-                  </p>
-                )}
-                {address.landmark && (
-                  <p className="text-sm text-gray-600 ml-8">
-                    Landmark: {address.landmark}
-                  </p>
-                )}
+                <div className="flex items-center justify-between mt-4">
+                  <span className="text-xs font-semibold text-gray-900 bg-gray-100 px-2 py-1 rounded">
+                    {address.deliveryTime}
+                  </span>
+                  <button
+                    onClick={() => handleSelectAddress(address)}
+                    className="px-6 py-2 bg-green-600 text-white text-xs font-bold rounded hover:bg-green-700 transition-colors"
+                  >
+                    DELIVER HERE
+                  </button>
+                </div>
               </div>
             ))}
 
-            {/* Add New Address Button */}
-            <button
-              onClick={() => setShowAddNew(true)}
-              className="w-full border-2 border-teal-500 text-teal-600 font-bold py-3 rounded-lg hover:bg-teal-50 transition-colors text-base mt-6"
-            >
-              + ADD NEW ADDRESS
-            </button>
+            {/* Add New Address Card */}
+            <div className="border border-gray-300 rounded-md p-4 bg-white">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 border-2 border-teal-500 rounded-full flex items-center justify-center">
+                  <MapPin className="text-teal-500" size={16} />
+                </div>
+                <h3 className="font-semibold text-gray-900">Add New Address</h3>
+              </div>
+              <button
+                onClick={() => setShowAddNew(true)}
+                className="w-full mt-3 border-2 border-teal-500 text-teal-600 font-bold py-2 rounded text-sm hover:bg-teal-50 transition-colors"
+              >
+                ADD NEW
+              </button>
+            </div>
           </div>
         )}
 
         {/* Add New Address Form */}
         {showAddNew && (
-          <div className="p-6 space-y-4">
+          <div className="p-4 space-y-4">
+            {/* Map Placeholder */}
+            <div className="bg-gray-200 rounded-lg h-48 flex items-center justify-center mb-4">
+              <div className="text-center">
+                <MapPin className="mx-auto text-gray-400 mb-2" size={40} />
+                <p className="text-sm text-gray-500">Map location</p>
+              </div>
+            </div>
+
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Street Address *
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Address Name *
+              </label>
+              <input
+                type="text"
+                value={newAddress.name}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, name: e.target.value })
+                }
+                placeholder="e.g., Home, Office, Friends And Family"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Address *
               </label>
               <input
                 type="text"
@@ -134,13 +178,13 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
                 onChange={(e) =>
                   setNewAddress({ ...newAddress, street: e.target.value })
                 }
-                placeholder="Enter street address"
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none"
+                placeholder="Enter complete address"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Door / Flat No.
               </label>
               <input
@@ -150,12 +194,12 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
                   setNewAddress({ ...newAddress, doorFlat: e.target.value })
                 }
                 placeholder="Enter door/flat number"
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Landmark
               </label>
               <input
@@ -165,53 +209,57 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
                   setNewAddress({ ...newAddress, landmark: e.target.value })
                 }
                 placeholder="Enter landmark"
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none text-sm"
               />
             </div>
 
             {/* Address Type */}
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-3">
-                Address Type
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Save as
               </label>
-              <div className="flex gap-4">
-                {["home", "work", "other"].map((type) => (
+              <div className="flex gap-2">
+                {[
+                  { value: "home", icon: "🏠", label: "Home" },
+                  { value: "work", icon: "💼", label: "Work" },
+                  { value: "other", icon: "❤️", label: "Other" },
+                ].map((type) => (
                   <button
-                    key={type}
+                    key={type.value}
                     onClick={() =>
-                      setNewAddress({ ...newAddress, type })
+                      setNewAddress({ ...newAddress, type: type.value })
                     }
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-colors capitalize ${
-                      newAddress.type === type
-                        ? "border-orange-500 bg-orange-50 text-orange-600"
-                        : "border-gray-200 text-gray-600 hover:border-gray-300"
+                    className={`flex items-center gap-1 px-3 py-2 rounded border text-sm transition-colors ${
+                      newAddress.type === type.value
+                        ? "border-orange-500 bg-orange-50 text-orange-600 font-semibold"
+                        : "border-gray-300 text-gray-700 hover:border-gray-400"
                     }`}
                   >
-                    {getAddressIcon(type)}
-                    {type}
+                    <span>{type.icon}</span>
+                    {type.label}
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Buttons */}
-            <div className="flex gap-3 mt-6">
-              <button
-                onClick={() => {
-                  setShowAddNew(false);
-                  setNewAddress({ street: "", doorFlat: "", landmark: "", type: "home" });
-                }}
-                className="flex-1 px-4 py-3 border-2 border-gray-300 text-gray-700 font-bold rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddNewAddress}
-                className="flex-1 px-4 py-3 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 transition-colors"
-              >
-                SAVE ADDRESS & PROCEED
-              </button>
-            </div>
+            <button
+              onClick={handleAddNewAddress}
+              disabled={!newAddress.name || !newAddress.street}
+              className="w-full py-3 bg-orange-500 text-white font-bold rounded hover:bg-orange-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed text-sm"
+            >
+              SAVE ADDRESS & PROCEED
+            </button>
+
+            <button
+              onClick={() => {
+                setShowAddNew(false);
+                setNewAddress({ name: "", street: "", doorFlat: "", landmark: "", type: "home" });
+              }}
+              className="w-full py-2 text-gray-600 text-sm hover:text-gray-900 transition-colors"
+            >
+              Cancel
+            </button>
           </div>
         )}
       </div>

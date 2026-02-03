@@ -82,7 +82,7 @@ const Cart = () => {
       // Show success and clear cart
       alert("Order placed successfully!");
       clearCart();
-      navigate("/order-tracking");
+      navigate("/order");
     } catch (error) {
       alert("Failed to place order. Please try again.");
     } finally {

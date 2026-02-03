@@ -1,10 +1,11 @@
 import { useSelector } from "react-redux";
 import { useCart } from "../../redux/hooks/useCart";
+import { useNavigate } from "react-router-dom";
 
 const CartHover = () => {
   const { items, totalQuantity, totalPrice, image } = useCart();
   const subtotal = totalPrice;
-
+  const navigate = useNavigate();
   console.log("Cart Image URL:", image);
 
   return (
@@ -58,7 +59,9 @@ const CartHover = () => {
         <span>₹{subtotal}</span>
       </div>
 
-      <button className="w-full bg-orange-600 text-white py-3 font-semibold rounded-md hover:bg-orange-700">
+      <button className="w-full bg-orange-600 text-white py-3 font-semibold rounded-md hover:bg-orange-700"
+        onClick={() => navigate("/checkout")}
+      >
         CHECKOUT
       </button>
     </div>

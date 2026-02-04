@@ -82,8 +82,33 @@ const CouponModal = ({ isOpen, onClose, onApplyCoupon, appliedCoupon }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg shadow-lg max-w-md w-full mx-4 max-h-96 overflow-y-auto">
+    <>
+      {/* Dark Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/50 z-[100] transition-opacity duration-300
+        ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        onClick={onClose}
+      />
+      
+      {/* Right Drawer */}
+      <div 
+        className={`fixed right-0 top-0 h-full bg-white z-[110] shadow-2xl w-full max-w-md overflow-y-auto transform transition-transform duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+        style={{
+          animation: 'slideInRight 0.3s ease-out'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <style>{`
+          @keyframes slideInRight {
+            from {
+              transform: translateX(100%);
+            }
+            to {
+              transform: translateX(0);
+            }
+          }
+        `}</style>
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white">
           <h2 className="text-xl font-bold text-gray-900">Apply Coupon</h2>
@@ -207,7 +232,7 @@ const CouponModal = ({ isOpen, onClose, onApplyCoupon, appliedCoupon }) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

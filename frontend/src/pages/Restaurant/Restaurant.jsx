@@ -15,6 +15,12 @@ const Restaurant = () => {
     address: "Shop 4, Ground Floor, Janta Market, Jhandewalan, Karol Bagh, New Delhi",
     phone: "+917428772532",
     bannerImage: "https://b.zmtcdn.com/data/pictures/9/18198449/f6561b325fd03769300dbc56e530ac22.jpg",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=800&h=600&fit=crop",
+    ],
     deliveryRating: 4.1,
     deliveryCount: 6462,
     diningRating: 0,

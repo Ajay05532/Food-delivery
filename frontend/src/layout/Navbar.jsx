@@ -14,25 +14,23 @@ import {
   LogOut,
 } from "lucide-react";
 
-
 const Navbar = ({ onLoginClick }) => {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   const cartItems = useSelector((state) => state.cart.items);
 
-  const handleLogout = async() => {
-    try{
-      await fetch ("http://localhost:3000/api/auth/logout", {
-        method:"POST",
-        credentials: "include"
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:3000/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
       });
       dispatch(logout());
-    }catch(err){
-      console.log("Logout Failed: " , err);
+    } catch (err) {
+      console.log("Logout Failed: ", err);
     }
   };
 
@@ -51,12 +49,17 @@ const Navbar = ({ onLoginClick }) => {
         </div>
 
         <nav className="flex items-center gap-10">
-          <button className="rounded-full bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200"
-          onClick={() => navigate("/")}>
+          <button
+            className="rounded-full bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200"
+            onClick={() => navigate("/")}
+          >
             Home
           </button>
 
-          <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
+          <button
+            onClick={() => navigate("/search")}
+            className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors px-3 py-2 rounded-lg hover:bg-gray-50"
+          >
             <Search className="h-5 w-5" />
             <span>Search</span>
           </button>
@@ -97,7 +100,9 @@ const Navbar = ({ onLoginClick }) => {
               {/* Profile Dropdown */}
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div className="px-4 py-3 border-b border-gray-200">
-                  <p className="text-sm font-semibold text-gray-900">{user.name}</p>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {user.name}
+                  </p>
                   <p className="text-xs text-gray-500">{user.email}</p>
                 </div>
                 <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">

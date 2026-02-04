@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { MapPin, Phone, Heart, Share2, ChevronRight } from "lucide-react";
+import { MapPin, Phone, Heart, Share2, X, ChevronLeft, ChevronRight } from "lucide-react";
 
 const Header = ({ restaurant }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const defaultRestaurant = {
     name: "Punjabi Angithi By Vegorama Group",
@@ -10,6 +12,12 @@ const Header = ({ restaurant }) => {
     address: "Shop 4, Ground Floor, Janta Market, Jhandewalan, Karol Bagh, New Delhi",
     phone: "+917428772532",
     bannerImage: "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=1200&h=400&fit=crop",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=800&h=600&fit=crop",
+    ],
     deliveryRating: 4.1,
     deliveryCount: 6462,
     diningRating: 0,
@@ -20,16 +28,67 @@ const Header = ({ restaurant }) => {
   };
 
   const data = restaurant || defaultRestaurant;
+  const galleryImages = data.galleryImages || [data.bannerImage];
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev === 0 ? galleryImages.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev === galleryImages.length - 1 ? 0 : prev + 1));
+  };
 
   return (
-    <div className= "bg-white px-4 shadow-md">
-      {/* Banner Section */}
-      <div className="relative h-96 bg-gray-200 overflow-hidden">
-        <img
-          src={data.bannerImage}
-          alt={data.name}
-          className="w-full h-full object-cover"
-        />
+    <div className="bg-white shadow-md">
+      {/* Banner Section - Multi Image Grid */}
+      <div className="max-w-6xl mx-auto px-4 py-4">
+        <div className="relative h-120 bg-gray-200 overflow-hidden rounded-lg">
+        <div className="flex h-full gap-1">
+          {/* Main Large Image - Left Side */}
+          <div className="flex-[2] relative overflow-hidden">
+            <img
+              src={galleryImages[0]}
+              alt={`${data.name} - Main`}
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            />
+          </div>
+
+          {/* Right Side - Grid of 3 Images */}
+          <div className="flex-1 flex flex-col gap-1">
+            {galleryImages.slice(1, 4).map((image, index) => (
+              <div 
+                key={index} 
+                className="flex-1 relative overflow-hidden group cursor-pointer"
+                onClick={() => {
+                  setCurrentImageIndex(index + 1);
+                  setShowGallery(true);
+                }}
+              >
+                <img
+                  src={image}
+                  alt={`${data.name} - ${index + 2}`}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+                
+                {/* View Gallery Button on Last Image */}
+                {index === 2 && (
+                  <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCurrentImageIndex(0);
+                        setShowGallery(true);
+                      }}
+                      className="px-6 py-3 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-100 transition-colors"
+                    >
+                      View Gallery
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
         
         {/* Overlay with Delivery Badge */}
         <div className="absolute bottom-4 left-4 bg-orange-500 text-white px-3 py-1 rounded-md text-sm font-semibold">
@@ -37,7 +96,7 @@ const Header = ({ restaurant }) => {
         </div>
 
         {/* Action Buttons - Top Right */}
-        <div className="absolute top-4 right-4 flex gap-3">
+        <div className="absolute top-4 right-4 flex gap-3 z-10">
           <button
             onClick={() => setIsFavorite(!isFavorite)}
             className="bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-all"
@@ -52,9 +111,88 @@ const Header = ({ restaurant }) => {
           </button>
         </div>
       </div>
+      </div>
+
+      {/* Gallery Modal */}
+      {showGallery && (
+        <>
+          {/* Dark Overlay */}
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-90 z-[200] transition-opacity duration-300"
+            onClick={() => setShowGallery(false)}
+          />
+          
+          {/* Gallery Content */}
+          <div className="fixed inset-0 z-[210] flex items-center justify-center p-4">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowGallery(false)}
+              className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors z-10"
+            >
+              <X size={24} className="text-gray-900" />
+            </button>
+
+            {/* Image Counter */}
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white px-4 py-2 rounded-full text-sm font-semibold">
+              {currentImageIndex + 1} / {galleryImages.length}
+            </div>
+
+            {/* Previous Button */}
+            {galleryImages.length > 1 && (
+              <button
+                onClick={handlePrevImage}
+                className="absolute left-4 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
+              >
+                <ChevronLeft size={28} className="text-gray-900" />
+              </button>
+            )}
+
+            {/* Current Image */}
+            <div 
+              className="max-w-5xl max-h-[80vh] w-full h-full flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={galleryImages[currentImageIndex]}
+                alt={`${data.name} - Gallery ${currentImageIndex + 1}`}
+                className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+              />
+            </div>
+
+            {/* Next Button */}
+            {galleryImages.length > 1 && (
+              <button
+                onClick={handleNextImage}
+                className="absolute right-4 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
+              >
+                <ChevronRight size={28} className="text-gray-900" />
+              </button>
+            )}
+
+            {/* Thumbnail Strip */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 bg-black bg-opacity-60 p-3 rounded-lg max-w-full overflow-x-auto">
+              {galleryImages.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-all ${
+                    currentImageIndex === index ? "border-orange-500 scale-110" : "border-transparent opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <img
+                    src={image}
+                    alt={`Thumbnail ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Restaurant Info Section */}
-      <div className="px-6 py-6 border-b border-gray-200">
+      <div className="max-w-6xl mx-auto px-4 py-6 border-b border-gray-200">
         {/* Name and Cuisine */}
         <h1 className="text-3xl font-bold text-gray-900 mb-1">{data.name}</h1>
         <p className="text-gray-600 text-sm mb-4">{data.cuisine}</p>
@@ -102,7 +240,7 @@ const Header = ({ restaurant }) => {
       </div>
 
       {/* Contact and Details */}
-      <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <div className="max-w-6xl mx-auto px-4 py-4 bg-gray-50 border-b border-gray-200">
         <div className="flex items-start gap-3 mb-3">
           <Phone size={18} className="text-red-500 flex-shrink-0 mt-1" />
           <a href={`tel:${data.phone}`} className="text-red-500 font-semibold hover:underline">
@@ -116,7 +254,7 @@ const Header = ({ restaurant }) => {
       </div>
 
       {/* Quick Info */}
-      <div className="px-6 py-4 bg-white flex gap-6 text-sm">
+      <div className="max-w-6xl mx-auto px-4 py-4 bg-white flex gap-6 text-sm">
         <div>
           <p className="text-gray-500 text-xs mb-1">Delivery Time</p>
           <p className="font-semibold text-gray-900">{data.deliveryTime}</p>

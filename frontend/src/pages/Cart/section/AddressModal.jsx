@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { X, MapPin } from "lucide-react";
+import { X, MapPin, ArrowLeft } from "lucide-react";
+import AddressMapPicker from "./AddressMapPicker";
 
 const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
   const [showAddNew, setShowAddNew] = useState(false);
@@ -47,8 +48,33 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-12">
-      <div className="bg-white rounded-lg shadow-2xl max-w-lg w-full mx-4 max-h-[85vh] overflow-y-auto">
+    <>
+      {/* Dark Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/50 z-[100] transition-opacity
+        ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        onClick={onClose}
+      />
+      
+      {/* Left Drawer */}
+      <div 
+        className={`fixed left-0 top-0 h-full bg-white z-[110] shadow-2xl w-full max-w-md overflow-y-auto transform transition-transform duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+        style={{
+          animation: 'slideIn 0.3s ease-out'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <style>{`
+          @keyframes slideIn {
+            from {
+              transform: translateX(-100%);
+            }
+            to {
+              transform: translateX(0);
+            }
+          }
+        `}</style>
         {/* Header */}
         {!showAddNew && (
           <div className="p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
@@ -77,7 +103,19 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
         {showAddNew && (
           <div className="p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-gray-900">Save delivery address</h2>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => {
+                    setShowAddNew(false);
+                    setNewAddress({ name: "", street: "", doorFlat: "", landmark: "", type: "home" });
+                  }}
+                  className="p-1 hover:bg-gray-100 rounded transition-colors"
+                  aria-label="Back to address selection"
+                >
+                  <ArrowLeft size={20} />
+                </button>
+                <h2 className="text-lg font-bold text-gray-900">Save delivery address</h2>
+              </div>
               <button
                 onClick={onClose}
                 className="p-1 hover:bg-gray-100 rounded transition-colors"
@@ -145,41 +183,23 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
         {/* Add New Address Form */}
         {showAddNew && (
           <div className="p-4 space-y-4">
-            {/* Map Placeholder */}
-            <div className="bg-gray-200 rounded-lg h-48 flex items-center justify-center mb-4">
-              <div className="text-center">
-                <MapPin className="mx-auto text-gray-400 mb-2" size={40} />
-                <p className="text-sm text-gray-500">Map location</p>
-              </div>
-            </div>
+            {/* Map Component */}
+            <AddressMapPicker
+              onAddressChange={(address) =>
+                setNewAddress({ ...newAddress, street: address })
+              }
+            />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Address Name *
+                Address
               </label>
-              <input
-                type="text"
-                value={newAddress.name}
-                onChange={(e) =>
-                  setNewAddress({ ...newAddress, name: e.target.value })
-                }
-                placeholder="e.g., Home, Office, Friends And Family"
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Address *
-              </label>
-              <input
-                type="text"
+              <textarea
                 value={newAddress.street}
-                onChange={(e) =>
-                  setNewAddress({ ...newAddress, street: e.target.value })
-                }
-                placeholder="Enter complete address"
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-none text-sm"
+                readOnly
+                placeholder="Move the map to select your address"
+                className="w-full px-3 py-2 border border-gray-300 rounded bg-gray-50 text-gray-700 text-sm resize-none cursor-not-allowed"
+                rows="3"
               />
             </div>
 
@@ -263,7 +283,7 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

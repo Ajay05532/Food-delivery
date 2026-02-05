@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading, setUser, setError } from "../../redux/slices/userSlice";
 
-const SignUp = ({ switchToLogin }) => {
+const SignUp = ({ switchToLogin, onClose }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -39,17 +39,19 @@ const SignUp = ({ switchToLogin }) => {
 
       // Store user data in Redux
       dispatch(setUser(data.user));
-      setSuccess("Registration successful! Redirecting to home...");
+      setSuccess("Registration successful!");
 
       // Clear form
       setName("");
       setPhone("");
       setEmail("");
 
-      // Redirect to login after 1.5 seconds
+      // Close drawer after successful registration
       setTimeout(() => {
-        switchToLogin();
-      }, 1500);
+        if (onClose) {
+          onClose();
+        }
+      }, 1000);
     } catch (err) {
       dispatch(setError("Something went wrong. Please try again."));
       console.error(err);
@@ -71,7 +73,12 @@ const SignUp = ({ switchToLogin }) => {
         </button>
       </p>
 
-      {/* error and success messages shown from Redux state */}
+      {/* Error Message */}
+      {success && (
+        <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm">
+          {success}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const initialState = {
   items: [],
   totalPrice: 0,
   totalQuantity: 0,
   restaurantId: null,
+  restaurantName: null,
   loading: false,
   image: null,
   error: null,
@@ -17,19 +17,20 @@ const cartSlice = createSlice({
   reducers: {
     // Add item to cart
     addToCart: (state, action) => {
-         // CASE 1: cart empty → set restaurant
-        if (state.items.length === 0) {
-            state.restaurantId = action.payload.restaurantId;
-            state.image = action.payload.image;
-        } 
-        // CASE 2: different restaurant → ignore add and set error
-        else if (state.restaurantId !== action.payload.restaurantId) {
-            state.error = "You can only order from one restaurant at a time.";
-            return;
-        }
+      // CASE 1: cart empty → set restaurant
+      if (state.items.length === 0) {
+        state.restaurantId = action.payload.restaurantId;
+        state.restaurantName = action.payload.restaurantName;
+        state.image = action.payload.image;
+      }
+      // CASE 2: different restaurant → ignore add and set error
+      else if (state.restaurantId !== action.payload.restaurantId) {
+        state.error = "You can only order from one restaurant at a time.";
+        return;
+      }
 
       const existingItem = state.items.find(
-        (item) => item.id === action.payload.id
+        (item) => item.id === action.payload.id,
       );
 
       if (existingItem) {
@@ -46,11 +47,11 @@ const cartSlice = createSlice({
       // Update total quantity and price
       state.totalQuantity = state.items.reduce(
         (sum, item) => sum + item.quantity,
-        0
+        0,
       );
       state.totalPrice = state.items.reduce(
         (sum, item) => sum + item.price * item.quantity,
-        0
+        0,
       );
     },
 
@@ -61,11 +62,11 @@ const cartSlice = createSlice({
       // Update totals
       state.totalQuantity = state.items.reduce(
         (sum, item) => sum + item.quantity,
-        0
+        0,
       );
       state.totalPrice = state.items.reduce(
         (sum, item) => sum + item.price * item.quantity,
-        0
+        0,
       );
     },
 
@@ -78,11 +79,11 @@ const cartSlice = createSlice({
         // Update totals
         state.totalQuantity = state.items.reduce(
           (sum, item) => sum + item.quantity,
-          0
+          0,
         );
         state.totalPrice = state.items.reduce(
           (sum, item) => sum + item.price * item.quantity,
-          0
+          0,
         );
       }
     },
@@ -96,18 +97,18 @@ const cartSlice = createSlice({
         } else {
           // Remove item if quantity becomes 0
           state.items = state.items.filter(
-            (item) => item.id !== action.payload
+            (item) => item.id !== action.payload,
           );
         }
 
         // Update totals
         state.totalQuantity = state.items.reduce(
           (sum, item) => sum + item.quantity,
-          0
+          0,
         );
         state.totalPrice = state.items.reduce(
           (sum, item) => sum + item.price * item.quantity,
-          0
+          0,
         );
       }
     },
@@ -128,11 +129,11 @@ const cartSlice = createSlice({
         // Update totals
         state.totalQuantity = state.items.reduce(
           (sum, item) => sum + item.quantity,
-          0
+          0,
         );
         state.totalPrice = state.items.reduce(
           (sum, item) => sum + item.price * item.quantity,
-          0
+          0,
         );
       }
     },
@@ -143,6 +144,30 @@ const cartSlice = createSlice({
       state.totalQuantity = 0;
       state.totalPrice = 0;
       state.restaurantId = null;
+      state.restaurantName = null;
+    },
+
+    // Clear cart and add new item from different restaurant
+    clearCartAndAddItem: (state, action) => {
+      // Clear current cart
+      state.items = [];
+      state.totalQuantity = 0;
+      state.totalPrice = 0;
+
+      // Set new restaurant
+      state.restaurantId = action.payload.restaurantId;
+      state.restaurantName = action.payload.restaurantName;
+      state.image = action.payload.image;
+
+      // Add the new item
+      state.items.push({
+        ...action.payload,
+        quantity: action.payload.quantity || 1,
+      });
+
+      // Update totals
+      state.totalQuantity = action.payload.quantity || 1;
+      state.totalPrice = action.payload.price * (action.payload.quantity || 1);
     },
 
     // Set loading state
@@ -170,6 +195,7 @@ export const {
   decreaseQuantity,
   updateItemQuantity,
   clearCart,
+  clearCartAndAddItem,
   setLoading,
   setError,
   clearError,

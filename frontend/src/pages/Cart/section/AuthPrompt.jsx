@@ -47,7 +47,7 @@ const AuthPrompt = () => {
 
       {/* Optional: Add login modal placeholder */}
       {showLoginModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <h3 className="text-xl font-bold mb-4">Login</h3>
             <p className="text-gray-600 mb-4">
@@ -65,7 +65,7 @@ const AuthPrompt = () => {
 
       {/* Optional: Add signup modal placeholder */}
       {showSignupModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <h3 className="text-xl font-bold mb-4">Sign Up</h3>
             <p className="text-gray-600 mb-4">

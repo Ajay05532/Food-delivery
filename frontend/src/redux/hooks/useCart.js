@@ -6,6 +6,7 @@ import {
   decreaseQuantity,
   updateItemQuantity,
   clearCart,
+  clearCartAndAddItem,
   clearError,
 } from "../slices/cartSlice";
 
@@ -24,7 +25,13 @@ export const useCart = () => {
 
   // Smart add to cart with restaurant check
   const addToCart = (item) => {
-    const { id, restaurantId: itemRestaurantId, restaurantName: itemRestaurantName, image: itemImage, quantity = 1 } = item;
+    const {
+      id,
+      restaurantId: itemRestaurantId,
+      restaurantName: itemRestaurantName,
+      image: itemImage,
+      quantity = 1,
+    } = item;
 
     // Check if item has restaurant info
     if (!itemRestaurantId) {
@@ -34,9 +41,7 @@ export const useCart = () => {
 
     // If cart has different restaurant, show error
     if (restaurantId && restaurantId !== itemRestaurantId) {
-      dispatch(
-        clearError()
-      );
+      dispatch(clearError());
       // Return error flag so component can show modal
       return {
         success: false,
@@ -50,21 +55,26 @@ export const useCart = () => {
       addToCartAction({
         ...item,
         quantity,
-      })
+      }),
     );
 
     return { success: true };
   };
 
   // Replace cart with new restaurant's items
-  const switchRestaurant = (items, newRestaurantId, newRestaurantName, newImage) => {
+  const switchRestaurant = (
+    items,
+    newRestaurantId,
+    newRestaurantName,
+    newImage,
+  ) => {
     dispatch(
       replaceCart({
         items,
         restaurantId: newRestaurantId,
         restaurantName: newRestaurantName,
         image: newImage,
-      })
+      }),
     );
   };
 
@@ -87,6 +97,7 @@ export const useCart = () => {
     updateItemQuantity: (id, quantity) =>
       dispatch(updateItemQuantity({ id, quantity })),
     clearCart: () => dispatch(clearCart()),
+    clearCartAndAddItem: (item) => dispatch(clearCartAndAddItem(item)),
     clearError: () => dispatch(clearError()),
     switchRestaurant,
   };

@@ -9,9 +9,30 @@ const CheckoutNavbar = () => {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.user);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      // Call backend logout API to clear the cookie
+      const response = await fetch("http://localhost:3000/api/auth/logout", {
+        method: "POST",
+        credentials: "include", // Important: Include cookies in the request
+      });
+
+      if (response.ok) {
+        // Clear Redux state after successful backend logout
+        dispatch(logout());
+        navigate("/");
+      } else {
+        console.error("Logout failed");
+        // Still clear Redux state even if backend fails
+        dispatch(logout());
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+      // Still clear Redux state even if there's an error
+      dispatch(logout());
+      navigate("/");
+    }
   };
 
   const handleSignIn = () => {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser, setError } from "../../redux/slices/userSlice";
 
-const Login = ({ switchToSignup }) => {
+const Login = ({ switchToSignup, onClose }) => {
   const [phone, setPhone] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -49,10 +49,12 @@ const Login = ({ switchToSignup }) => {
       // Clear form
       setPhone("");
 
-      // Optional: Redirect or close modal after 1.5 seconds
+      // Close the drawer after showing success message
       setTimeout(() => {
-        // If using modal, you can trigger switch or close here
-      }, 1500);
+        if (onClose) {
+          onClose();
+        }
+      }, 1000);
     } catch (err) {
       dispatch(setError("Something went wrong. Please try again."));
       console.error(err);

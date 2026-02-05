@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useCart } from "../../redux/hooks/useCart";
 import emptyCart from "../../assets/empty_cart.png";
 import AddressModal from "./section/AddressModal";
 import CouponModal from "./section/CouponModal";
 import CartItems from "./section/CartItems";
 import BillDetails from "./section/BillDetails";
+import AuthPrompt from "./section/AuthPrompt";
 import { MapPin, Wallet, AlertCircle, ChevronRight } from "lucide-react";
 
 const Cart = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.user);
   const {
     items,
     totalPrice,
@@ -38,7 +41,9 @@ const Cart = () => {
           className="w-64 h-64 object-contain"
         />
         <div className="flex flex-col gap-3 items-center">
-          <p className="text-xl font-semibold text-gray-900">Your cart is empty</p>
+          <p className="text-xl font-semibold text-gray-900">
+            Your cart is empty
+          </p>
           <span className="font-light text-gray-600">
             You can go to home page to view more restaurants
           </span>
@@ -69,7 +74,11 @@ const Cart = () => {
   const finalAmount = totalPrice + deliveryFee + gstAndCharges - discount;
 
   const handlePlaceOrder = async () => {
-    if (!selectedAddress) {
+    if(!isAuthenticated){
+      alert("Please login to place an order");
+      return;
+    }
+    else if (!selectedAddress) {
       alert("Please select a delivery address");
       return;
     }
@@ -98,37 +107,23 @@ const Cart = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div
-              onClick={() => navigate("/")}
-              className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold cursor-pointer hover:bg-orange-600 transition-colors"
-            >
-              🍽️
-            </div>
-            <h1 className="text-lg font-bold text-gray-900">SECURE CHECKOUT</h1>
-          </div>
-          <div className="flex items-center gap-6">
-            <button className="text-sm font-semibold text-gray-700 hover:text-orange-500 transition-colors">
-              Help
-            </button>
-            <button className="text-sm font-semibold text-gray-700 hover:text-orange-500 transition-colors">
-              Profile
-            </button>
-          </div>
-        </div>
-      </header>
+      
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Delivery & Cart */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Auth Prompt - Show if not authenticated */}
+            {!isAuthenticated && <AuthPrompt />}
+
             {/* Address Section */}
             <div className="bg-white rounded-lg border border-gray-200 p-6">
               <div className="flex items-start gap-4 mb-4">
-                <MapPin className="text-orange-500 flex-shrink-0 mt-1" size={24} />
+                <MapPin
+                  className="text-orange-500 flex-shrink-0 mt-1"
+                  size={24}
+                />
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900 mb-1">
                     Add a delivery address
@@ -192,8 +187,9 @@ const Cart = () => {
                     Opt in for No-contact Delivery
                   </p>
                   <p className="text-sm text-gray-600 mt-1">
-                    Unwell, or avoiding contact? Please select no-contact delivery. Partner
-                    will safely place the order outside your door (not for COD)
+                    Unwell, or avoiding contact? Please select no-contact
+                    delivery. Partner will safely place the order outside your
+                    door (not for COD)
                   </p>
                 </div>
               </div>
@@ -215,16 +211,20 @@ const Cart = () => {
                 <h2 className="text-lg font-bold text-gray-900">Payment</h2>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {["Credit Card", "Debit Card", "UPI", "Wallet", "NetBanking"].map(
-                  (method, idx) => (
-                    <button
-                      key={idx}
-                      className="p-4 border-2 border-gray-200 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors text-sm font-semibold text-gray-700"
-                    >
-                      {method}
-                    </button>
-                  )
-                )}
+                {[
+                  "Credit Card",
+                  "Debit Card",
+                  "UPI",
+                  "Wallet",
+                  "NetBanking",
+                ].map((method, idx) => (
+                  <button
+                    key={idx}
+                    className="p-4 border-2 border-gray-200 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors text-sm font-semibold text-gray-700"
+                  >
+                    {method}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -253,7 +253,10 @@ const Cart = () => {
               className="w-full border-2 border-dashed border-gray-300 rounded-lg p-4 flex items-center justify-between hover:border-orange-500 hover:bg-orange-50 transition-colors group"
             >
               <span className="font-semibold text-gray-700 group-hover:text-orange-600">
-                🎟️ {appliedCoupon ? `${appliedCoupon.code} Applied` : "Apply Coupon"}
+                🎟️{" "}
+                {appliedCoupon
+                  ? `${appliedCoupon.code} Applied`
+                  : "Apply Coupon"}
               </span>
               <ChevronRight className="text-gray-400 group-hover:text-orange-500" />
             </button>
@@ -261,9 +264,9 @@ const Cart = () => {
             {/* Place Order Button */}
             <button
               onClick={handlePlaceOrder}
-              disabled={!selectedAddress || isProcessing}
+              disabled={!selectedAddress || isProcessing || !isAuthenticated}
               className={`w-full py-4 rounded-lg font-bold text-white text-lg transition-all ${
-                selectedAddress && !isProcessing
+                selectedAddress && !isProcessing && isAuthenticated
                   ? "bg-orange-500 hover:bg-orange-600 cursor-pointer"
                   : "bg-gray-400 cursor-not-allowed"
               }`}
@@ -280,7 +283,10 @@ const Cart = () => {
 
             {!selectedAddress && (
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex gap-2">
-                <AlertCircle className="text-yellow-600 flex-shrink-0" size={18} />
+                <AlertCircle
+                  className="text-yellow-600 flex-shrink-0"
+                  size={18}
+                />
                 <p className="text-xs text-yellow-800">
                   Please add a delivery address to proceed
                 </p>
@@ -289,11 +295,15 @@ const Cart = () => {
 
             {/* Order Summary */}
             <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <h3 className="font-bold text-gray-900 mb-3 text-sm">Order Summary</h3>
+              <h3 className="font-bold text-gray-900 mb-3 text-sm">
+                Order Summary
+              </h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">{totalQuantity} items</span>
-                  <span className="font-semibold text-gray-900">₹{totalPrice}</span>
+                  <span className="font-semibold text-gray-900">
+                    ₹{totalPrice}
+                  </span>
                 </div>
                 {appliedCoupon && (
                   <div className="flex justify-between text-green-600">

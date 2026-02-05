@@ -1,21 +1,29 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home/Home.jsx";
-import Layout from "./layout/Layout.jsx";
-import Cart from "./pages/Cart/Cart.jsx";
-import Restaurant from "./pages/Restaurant/Restaurant.jsx";
-import Order from "./pages/Order/Order.jsx";
-import Search from "./pages/Search/Search.jsx";
+import Layout from "./layout/Layout";
+import Home from "./pages/Home/Home";
+import Cart from "./pages/Cart/Cart";
+import Restaurant from "./pages/Restaurant/Restaurant";
+import Order from "./pages/Order/Order";
+import Search from "./pages/Search/Search";
+import NotFound from "./pages/NotFound";
+import CheckoutLayout from "./layout/CheckoutLayout";
+
 const App = () => {
   return (
-    <Layout>
-      <Routes>
+    <Routes>
+      <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/checkout" element={<Cart />} />
-        <Route path="/restaurant/:id" element={<Restaurant />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/restaurant/:id" element={<Restaurant />} />
         <Route path="/search" element={<Search />} />
-      </Routes>
-    </Layout>
+      </Route>
+
+      <Route element={<CheckoutLayout />}>
+        <Route path="/checkout" element={<Cart />} />
+      </Route>
+
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 };
 

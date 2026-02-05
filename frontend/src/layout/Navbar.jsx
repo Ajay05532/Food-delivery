@@ -126,7 +126,7 @@ const Navbar = ({ onLoginClick }) => {
               className="flex w-auto items-center gap-2.5 rounded-full bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-gray-950 hover:to-gray-900 transition-all duration-200"
             >
               <CircleUserRound className="h-5 w-5 bg-orange-500 rounded-full" />
-              <span>Signup / Login</span>
+              <span>Sign in</span>
             </button>
           )}
         </nav>

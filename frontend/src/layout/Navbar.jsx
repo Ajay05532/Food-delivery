@@ -24,13 +24,24 @@ const Navbar = ({ onLoginClick }) => {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:3000/api/auth/logout", {
+      const response = await fetch("http://localhost:3000/api/auth/logout", {
         method: "POST",
         credentials: "include",
       });
-      dispatch(logout());
+
+      if (response.ok) {
+        dispatch(logout());
+        navigate("/");
+      } else {
+        console.error("Logout failed");
+        dispatch(logout());
+        navigate("/");
+      }
     } catch (err) {
-      console.log("Logout Failed: ", err);
+      console.error("Logout Failed: ", err);
+      // Still clear Redux state even if there's an error
+      dispatch(logout());
+      navigate("/");
     }
   };
 

@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { Search, ChevronUp, ChevronDown, Plus, Minus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../../redux/hooks/useCart";
+import RestaurantSwitchModal from "../../../components/RestaurantSwitchModal";
 
-
-const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi By Vegorama Group" }) => {
+const Menu = ({
+  restaurantId = "restaurant-1",
+  restaurantName = "Punjabi Angithi By Vegorama Group",
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilters, setSelectedFilters] = useState(["veg", "non-veg"]);
   const [expandedCategory, setExpandedCategory] = useState(0);
@@ -12,7 +15,17 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
   const [pendingItem, setPendingItem] = useState(null);
 
   const navigate = useNavigate();
-  const { items, totalQuantity, totalPrice, addToCart, increaseQuantity, decreaseQuantity, restaurantId: cartRestaurantId } = useCart();
+  const {
+    items,
+    totalQuantity,
+    totalPrice,
+    addToCart,
+    increaseQuantity,
+    decreaseQuantity,
+    restaurantId: cartRestaurantId,
+    restaurantName: cartRestaurantName,
+    clearCartAndAddItem,
+  } = useCart();
 
   const categories = [
     { id: 0, name: "Want to repeat?", items: 3 },
@@ -33,7 +46,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         type: "veg",
         price: 289,
         badge: "bestseller",
-        image: "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
       },
       {
         id: 2,
@@ -41,7 +55,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         type: "veg",
         price: 199,
         badge: null,
-        image: "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
       },
       {
         id: 3,
@@ -49,7 +64,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         type: "veg",
         price: 249,
         badge: null,
-        image: "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
       },
     ],
     1: [
@@ -62,7 +78,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         discount: "20% OFF",
         rating: 5.0,
         ratingCount: 1,
-        image: "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
       },
       {
         id: 5,
@@ -73,7 +90,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         discount: "20% OFF",
         rating: 4.8,
         ratingCount: 5,
-        image: "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
       },
       {
         id: 6,
@@ -82,7 +100,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         price: 699,
         rating: null,
         ratingCount: 0,
-        image: "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
       },
     ],
     2: [
@@ -93,7 +112,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         price: 599,
         rating: 4.6,
         ratingCount: 12,
-        image: "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
       },
     ],
     3: [
@@ -104,7 +124,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         price: 649,
         rating: 4.5,
         ratingCount: 8,
-        image: "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
       },
     ],
     4: [
@@ -115,7 +136,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         price: 749,
         rating: 4.7,
         ratingCount: 6,
-        image: "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
       },
     ],
     5: [
@@ -126,7 +148,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         price: 399,
         rating: 4.4,
         ratingCount: 15,
-        image: "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
       },
     ],
     6: [
@@ -135,7 +158,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         name: "Paneer Tikka",
         type: "veg",
         price: 249,
-        image: "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
       },
     ],
     7: [
@@ -144,7 +168,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         name: "Garlic Naan",
         type: "veg",
         price: 79,
-        image: "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
       },
     ],
   };
@@ -158,7 +183,7 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
     setSelectedFilters((prev) =>
       prev.includes(filterId)
         ? prev.filter((f) => f !== filterId)
-        : [...prev, filterId]
+        : [...prev, filterId],
     );
   };
 
@@ -191,6 +216,10 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
   };
 
   const getItemQuantity = (itemId) => {
+    // Only show quantity if the cart is from the current restaurant
+    if (cartRestaurantId !== restaurantId) {
+      return 0;
+    }
     const item = items.find((cartItem) => cartItem.id === itemId);
     return item ? item.quantity : 0;
   };
@@ -199,7 +228,9 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
     <div className="bg-white min-h-screen">
       {/* Header */}
       <div className="max-w-6xl mx-auto px-4 py-6 mb-4">
-        <h1 className="text-center text-gray-600 text-sm tracking-widest mb-8">~ MENU ~</h1>
+        <h1 className="text-center text-gray-600 text-sm tracking-widest mb-8">
+          ~ MENU ~
+        </h1>
 
         {/* Search Bar */}
         <div className="relative mb-6">
@@ -210,7 +241,10 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full px-4 py-3 bg-gray-200 rounded-full focus:outline-none focus:bg-gray-100 text-gray-700"
           />
-          <Search className="absolute right-4 top-3.5 text-gray-500" size={20} />
+          <Search
+            className="absolute right-4 top-3.5 text-gray-500"
+            size={20}
+          />
         </div>
 
         {/* Filters */}
@@ -251,7 +285,9 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
                 <div
                   className="flex items-center justify-between cursor-pointer mb-4 hover:opacity-80 transition-opacity"
                   onClick={() =>
-                    setExpandedCategory(expandedCategory === category.id ? null : category.id)
+                    setExpandedCategory(
+                      expandedCategory === category.id ? null : category.id,
+                    )
                   }
                 >
                   <h2 className="text-lg font-bold text-gray-900">
@@ -271,7 +307,10 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
                       const quantity = getItemQuantity(item.id);
 
                       return (
-                        <div key={item.id} className="flex gap-4 pb-4 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                        <div
+                          key={item.id}
+                          className="flex gap-4 pb-4 hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                        >
                           {/* Item Details */}
                           <div className="flex-1">
                             {/* Type Indicator */}
@@ -285,7 +324,9 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
                               >
                                 <div
                                   className={`w-2 h-2 rounded-full ${
-                                    item.type === "veg" ? "bg-green-600" : "bg-red-600"
+                                    item.type === "veg"
+                                      ? "bg-green-600"
+                                      : "bg-red-600"
                                   }`}
                                 />
                               </div>
@@ -303,7 +344,9 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
 
                             {/* Price */}
                             <div className="flex items-center gap-2 mb-2">
-                              <span className="font-bold text-gray-900">₹{item.price}</span>
+                              <span className="font-bold text-gray-900">
+                                ₹{item.price}
+                              </span>
                               {item.originalPrice && (
                                 <>
                                   <span className="text-xs text-gray-500 line-through">
@@ -320,8 +363,12 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
                             {item.rating && (
                               <div className="flex items-center gap-1 text-sm">
                                 <span className="text-yellow-500">⭐</span>
-                                <span className="font-bold text-gray-900">{item.rating}</span>
-                                <span className="text-gray-600">({item.ratingCount})</span>
+                                <span className="font-bold text-gray-900">
+                                  {item.rating}
+                                </span>
+                                <span className="text-gray-600">
+                                  ({item.ratingCount})
+                                </span>
                               </div>
                             )}
 
@@ -345,7 +392,9 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
                             {quantity > 0 ? (
                               <div className="flex items-center gap-2 bg-green-50 rounded-lg px-2 py-1 border border-green-600">
                                 <button
-                                  onClick={() => handleDecreaseQuantity(item.id)}
+                                  onClick={() =>
+                                    handleDecreaseQuantity(item.id)
+                                  }
                                   className="text-green-600 hover:bg-green-100 p-1 rounded transition-colors"
                                 >
                                   <Minus size={14} />
@@ -354,7 +403,9 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
                                   {quantity}
                                 </span>
                                 <button
-                                  onClick={() => handleIncreaseQuantity(item.id)}
+                                  onClick={() =>
+                                    handleIncreaseQuantity(item.id)
+                                  }
                                   className="text-green-600 hover:bg-green-100 p-1 rounded transition-colors"
                                 >
                                   <Plus size={14} />
@@ -385,7 +436,8 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
         <div className="fixed bottom-0 left-1/2 bg-green-600 text-white px-4 py-4 flex items-center justify-between shadow-2xl w-full max-w-6xl transform -translate-x-1/2">
           <div className="w-full flex items-center justify-between">
             <div className="font-bold text-sm">
-              {totalQuantity} {totalQuantity === 1 ? "item" : "items"} | ₹{totalPrice}
+              {totalQuantity} {totalQuantity === 1 ? "item" : "items"} | ₹
+              {totalPrice}
             </div>
             <button
               onClick={() => navigate("/checkout")}
@@ -398,20 +450,27 @@ const Menu = ({ restaurantId = "restaurant-1", restaurantName = "Punjabi Angithi
       )}
 
       {/* Restaurant Switch Modal */}
-      {/* <RestaurantSwitchModal
+      <RestaurantSwitchModal
         isOpen={showSwitchModal}
+        currentRestaurant={cartRestaurantName}
+        newRestaurant={restaurantName}
         onClose={() => {
           setShowSwitchModal(false);
           setPendingItem(null);
         }}
-        onConfirm={() => {
+        onClearAndAdd={() => {
           if (pendingItem) {
-            handleAddToCart(pendingItem);
+            clearCartAndAddItem({
+              ...pendingItem,
+              restaurantId,
+              restaurantName,
+              image: pendingItem.image,
+            });
           }
           setShowSwitchModal(false);
           setPendingItem(null);
         }}
-      /> */}
+      />
     </div>
   );
 };

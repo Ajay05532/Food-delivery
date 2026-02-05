@@ -21,8 +21,8 @@ const AuthDrawer = ({ open, onClose }) => {
         ${open ? "translate-x-0" : "translate-x-full"}`}
       >
         {/* Close Button - Top */}
-        <button 
-          className="absolute top-6 left-6 text-2xl text-gray-600 hover:text-gray-900 z-10" 
+        <button
+          className="absolute top-6 left-6 text-2xl text-gray-600 hover:text-gray-900 z-10"
           onClick={onClose}
         >
           ✕
@@ -32,9 +32,15 @@ const AuthDrawer = ({ open, onClose }) => {
           {/* Left Side - Form */}
           <div className="w-[60%] p-8 overflow-y-auto flex flex-col justify-center">
             {mode === "login" ? (
-              <Login switchToSignup={() => setMode("signup")} />
+              <Login
+                switchToSignup={() => setMode("signup")}
+                onClose={onClose}
+              />
             ) : (
-              <SignUp switchToLogin={() => setMode("login")} />
+              <SignUp
+                switchToLogin={() => setMode("login")}
+                onClose={onClose}
+              />
             )}
           </div>
 
@@ -47,9 +53,7 @@ const AuthDrawer = ({ open, onClose }) => {
                   <h3 className="text-xl font-bold text-gray-800 mb-2">
                     Welcome Back!
                   </h3>
-                  <p className="text-gray-600">
-                    Fast and Fresh Food Delivery
-                  </p>
+                  <p className="text-gray-600">Fast and Fresh Food Delivery</p>
                 </>
               ) : (
                 <>
@@ -57,9 +61,7 @@ const AuthDrawer = ({ open, onClose }) => {
                   <h3 className="text-xl font-bold text-gray-800 mb-2">
                     Join Us Today
                   </h3>
-                  <p className="text-gray-600">
-                    Discover amazing restaurants
-                  </p>
+                  <p className="text-gray-600">Discover amazing restaurants</p>
                 </>
               )}
             </div>

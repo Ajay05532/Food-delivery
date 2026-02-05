@@ -47,4 +47,26 @@ The cart follows real-world food delivery constraints:
 - JWT Authentication
 - Bycript
 
+---
+
+## ⚙️ Installation & Setup
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Ajay05532/Food-delivery
+cd Food delivery/frontend
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Run the Development Server
+```bash
+npm run dev
+```
+The app will be available at `http://localhost:port`
+
+---
 

@@ -8,6 +8,7 @@ import {
   clearCart,
   clearCartAndAddItem,
   clearError,
+  fetchCartFromServer,
 } from "../slices/cartSlice";
 
 export const useCart = () => {
@@ -99,6 +100,7 @@ export const useCart = () => {
     clearCart: () => dispatch(clearCart()),
     clearCartAndAddItem: (item) => dispatch(clearCartAndAddItem(item)),
     clearError: () => dispatch(clearError()),
+    fetchCart: () => dispatch(fetchCartFromServer()),
     switchRestaurant,
   };
 };

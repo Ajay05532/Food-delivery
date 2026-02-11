@@ -5,7 +5,7 @@ import { useCart } from "../../../redux/hooks/useCart";
 import RestaurantSwitchModal from "../../../components/RestaurantSwitchModal";
 
 const Menu = ({
-  restaurantId = "restaurant-1",
+  restaurantId = "65d8b1b1b1b1b1b1b1b10001", // MongoDB ObjectId for restaurant
   restaurantName = "Punjabi Angithi By Vegorama Group",
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,11 +20,11 @@ const Menu = ({
     totalQuantity,
     totalPrice,
     addToCart,
-    increaseQuantity,
-    decreaseQuantity,
+    updateQuantity,
+    removeItem,
+    clearCart,
     restaurantId: cartRestaurantId,
     restaurantName: cartRestaurantName,
-    clearCartAndAddItem,
   } = useCart();
 
   const categories = [
@@ -41,38 +41,45 @@ const Menu = ({
   const menuItems = {
     0: [
       {
+        _id: "65d8a1a1a1a1a1a1a1a10001",
         id: 1,
         name: "Egg Biryani Bowl - 500ml",
         type: "veg",
+        category: "Want to repeat?",
         price: 289,
         badge: "bestseller",
         image:
           "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
       },
       {
+        _id: "65d8a1a1a1a1a1a1a1a10002",
         id: 2,
         name: "Basmati Biryani Rice (400 Grams)",
         type: "veg",
+        category: "Want to repeat?",
         price: 199,
-        badge: null,
         image:
           "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
       },
       {
+        _id: "65d8a1a1a1a1a1a1a1a10003",
         id: 3,
         name: "Biryani Mix (400g)",
         type: "veg",
+        category: "Want to repeat?",
         price: 249,
-        badge: null,
         image:
           "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
       },
     ],
+
     1: [
       {
+        _id: "65d8a1a1a1a1a1a1a1a10004",
         id: 4,
         name: "Veg Dum Hyderabadi Biryani (1 Kg Serves 2)",
         type: "veg",
+        category: "Crazy Biryani Box (1 Kg Serves 2)",
         price: 479,
         originalPrice: 599,
         discount: "20% OFF",
@@ -82,9 +89,11 @@ const Menu = ({
           "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
       },
       {
+        _id: "65d8a1a1a1a1a1a1a1a10005",
         id: 5,
         name: "Paneer 65 Hyderabadi Biryani (1 Kg Serves 2)",
         type: "veg",
+        category: "Crazy Biryani Box (1 Kg Serves 2)",
         price: 519,
         originalPrice: 649,
         discount: "20% OFF",
@@ -94,21 +103,24 @@ const Menu = ({
           "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
       },
       {
+        _id: "65d8a1a1a1a1a1a1a1a10006",
         id: 6,
         name: "Paneer 65 Hyderabadi Biryani (1 Kg Serves 2)",
         type: "veg",
+        category: "Crazy Biryani Box (1 Kg Serves 2)",
         price: 699,
-        rating: null,
-        ratingCount: 0,
         image:
           "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
       },
     ],
+
     2: [
       {
+        _id: "65d8a1a1a1a1a1a1a1a10007",
         id: 7,
         name: "Chicken Hyderabadi Biryani",
         type: "non-veg",
+        category: "Hyderabadi Biryani",
         price: 599,
         rating: 4.6,
         ratingCount: 12,
@@ -116,11 +128,14 @@ const Menu = ({
           "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
       },
     ],
+
     3: [
       {
+        _id: "65d8a1a1a1a1a1a1a1a10008",
         id: 8,
         name: "Murgh Hyderabadi Biryani",
         type: "non-veg",
+        category: "Chicken Biryani",
         price: 649,
         rating: 4.5,
         ratingCount: 8,
@@ -128,11 +143,14 @@ const Menu = ({
           "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
       },
     ],
+
     4: [
       {
+        _id: "65d8a1a1a1a1a1a1a1a10009",
         id: 9,
         name: "Goat Biryani",
         type: "non-veg",
+        category: "Mutton Biryani",
         price: 749,
         rating: 4.7,
         ratingCount: 6,
@@ -140,11 +158,14 @@ const Menu = ({
           "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
       },
     ],
+
     5: [
       {
+        _id: "65d8a1a1a1a1a1a1a1a10010",
         id: 10,
         name: "Vegetables Biryani",
         type: "veg",
+        category: "Veg Biryani",
         price: 399,
         rating: 4.4,
         ratingCount: 15,
@@ -152,21 +173,27 @@ const Menu = ({
           "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
       },
     ],
+
     6: [
       {
+        _id: "65d8a1a1a1a1a1a1a1a10011",
         id: 11,
         name: "Paneer Tikka",
         type: "veg",
+        category: "Appetizers",
         price: 249,
         image:
           "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
       },
     ],
+
     7: [
       {
+        _id: "65d8a1a1a1a1a1a1a1a10012",
         id: 12,
         name: "Garlic Naan",
         type: "veg",
+        category: "Breads",
         price: 79,
         image:
           "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
@@ -202,12 +229,18 @@ const Menu = ({
     }
   };
 
-  const handleIncreaseQuantity = (itemId) => {
-    increaseQuantity(itemId);
+  const handleIncreaseQuantity = (item) => {
+    const currentQty = getItemQuantity(item.id);
+    updateQuantity(item.id, currentQty + 1);
   };
 
-  const handleDecreaseQuantity = (itemId) => {
-    decreaseQuantity(itemId);
+  const handleDecreaseQuantity = (item) => {
+    const currentQty = getItemQuantity(item.id);
+    if (currentQty > 1) {
+      updateQuantity(item.id, currentQty - 1);
+    } else {
+      removeItem(item.id);
+    }
   };
 
   const getFilteredItems = (categoryId) => {
@@ -392,9 +425,7 @@ const Menu = ({
                             {quantity > 0 ? (
                               <div className="flex items-center gap-2 bg-green-50 rounded-lg px-2 py-1 border border-green-600">
                                 <button
-                                  onClick={() =>
-                                    handleDecreaseQuantity(item.id)
-                                  }
+                                  onClick={() => handleDecreaseQuantity(item)}
                                   className="text-green-600 hover:bg-green-100 p-1 rounded transition-colors"
                                 >
                                   <Minus size={14} />
@@ -403,9 +434,7 @@ const Menu = ({
                                   {quantity}
                                 </span>
                                 <button
-                                  onClick={() =>
-                                    handleIncreaseQuantity(item.id)
-                                  }
+                                  onClick={() => handleIncreaseQuantity(item)}
                                   className="text-green-600 hover:bg-green-100 p-1 rounded transition-colors"
                                 >
                                   <Plus size={14} />
@@ -460,12 +489,9 @@ const Menu = ({
         }}
         onClearAndAdd={() => {
           if (pendingItem) {
-            clearCartAndAddItem({
-              ...pendingItem,
-              restaurantId,
-              restaurantName,
-              image: pendingItem.image,
-            });
+            // Clear cart and add the new item
+            clearCart();
+            handleAddToCart(pendingItem);
           }
           setShowSwitchModal(false);
           setPendingItem(null);

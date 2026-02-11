@@ -1,17 +1,20 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addToCart as addToCartAction,
-  removeFromCart,
-  increaseQuantity,
-  decreaseQuantity,
-  updateItemQuantity,
-  clearCart,
-  clearCartAndAddItem,
+  addToCart as addToCartLocal,
+  removeFromCart as removeFromCartLocal,
+  updateItemQuantity as updateItemQuantityLocal,
+  clearCart as clearCartLocal,
   clearError,
+  fetchCartFromServer,
+  addToCartAsync,
+  updateCartItemAsync,
+  removeFromCartAsync,
+  clearCartAsync,
 } from "../slices/cartSlice";
 
 export const useCart = () => {
   const dispatch = useDispatch();
+
   const {
     items,
     totalPrice,
@@ -23,59 +26,90 @@ export const useCart = () => {
     error,
   } = useSelector((state) => state.cart);
 
-  // Smart add to cart with restaurant check
-  const addToCart = (item) => {
-    const {
-      id,
-      restaurantId: itemRestaurantId,
-      restaurantName: itemRestaurantName,
-      image: itemImage,
-      quantity = 1,
-    } = item;
+  /* ======================
+     ADD TO CART
+  ====================== */
 
-    // Check if item has restaurant info
-    if (!itemRestaurantId) {
-      console.warn("Item must include restaurantId and restaurantName");
-      return;
+  const addToCart = (item) => {
+    console.log("🎯 addToCart received item:", item);
+    console.log("🔍 item properties:", {
+      id: item.id,
+      _id: item._id,
+      name: item.name,
+      price: item.price,
+      restaurantId: item.restaurantId,
+      category: item.category,
+    });
+
+    if (!item.restaurantId) {
+      return { success: false };
     }
 
-    // If cart has different restaurant, show error
-    if (restaurantId && restaurantId !== itemRestaurantId) {
-      dispatch(clearError());
-      // Return error flag so component can show modal
+    if (restaurantId && restaurantId !== item.restaurantId) {
       return {
         success: false,
-        error: `You can only order from one restaurant at a time. Current: ${restaurantName}, Trying: ${itemRestaurantName}`,
-        currentRestaurant: restaurantName,
-        newRestaurant: itemRestaurantName,
+        error: "You can only order from one restaurant at a time",
       };
     }
 
-    dispatch(
-      addToCartAction({
-        ...item,
-        quantity,
-      }),
-    );
+    // 🔹 FRONTEND NORMALIZATION
+    const payload = {
+      id: item.id, // frontend id (for cart state)
+      menuItemId: item._id, // backend MongoDB ObjectId
+      name: item.name, // NOT title
+      image: item.image,
+      category: item.category, // MUST exist
+      price: item.price, // NOT cost
+      quantity: 1,
+      restaurantId: item.restaurantId,
+    };
+
+    console.log("🛒 Cart payload:", payload);
+    console.log("� Payload JSON:", JSON.stringify(payload, null, 2));
+    console.log("�🔍 item._id:", item._id, "item.id:", item.id);
+
+    // optimistic update
+    dispatch(addToCartLocal(payload));
+
+    // backend sync
+    dispatch(addToCartAsync(payload));
 
     return { success: true };
   };
 
-  // Replace cart with new restaurant's items
-  const switchRestaurant = (
-    items,
-    newRestaurantId,
-    newRestaurantName,
-    newImage,
-  ) => {
-    dispatch(
-      replaceCart({
-        items,
-        restaurantId: newRestaurantId,
-        restaurantName: newRestaurantName,
-        image: newImage,
-      }),
-    );
+  /* ======================
+     UPDATE QUANTITY
+  ====================== */
+
+  const updateQuantity = (id, quantity) => {
+    // Find the menuItemId from cart state
+    const cartItem = items.find((item) => item.id === id);
+    if (!cartItem) return;
+
+    dispatch(updateItemQuantityLocal({ id, quantity }));
+    dispatch(updateCartItemAsync({ id: cartItem.menuItemId, quantity }));
+  };
+
+  /* ======================
+     REMOVE ITEM
+  ====================== */
+
+  const removeItem = (id) => {
+    // Find the menuItemId from cart state
+    const cartItem = items.find((item) => item.id === id);
+    if (!cartItem) return;
+
+    dispatch(removeFromCartLocal(id));
+    dispatch(removeFromCartAsync(cartItem.menuItemId));
+  };
+
+  /* ======================
+     CLEAR CART
+  ====================== */
+
+  const clearCart = () => {
+    dispatch(clearCartLocal());
+    dispatch(clearCartAsync());
   };
 
   return {
@@ -91,14 +125,10 @@ export const useCart = () => {
 
     // Actions
     addToCart,
-    removeFromCart: (itemId) => dispatch(removeFromCart(itemId)),
-    increaseQuantity: (itemId) => dispatch(increaseQuantity(itemId)),
-    decreaseQuantity: (itemId) => dispatch(decreaseQuantity(itemId)),
-    updateItemQuantity: (id, quantity) =>
-      dispatch(updateItemQuantity({ id, quantity })),
-    clearCart: () => dispatch(clearCart()),
-    clearCartAndAddItem: (item) => dispatch(clearCartAndAddItem(item)),
+    updateQuantity,
+    removeItem,
+    clearCart,
     clearError: () => dispatch(clearError()),
-    switchRestaurant,
+    fetchCart: () => dispatch(fetchCartFromServer()),
   };
 };

@@ -1,4 +1,72 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import * as cartService from "../../services/cartService";
+
+// Async Thunks for backend integration
+
+// Fetch cart from server
+export const fetchCartFromServer = createAsyncThunk(
+  "cart/fetchFromServer",
+  async (_, { rejectWithValue }) => {
+    try {
+      const cart = await cartService.getCart();
+      return cart;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+// Add item to cart with backend sync
+export const addToCartAsync = createAsyncThunk(
+  "cart/addAsync",
+  async (item, { rejectWithValue }) => {
+    try {
+      const response = await cartService.addToCartAPI(item);
+      return { item, serverResponse: response };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+// Update cart item quantity with backend sync
+export const updateCartItemAsync = createAsyncThunk(
+  "cart/updateAsync",
+  async ({ id, quantity }, { rejectWithValue }) => {
+    try {
+      const response = await cartService.updateCartItemAPI(id, quantity);
+      return { id, quantity, serverResponse: response };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+// Remove item from cart with backend sync
+export const removeFromCartAsync = createAsyncThunk(
+  "cart/removeAsync",
+  async (menuItemId, { rejectWithValue }) => {
+    try {
+      const response = await cartService.removeFromCartAPI(menuItemId);
+      return { menuItemId, serverResponse: response };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+// Clear cart with backend sync
+export const clearCartAsync = createAsyncThunk(
+  "cart/clearAsync",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await cartService.clearCartAPI();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
 const initialState = {
   items: [],
@@ -145,6 +213,7 @@ const cartSlice = createSlice({
       state.totalPrice = 0;
       state.restaurantId = null;
       state.restaurantName = null;
+      state.image = null;
     },
 
     // Clear cart and add new item from different restaurant
@@ -185,6 +254,94 @@ const cartSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+  },
+  extraReducers: (builder) => {
+    // Fetch cart from server
+    builder.addCase(fetchCartFromServer.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchCartFromServer.fulfilled, (state, action) => {
+      state.loading = false;
+      if (action.payload) {
+        const transformed = cartService.transformBackendCart(action.payload);
+        if (transformed) {
+          state.items = transformed.items;
+          state.restaurantId = transformed.restaurantId;
+          // Calculate totals
+          state.totalQuantity = state.items.reduce(
+            (sum, item) => sum + item.quantity,
+            0,
+          );
+          state.totalPrice = state.items.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0,
+          );
+          // Set restaurant name from first item if available
+          if (state.items.length > 0 && state.items[0].restaurantName) {
+            state.restaurantName = state.items[0].restaurantName;
+          }
+        }
+      }
+    });
+    builder.addCase(fetchCartFromServer.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // Add to cart async
+    builder.addCase(addToCartAsync.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(addToCartAsync.fulfilled, (state, action) => {
+      state.loading = false;
+      // The local state is already updated by the optimistic update in useCart
+      // We just confirm it was successful on the server
+    });
+    builder.addCase(addToCartAsync.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // Update cart item async
+    builder.addCase(updateCartItemAsync.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(updateCartItemAsync.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(updateCartItemAsync.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // Remove from cart async
+    builder.addCase(removeFromCartAsync.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(removeFromCartAsync.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(removeFromCartAsync.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // Clear cart async
+    builder.addCase(clearCartAsync.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(clearCartAsync.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(clearCartAsync.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
   },
 });
 

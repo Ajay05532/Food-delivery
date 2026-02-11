@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser, setError } from "../../redux/slices/userSlice";
 
 const Login = ({ switchToSignup, onClose }) => {
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("9162384894");
   const [success, setSuccess] = useState("");
 
   const dispatch = useDispatch();

@@ -9,12 +9,15 @@ const Restaurant = () => {
 
   // Sample restaurant data - in real app, fetch from API
   const restaurant = {
+    _id: "65d8b1b1b1b1b1b1b1b10001", // MongoDB ObjectId for restaurant
     id: id,
     name: "Punjabi Angithi By Vegorama Group",
     cuisine: "North Indian, Biryani, Chinese, Rolls, Momos",
-    address: "Shop 4, Ground Floor, Janta Market, Jhandewalan, Karol Bagh, New Delhi",
+    address:
+      "Shop 4, Ground Floor, Janta Market, Jhandewalan, Karol Bagh, New Delhi",
     phone: "+917428772532",
-    bannerImage: "https://b.zmtcdn.com/data/pictures/9/18198449/f6561b325fd03769300dbc56e530ac22.jpg",
+    bannerImage:
+      "https://b.zmtcdn.com/data/pictures/9/18198449/f6561b325fd03769300dbc56e530ac22.jpg",
     galleryImages: [
       "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop",
       "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&h=600&fit=crop",
@@ -32,15 +35,13 @@ const Restaurant = () => {
 
   return (
     <div className="min-h-screen bg-white py-4">
-
       {/* Restaurant Header */}
       <Header restaurant={restaurant} />
 
-        {/* Restaurant Menu */}
-        <Menu restaurantId={id} />
+      {/* Restaurant Menu */}
+      <Menu restaurantId={restaurant._id} restaurantName={restaurant.name} />
 
-        <Footer />
-
+      <Footer />
     </div>
   );
 };

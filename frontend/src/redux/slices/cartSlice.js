@@ -213,6 +213,7 @@ const cartSlice = createSlice({
       state.totalPrice = 0;
       state.restaurantId = null;
       state.restaurantName = null;
+      state.image = null;
     },
 
     // Clear cart and add new item from different restaurant

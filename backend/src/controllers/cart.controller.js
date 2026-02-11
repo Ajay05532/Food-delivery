@@ -20,6 +20,16 @@ const addToCart = async (req, res) => {
     const { menuItemId, name, image, category, price, quantity, restaurantId } =
       req.body;
 
+    console.log("📥 Add to cart request:", {
+      menuItemId,
+      name,
+      category,
+      price,
+      quantity,
+      restaurantId,
+      userId: req.user?.id,
+    });
+
     // Validate required fields
     if (
       !menuItemId ||
@@ -62,7 +72,7 @@ const addToCart = async (req, res) => {
 
       // Check if item already exists in cart
       const existingItemIndex = cart.items.findIndex(
-        (item) => item.menuItemId.toString() === menuItemId,
+        (item) => item.menuItemId.toString() === menuItemId.toString(),
       );
 
       if (existingItemIndex > -1) {
@@ -85,8 +95,12 @@ const addToCart = async (req, res) => {
 
     res.status(200).json({ message: "Item added to cart successfully", cart });
   } catch (error) {
-    console.error("Error adding to cart:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("❌ Error adding to cart:", error);
+    console.error("Error stack:", error.stack);
+    console.error("Error message:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
 
@@ -109,7 +123,7 @@ const updateCartItem = async (req, res) => {
 
     // Find item in cart
     const itemIndex = cart.items.findIndex(
-      (item) => item.menuItemId.toString() === menuItemId,
+      (item) => item.menuItemId.toString() === menuItemId.toString(),
     );
 
     if (itemIndex === -1) {
@@ -156,7 +170,7 @@ const removeFromCart = async (req, res) => {
 
     // Find item in cart
     const itemIndex = cart.items.findIndex(
-      (item) => item.menuItemId.toString() === menuItemId,
+      (item) => item.menuItemId.toString() === menuItemId.toString(),
     );
 
     if (itemIndex === -1) {

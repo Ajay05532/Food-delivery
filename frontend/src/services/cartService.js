@@ -4,7 +4,7 @@ const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 // Get user's cart
 export const getCart = async () => {
-  const response = await fetch(`${API_BASE_URL}`, {
+  const response = await fetch(`${API_BASE_URL}/checkout`, {
     method: "GET",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -24,7 +24,7 @@ export const addToCartAPI = async (cartData) => {
   const { menuItemId, name, image, category, price, quantity, restaurantId } =
     cartData;
 
-  const response = await fetch(`${API_BASE_URL}/items`, {
+  const response = await fetch(`${API_BASE_URL}/checkout/items`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -49,7 +49,7 @@ export const addToCartAPI = async (cartData) => {
 
 // Update quantity
 export const updateCartItemAPI = async (menuItemId, quantity) => {
-  const response = await fetch(`${API_BASE_URL}/items/${menuItemId}`, {
+  const response = await fetch(`${API_BASE_URL}/checkout/items/${menuItemId}`, {
     method: "PUT",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -66,7 +66,7 @@ export const updateCartItemAPI = async (menuItemId, quantity) => {
 
 // Remove item
 export const removeFromCartAPI = async (menuItemId) => {
-  const response = await fetch(`${API_BASE_URL}/items/${menuItemId}`, {
+  const response = await fetch(`${API_BASE_URL}/checkout/items/${menuItemId}`, {
     method: "DELETE",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -82,7 +82,7 @@ export const removeFromCartAPI = async (menuItemId) => {
 
 // Clear cart
 export const clearCartAPI = async () => {
-  const response = await fetch(`${API_BASE_URL}`, {
+  const response = await fetch(`${API_BASE_URL}/checkout`, {
     method: "DELETE",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -103,6 +103,7 @@ export const transformBackendCart = (backendCart) => {
   return {
     items: backendCart.items.map((item) => ({
       id: item.menuItemId.toString(),
+      menuItemId: item.menuItemId, // ✅ Keep menuItemId for backend sync
       name: item.name,
       image: item.image,
       category: item.category,

@@ -1,10 +1,9 @@
 import express from "express";
+import { getRestaurants } from "../controllers/restaurant.controller.js";
+
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("Order Routes Working");
-});
+router.get("/", getRestaurants);
 
-const OrderRoutes = router;
-export default OrderRoutes;
+export default router;

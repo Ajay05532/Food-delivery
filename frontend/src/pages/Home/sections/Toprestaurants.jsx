@@ -1,66 +1,53 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import { ChevronLeft, ChevronRight, Star, Clock } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchRestaurants } from "../../../redux/slices/restaurantSlice";
+import { Link } from "react-router-dom";
 
 const TopRestaurants = () => {
   const scrollRef = useRef(null);
+  const dispatch = useDispatch();
 
-  const restaurants = [
-    {
-      id: 1,
-      name: "Biryani House",
-      image: "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=400&h=250&fit=crop",
-      rating: 4.4,
-      time: "20-25 mins",
-      cuisine: "Biryani, Hyderabadi, Andhra",
-      location: "Connaught Place",
-      badge: "ITEMS AT ₹49",
-      badgeColor: "bg-gray-800",
-    },
-    {
-      id: 2,
-      name: "KFC",
-      image: "https://images.unsplash.com/photo-1585238341710-4dd0bd180ffd?w=400&h=250&fit=crop",
-      rating: 4.5,
-      time: "10-15 mins",
-      cuisine: "Burgers, Fast Food, Rolls & Wraps",
-      location: "Connaught Place",
-      badge: "50% OFF",
-      badgeColor: "bg-red-600",
-    },
-    {
-      id: 3,
-      name: "Bakingo",
-      image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=250&fit=crop",
-      rating: 4.6,
-      time: "35-40 mins",
-      cuisine: "Bakery, Desserts, Beverages, Snacks",
-      location: "Karol Bagh",
-      badge: "60% OFF UPTO ₹120",
-      badgeColor: "bg-pink-400",
-    },
-    {
-      id: 4,
-      name: "Faasos - Wraps, Rolls & More",
-      image: "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=400&h=250&fit=crop",
-      rating: 4.3,
-      time: "30-40 mins",
-      cuisine: "Kebabs, Fast Food, Snacks",
-      location: "Connaught Place",
-      badge: "ITEMS AT ₹89",
-      badgeColor: "bg-purple-600",
-    },
-    {
-      id: 5,
-      name: "Burger King",
-      image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=250&fit=crop",
-      rating: 4.2,
-      time: "15-25 mins",
-      cuisine: "Burgers, Fast Food",
-      location: "Greater Kailash",
-      badge: "ITEMS AT ₹99",
-      badgeColor: "bg-yellow-600",
-    },
-  ];
+  const { items, loading } = useSelector((state) => state.restaurants);
+
+  // Fetch restaurants on mount if not already loaded
+  useEffect(() => {
+    if (items.length === 0) {
+      dispatch(fetchRestaurants({ page: 1, limit: 50 })); // Fetch more items to get top 10
+    }
+  }, [dispatch, items.length]);
+
+  // Get top 10 restaurants sorted by rating
+  const topRestaurants = useMemo(() => {
+    // Remove duplicates based on _id
+    const uniqueRestaurants = items.reduce((acc, current) => {
+      const exists = acc.find((item) => item._id === current._id);
+      if (!exists) {
+        acc.push(current);
+      }
+      return acc;
+    }, []);
+
+    // Sort by rating (descending) and take top 10
+    const sorted = uniqueRestaurants
+      .sort((a, b) => (b.avgRating || 0) - (a.avgRating || 0))
+      .slice(0, 8);
+
+    // Map to component format
+    return sorted.map((restaurant) => ({
+      id: restaurant._id,
+      name: restaurant.name,
+      image: restaurant.coverImage,
+      rating: restaurant.avgRating || 0,
+      time: `${restaurant.minDeliveryTime}-${restaurant.maxDeliveryTime} mins`,
+      cuisine: "", // You can add cuisine field to backend model
+      location: restaurant.address
+        ? `${restaurant.address.area}, ${restaurant.address.city}`
+        : "",
+      badge: "TOP RATED",
+      badgeColor: "bg-orange-500",
+    }));
+  }, [items]);
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -80,7 +67,7 @@ const TopRestaurants = () => {
           <h2 className="text-2xl font-bold text-gray-900">
             Top restaurant chains in Delhi
           </h2>
-          
+
           {/* Navigation Buttons */}
           <div className="flex gap-2">
             <button
@@ -116,59 +103,77 @@ const TopRestaurants = () => {
             }
           `}</style>
 
-          {restaurants.map((restaurant) => (
-            <div
-              key={restaurant.id}
-              className="flex-shrink-0 w-80 rounded-xl overflow-hidden bg-white hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
-            >
-              {/* Image Container with Badge */}
-              <div className="relative h-48 overflow-hidden bg-gray-200">
-                <img
-                  src={restaurant.image}
-                  alt={restaurant.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
-                
-                {/* Badge */}
-                <div className={`absolute bottom-0 left-0 right-0 ${restaurant.badgeColor} text-white py-2 px-3 text-sm font-bold`}>
-                  {restaurant.badge}
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-4">
-                {/* Restaurant Name */}
-                <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1">
-                  {restaurant.name}
-                </h3>
-
-                {/* Rating and Time */}
-                <div className="flex items-center gap-4 mb-2">
-                  <div className="flex items-center gap-1">
-                    <Star size={16} className="text-green-600 fill-green-600" />
-                    <span className="text-sm font-semibold text-gray-800">
-                      {restaurant.rating}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1 text-gray-600">
-                    <Clock size={14} />
-                    <span className="text-sm font-medium">{restaurant.time}</span>
-                  </div>
-                </div>
-
-                {/* Cuisine */}
-                <p className="text-xs text-gray-600 mb-2 line-clamp-1">
-                  {restaurant.cuisine}
-                </p>
-
-                {/* Location */}
-                <p className="text-xs font-medium text-gray-500">
-                  {restaurant.location}
-                </p>
-              </div>
+          {loading && topRestaurants.length === 0 ? (
+            <div className="flex items-center justify-center w-full py-12">
+              <div className="text-gray-500">Loading top restaurants...</div>
             </div>
-          ))}
+          ) : topRestaurants.length === 0 ? (
+            <div className="flex items-center justify-center w-full py-12">
+              <div className="text-gray-500">No restaurants available</div>
+            </div>
+          ) : (
+            topRestaurants.map((restaurant) => (
+              <Link
+                key={restaurant.id}
+                to={`/restaurant/${restaurant.id}`}
+                className="flex-shrink-0 w-80 rounded-xl overflow-hidden bg-white hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
+              >
+                {/* Image Container with Badge */}
+                <div className="relative h-48 overflow-hidden bg-gray-200">
+                  <img
+                    src={restaurant.image}
+                    alt={restaurant.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+
+                  {/* Badge */}
+                  <div
+                    className={`absolute bottom-0 left-0 right-0 ${restaurant.badgeColor} text-white py-2 px-3 text-sm font-bold`}
+                  >
+                    {restaurant.badge}
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-4">
+                  {/* Restaurant Name */}
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1">
+                    {restaurant.name}
+                  </h3>
+
+                  {/* Rating and Time */}
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className="flex items-center gap-1">
+                      <Star
+                        size={16}
+                        className="text-green-600 fill-green-600"
+                      />
+                      <span className="text-sm font-semibold text-gray-800">
+                        {restaurant.rating}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1 text-gray-600">
+                      <Clock size={14} />
+                      <span className="text-sm font-medium">
+                        {restaurant.time}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Cuisine */}
+                  <p className="text-xs text-gray-600 mb-2 line-clamp-1">
+                    {restaurant.cuisine}
+                  </p>
+
+                  {/* Location */}
+                  <p className="text-xs font-medium text-gray-500">
+                    {restaurant.location}
+                  </p>
+                </div>
+              </Link>
+            ))
+          )}
         </div>
       </div>
     </div>

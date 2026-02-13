@@ -18,11 +18,27 @@ const Cart = () => {
     totalPrice,
     totalQuantity,
     restaurantName,
-    increaseQuantity,
-    decreaseQuantity,
-    removeFromCart,
+    updateQuantity,
+    removeItem,
     clearCart,
   } = useCart();
+
+  // Wrapper functions for quantity changes
+  const increaseQuantity = (id) => {
+    const item = items.find((item) => item.id === id);
+    if (item) {
+      updateQuantity(id, item.quantity + 1);
+    }
+  };
+
+  const decreaseQuantity = (id) => {
+    const item = items.find((item) => item.id === id);
+    if (item && item.quantity > 1) {
+      updateQuantity(id, item.quantity - 1);
+    } else if (item && item.quantity === 1) {
+      removeItem(id);
+    }
+  };
 
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showCouponModal, setShowCouponModal] = useState(false);
@@ -74,11 +90,10 @@ const Cart = () => {
   const finalAmount = totalPrice + deliveryFee + gstAndCharges - discount;
 
   const handlePlaceOrder = async () => {
-    if(!isAuthenticated){
+    if (!isAuthenticated) {
       alert("Please login to place an order");
       return;
-    }
-    else if (!selectedAddress) {
+    } else if (!selectedAddress) {
       alert("Please select a delivery address");
       return;
     }
@@ -107,7 +122,6 @@ const Cart = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">
@@ -201,7 +215,7 @@ const Cart = () => {
               restaurantName={restaurantName}
               onIncreaseQuantity={increaseQuantity}
               onDecreaseQuantity={decreaseQuantity}
-              onRemoveItem={removeFromCart}
+              onRemoveItem={removeItem}
             />
 
             {/* Payment Section */}

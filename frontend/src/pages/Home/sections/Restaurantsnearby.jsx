@@ -1,157 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchRestaurants } from "../../../redux/slices/restaurantSlice";
 import { Star, Clock, MapPin, ChevronDown } from "lucide-react";
 
 const RestaurantsNearby = () => {
   const [sortBy, setSortBy] = useState("relevance");
   const [showSortMenu, setShowSortMenu] = useState(false);
 
-  const restaurants = [
-    {
-      id: 1,
-      name: "Biryani House",
-      image:
-        "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=400&h=250&fit=crop",
-      rating: 4.4,
-      time: "20-25 mins",
-      cuisine: "Biryani, Hyderabadi, Andhra",
-      location: "Connaught Place",
-      badge: "ITEMS AT ₹49",
-      badgeColor: "bg-gray-800",
-    },
-    {
-      id: 2,
-      name: "KFC",
-      image:
-        "https://images.unsplash.com/photo-1585238341710-4dd0bd180ffd?w=400&h=250&fit=crop",
-      rating: 4.5,
-      time: "10-15 mins",
-      cuisine: "Burgers, Fast Food, Rolls & Wraps",
-      location: "Connaught Place",
-      badge: "50% OFF",
-      badgeColor: "bg-red-600",
-    },
-    {
-      id: 3,
-      name: "Bakingo",
-      image:
-        "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=250&fit=crop",
-      rating: 4.6,
-      time: "35-40 mins",
-      cuisine: "Bakery, Desserts, Beverages, Snacks",
-      location: "Karol Bagh",
-      badge: "60% OFF UPTO ₹120",
-      badgeColor: "bg-pink-400",
-    },
-    {
-      id: 4,
-      name: "Rollsking",
-      image:
-        "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=400&h=250&fit=crop",
-      rating: 4.4,
-      time: "15-20 mins",
-      cuisine: "Fast Food, Rolls & Wraps, North Indian",
-      location: "Connaught Place",
-      badge: "SPECIAL OFFER",
-      badgeColor: "bg-gray-900",
-    },
-    {
-      id: 5,
-      name: "California Burrito",
-      image:
-        "https://images.unsplash.com/photo-1565903451743-04f6461ef23e?w=400&h=250&fit=crop",
-      rating: 4.7,
-      time: "35-40 mins",
-      cuisine: "Mexican, American, Salads, Burgers",
-      location: "Karol Bagh",
-      badge: "ITEMS AT ₹89",
-      badgeColor: "bg-red-700",
-    },
-    {
-      id: 6,
-      name: "Taco Bell",
-      image:
-        "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=250&fit=crop",
-      rating: 4.6,
-      time: "15-20 mins",
-      cuisine: "Mexican, Fast Food, Snacks",
-      location: "Connaught Place",
-      badge: "ITEMS AT ₹58",
-      badgeColor: "bg-purple-900",
-    },
-    {
-      id: 7,
-      name: "Faasos - Wraps, Rolls & More",
-      image:
-        "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=400&h=250&fit=crop",
-      rating: 4.3,
-      time: "30-40 mins",
-      cuisine: "Kebabs, Fast Food, Snacks, North Indian",
-      location: "Connaught Place",
-      badge: "ITEMS AT ₹89",
-      badgeColor: "bg-purple-600",
-    },
-    {
-      id: 8,
-      name: "Domino's Pizza",
-      image:
-        "https://images.unsplash.com/photo-1628840042765-356cda07f4ee?w=400&h=250&fit=crop",
-      rating: 4.4,
-      time: "20-25 mins",
-      cuisine: "Pizzas, Italian, Pastas, Desserts",
-      location: "Connaught Place",
-      badge: "50% OFF",
-      badgeColor: "bg-blue-600",
-    },
-    {
-      id: 9,
-      name: "Burger King",
-      image:
-        "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=250&fit=crop",
-      rating: 4.2,
-      time: "15-25 mins",
-      cuisine: "Burgers, Fast Food, Beverages",
-      location: "Greater Kailash",
-      badge: "ITEMS AT ₹99",
-      badgeColor: "bg-yellow-600",
-    },
-    {
-      id: 10,
-      name: "Mainland China",
-      image:
-        "https://images.unsplash.com/photo-1609501676725-7186f017a4b5?w=400&h=250&fit=crop",
-      rating: 4.5,
-      time: "25-30 mins",
-      cuisine: "Chinese, Asian, Continental",
-      location: "Karol Bagh",
-      badge: "FREE DELIVERY",
-      badgeColor: "bg-green-600",
-    },
-    {
-      id: 11,
-      name: "Biryani by Kilo",
-      image:
-        "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=400&h=250&fit=crop",
-      rating: 4.6,
-      time: "30-35 mins",
-      cuisine: "Biryani, Hyderabadi, Kabab",
-      location: "CP Block",
-      badge: "ITEMS AT ₹79",
-      badgeColor: "bg-orange-700",
-    },
-    {
-      id: 12,
-      name: "Wow! Momo",
-      image:
-        "https://images.unsplash.com/photo-1585238341710-4dd0bd180ffd?w=400&h=250&fit=crop",
-      rating: 4.4,
-      time: "20-25 mins",
-      cuisine: "Momos, Asian, Chinese, Tibetan",
-      location: "Connaught Place",
-      badge: "40% OFF",
-      badgeColor: "bg-indigo-600",
-    },
-  ];
+  const dispatch = useDispatch();
+  // Get state from Redux
+  const { items, loading, hasNextPage, page } = useSelector(
+    (state) => state.restaurants,
+  );
+
+  // Fetch restaurants on mount
+  useEffect(() => {
+    if (items.length === 0) {
+      dispatch(fetchRestaurants({ page: 1, limit: 12 }));
+    }
+  }, [dispatch, items.length]);
+
+  const handleLoadMore = () => {
+    if (!loading && hasNextPage) {
+      dispatch(fetchRestaurants({ page, limit: 12 }));
+    }
+  };
+
+  // Remove duplicates and map backend data to match frontend structure
+  const restaurants = useMemo(() => {
+    // Remove duplicates based on _id
+    const uniqueItems = items.reduce((acc, current) => {
+      const exists = acc.find((item) => item._id === current._id);
+      if (!exists) {
+        acc.push(current);
+      }
+      return acc;
+    }, []);
+
+    // Map to component format
+    return uniqueItems.map((restaurant) => ({
+      id: restaurant._id,
+      name: restaurant.name,
+      image: restaurant.coverImage,
+      rating: restaurant.avgRating || 0,
+      time: `${restaurant.minDeliveryTime}-${restaurant.maxDeliveryTime} mins`,
+      cuisine: "", // You can add this field to your backend model if needed
+      location: restaurant.address
+        ? `${restaurant.address.area}, ${restaurant.address.city}`
+        : "",
+      badge: "NEW",
+      badgeColor: "bg-orange-500",
+    }));
+  }, [items]);
 
   const sortOptions = [
     { label: "Relevance", value: "relevance" },
@@ -284,11 +185,19 @@ const RestaurantsNearby = () => {
         </div>
 
         {/* Load More */}
-        <div className="flex justify-center mt-12">
-          <button className="px-8 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:border-orange-500 hover:text-orange-500 transition-colors duration-200">
-            Load More Restaurants
-          </button>
-        </div>
+        {hasNextPage && (
+          <div className="flex justify-center mt-12">
+            <button
+              onClick={handleLoadMore}
+              disabled={loading}
+              className={`px-8 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:border-orange-500 hover:text-orange-500 transition-colors duration-200 ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              {loading ? "Loading..." : "Load More Restaurants"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

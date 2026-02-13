@@ -86,6 +86,13 @@ export const useCart = () => {
     const cartItem = items.find((item) => item.id === id);
     if (!cartItem) return;
 
+    console.log("🔄 Updating quantity:", {
+      id,
+      menuItemId: cartItem.menuItemId,
+      name: cartItem.name,
+      newQuantity: quantity,
+    });
+
     dispatch(updateItemQuantityLocal({ id, quantity }));
     dispatch(updateCartItemAsync({ id: cartItem.menuItemId, quantity }));
   };
@@ -98,6 +105,12 @@ export const useCart = () => {
     // Find the menuItemId from cart state
     const cartItem = items.find((item) => item.id === id);
     if (!cartItem) return;
+
+    console.log("🗑️ Removing item:", {
+      id,
+      menuItemId: cartItem.menuItemId,
+      name: cartItem.name,
+    });
 
     dispatch(removeFromCartLocal(id));
     dispatch(removeFromCartAsync(cartItem.menuItemId));

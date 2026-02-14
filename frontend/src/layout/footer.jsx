@@ -1,13 +1,22 @@
 import React from "react";
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  Linkedin,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react";
 
 const FooterLink = ({ title, links }) => (
-  <div className="flex flex-col m-4">
-    <h4 className="font-bold text-base text-black mb-4">{title}</h4>
+  <div className="flex flex-col">
+    <h4 className="font-bold text-lg text-gray-900 mb-4">{title}</h4>
     {links.map((link, index) => (
       <a
         key={index}
         href={link.url || "#"}
-        className="underline text-gray-600 mt-2"
+        className="text-gray-600 hover:text-orange-500 transition-colors duration-200 mb-2 text-sm"
       >
         {link.text}
       </a>
@@ -16,90 +25,147 @@ const FooterLink = ({ title, links }) => (
 );
 
 const Footer = () => {
+  const companyLinks = [
+    { text: "About Us", url: "#" },
+    { text: "Careers", url: "#" },
+    { text: "Contact", url: "#" },
+    { text: "Blog", url: "#" },
+  ];
+
+  const partnerLinks = [
+    { text: "Add Restaurant", url: "#" },
+    { text: "Become a Rider", url: "#" },
+    { text: "Business Account", url: "#" },
+    { text: "Partner Portal", url: "#" },
+  ];
+
   const legalLinks = [
-    { text: "Terms and conditions" },
-    { text: "Privacy" },
-    { text: "Cookies" },
-    { text: "Modern Slavery Statement" },
+    { text: "Terms & Conditions", url: "#" },
+    { text: "Privacy Policy", url: "#" },
+    { text: "Cookie Policy", url: "#" },
+    { text: "Refund Policy", url: "#" },
   ];
 
-  const importantLinks = [
-    { text: "Get help" },
-    { text: "Add your restaurant" },
-    { text: "Sign up to deliver" },
-    { text: "Create a business account" },
-  ];
-
-  const bottomLinks = [
-    { text: "Privacy Policy" },
-    { text: "Terms" },
-    { text: "Pricing" },
-    { text: "Do not sell or share my personal information" },
+  const helpLinks = [
+    { text: "FAQ", url: "#" },
+    { text: "Order Status", url: "#" },
+    { text: "Payment Options", url: "#" },
+    { text: "Delivery Info", url: "#" },
   ];
 
   return (
-    <div className="bg-gray-100 text-black">
-      <div className="flex flex-col px-24 py-16">
-        <div className="flex justify-between flex-wrap items-start">
-          
-          {/* Company Info */}
-          <div className="flex flex-col m-4">
-            <h1 className="text-2xl font-bold">Logo</h1>
-            <p className="mt-2">
-              Company # 490039-445, Registered companies.
+    <footer className="bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          {/* Company Info - Spans 2 columns on large screens */}
+          <div className="lg:col-span-2">
+            <h2 className="text-3xl font-bold text-orange-500 mb-4">
+              Food<span className="text-white">Delivery</span>
+            </h2>
+            <p className="text-gray-400 mb-4 text-sm leading-relaxed">
+              Your favorite food delivered fast, fresh, and hassle-free. Order
+              from the best restaurants in your area and enjoy delicious meals
+              at your doorstep.
             </p>
+
+            {/* Contact Info */}
+            <div className="space-y-2 mb-6">
+              <div className="flex items-center gap-2 text-gray-400 text-sm">
+                <MapPin size={16} className="text-orange-500" />
+                <span>Delhi, India</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-400 text-sm">
+                <Phone size={16} className="text-orange-500" />
+                <span>+91 1800-123-4567</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-400 text-sm">
+                <Mail size={16} className="text-orange-500" />
+                <span>support@fooddelivery.com</span>
+              </div>
+            </div>
+
+            {/* Social Media */}
+            <div className="flex gap-4">
+              <a
+                href="#"
+                className="bg-gray-800 p-2 rounded-full hover:bg-orange-500 transition-colors duration-200"
+                aria-label="Facebook"
+              >
+                <Facebook size={20} />
+              </a>
+              <a
+                href="#"
+                className="bg-gray-800 p-2 rounded-full hover:bg-orange-500 transition-colors duration-200"
+                aria-label="Instagram"
+              >
+                <Instagram size={20} />
+              </a>
+              <a
+                href="#"
+                className="bg-gray-800 p-2 rounded-full hover:bg-orange-500 transition-colors duration-200"
+                aria-label="Twitter"
+              >
+                <Twitter size={20} />
+              </a>
+              <a
+                href="#"
+                className="bg-gray-800 p-2 rounded-full hover:bg-orange-500 transition-colors duration-200"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={20} />
+              </a>
+            </div>
           </div>
 
-          {/* Subscription */}
-          <div className="flex flex-col m-4">
-            <h4 className="font-bold text-base mb-4">
-              Get Exclusive Deals in your Inbox
-            </h4>
+          {/* Links Columns */}
+          <FooterLink title="Company" links={companyLinks} />
+          <FooterLink title="Partner With Us" links={partnerLinks} />
+          <FooterLink title="Legal" links={legalLinks} />
+        </div>
 
-            <div className="flex">
+        {/* Newsletter Section */}
+        <div className="mt-12 pt-8 border-t border-gray-800">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div>
+              <h4 className="font-bold text-xl mb-2">
+                Subscribe to our Newsletter
+              </h4>
+              <p className="text-gray-400 text-sm">
+                Get exclusive deals and updates delivered to your inbox
+              </p>
+            </div>
+            <div className="flex gap-2">
               <input
                 type="email"
-                placeholder="youremail@gmail.com"
-                className="px-2 py-2 border border-gray-300 rounded-l bg-gray-200"
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-orange-500 text-white placeholder-gray-500"
               />
-              <button className="bg-orange-500 text-white px-4 py-2 rounded-r">
+              <button className="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors duration-200">
                 Subscribe
               </button>
             </div>
-
-            <p className="mt-2 text-sm">
-              we wont spam, read our{" "}
-              <a href="#" className="underline">
-                email policy
-              </a>
-            </p>
-
-            <div className="flex gap-4 mt-4">
-              <a href="#">Facebook</a>
-              <a href="#">Instagram</a>
-            </div>
           </div>
-
-          <FooterLink title="Legal Pages" links={legalLinks} />
-          <FooterLink title="Important Links" links={importantLinks} />
         </div>
 
-        <hr className="h-px bg-gray-300 border-none mt-8" />
-
         {/* Bottom Bar */}
-        <div className="flex justify-between items-center mt-4 bg-[#00001a] text-white px-24 py-4 w-screen -ml-24">
-          <p>Copyright 2025. All Rights Reserved.</p>
-
-          <div className="flex gap-6 text-sm">
-            {bottomLinks.map((link, index) => (
-              <a key={index} href="#">
-                {link.text}
-              </a>
-            ))}
+        <div className="mt-8 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-gray-400 text-sm">
+            © 2025 FoodDelivery. All rights reserved.
+          </p>
+          <div className="flex gap-6 text-sm text-gray-400">
+            <a href="#" className="hover:text-orange-500 transition-colors">
+              Help Center
+            </a>
+            <a href="#" className="hover:text-orange-500 transition-colors">
+              Accessibility
+            </a>
+            <a href="#" className="hover:text-orange-500 transition-colors">
+              Sitemap
+            </a>
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 

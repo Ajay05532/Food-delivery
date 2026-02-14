@@ -1,41 +1,40 @@
 import React, { useState } from "react";
-import { MapPin, Phone, Heart, Share2, X, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Heart,
+  Share2,
+  X,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 const Header = ({ restaurant }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const defaultRestaurant = {
-    name: "Punjabi Angithi By Vegorama Group",
-    cuisine: "North Indian, Biryani, Chinese, Rolls, Momos",
-    address: "Shop 4, Ground Floor, Janta Market, Jhandewalan, Karol Bagh, New Delhi",
-    phone: "+917428772532",
-    bannerImage: "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=1200&h=400&fit=crop",
-    galleryImages: [
-      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=800&h=600&fit=crop",
-    ],
-    deliveryRating: 4.1,
-    deliveryCount: 6462,
-    diningRating: 0,
-    diningCount: 0,
-    deliveryTime: "35 min",
-    minOrder: "₹200",
-    deliveryCharge: "Free",
-  };
 
-  const data = restaurant || defaultRestaurant;
-  const galleryImages = data.galleryImages || [data.bannerImage];
+  const data = restaurant
+
+  // Use gallery images from backend if available, fallback to coverImage, then default
+  const galleryImages =
+    data.gallery && data.gallery.length > 0
+      ? data.gallery
+      : data.coverImage
+        ? [data.coverImage]
+        : data.galleryImages || [data.bannerImage];
 
   const handlePrevImage = () => {
-    setCurrentImageIndex((prev) => (prev === 0 ? galleryImages.length - 1 : prev - 1));
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? galleryImages.length - 1 : prev - 1,
+    );
   };
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev === galleryImages.length - 1 ? 0 : prev + 1));
+    setCurrentImageIndex((prev) =>
+      prev === galleryImages.length - 1 ? 0 : prev + 1,
+    );
   };
 
   return (
@@ -43,85 +42,87 @@ const Header = ({ restaurant }) => {
       {/* Banner Section - Multi Image Grid */}
       <div className="max-w-6xl mx-auto px-4 py-4">
         <div className="relative h-120 bg-gray-200 overflow-hidden rounded-lg">
-        <div className="flex h-full gap-1">
-          {/* Main Large Image - Left Side */}
-          <div className="flex-[2] relative overflow-hidden">
-            <img
-              src={galleryImages[0]}
-              alt={`${data.name} - Main`}
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-            />
+          <div className="flex h-full gap-1">
+            {/* Main Large Image - Left Side */}
+            <div className="flex-[2] relative overflow-hidden">
+              <img
+                src={galleryImages[0]}
+                alt={`${data.name} - Main`}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+
+            {/* Right Side - Grid of 3 Images */}
+            <div className="flex-1 flex flex-col gap-1">
+              {galleryImages.slice(1, 4).map((image, index) => (
+                <div
+                  key={index}
+                  className="flex-1 relative overflow-hidden group cursor-pointer"
+                  onClick={() => {
+                    setCurrentImageIndex(index + 1);
+                    setShowGallery(true);
+                  }}
+                >
+                  <img
+                    src={image}
+                    alt={`${data.name} - ${index + 2}`}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
+
+                  {/* View Gallery Button on Last Image */}
+                  {index === 2 && (
+                    <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentImageIndex(0);
+                          setShowGallery(true);
+                        }}
+                        className="px-6 py-3 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-100 transition-colors"
+                      >
+                        View Gallery
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Right Side - Grid of 3 Images */}
-          <div className="flex-1 flex flex-col gap-1">
-            {galleryImages.slice(1, 4).map((image, index) => (
-              <div 
-                key={index} 
-                className="flex-1 relative overflow-hidden group cursor-pointer"
-                onClick={() => {
-                  setCurrentImageIndex(index + 1);
-                  setShowGallery(true);
-                }}
-              >
-                <img
-                  src={image}
-                  alt={`${data.name} - ${index + 2}`}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-                
-                {/* View Gallery Button on Last Image */}
-                {index === 2 && (
-                  <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setCurrentImageIndex(0);
-                        setShowGallery(true);
-                      }}
-                      className="px-6 py-3 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-100 transition-colors"
-                    >
-                      View Gallery
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
+          {/* Overlay with Delivery Badge */}
+          <div className="absolute bottom-4 left-4 bg-orange-500 text-white px-3 py-1 rounded-md text-sm font-semibold">
+            Delivery only
+          </div>
+
+          {/* Action Buttons - Top Right */}
+          <div className="absolute top-4 right-4 flex gap-3 z-10">
+            <button
+              onClick={() => setIsFavorite(!isFavorite)}
+              className="bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-all"
+            >
+              <Heart
+                size={24}
+                className={
+                  isFavorite ? "fill-red-500 text-red-500" : "text-gray-700"
+                }
+              />
+            </button>
+            <button className="bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-all">
+              <Share2 size={24} className="text-gray-700" />
+            </button>
           </div>
         </div>
-        
-        {/* Overlay with Delivery Badge */}
-        <div className="absolute bottom-4 left-4 bg-orange-500 text-white px-3 py-1 rounded-md text-sm font-semibold">
-          Delivery only
-        </div>
-
-        {/* Action Buttons - Top Right */}
-        <div className="absolute top-4 right-4 flex gap-3 z-10">
-          <button
-            onClick={() => setIsFavorite(!isFavorite)}
-            className="bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-all"
-          >
-            <Heart
-              size={24}
-              className={isFavorite ? "fill-red-500 text-red-500" : "text-gray-700"}
-            />
-          </button>
-          <button className="bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-all">
-            <Share2 size={24} className="text-gray-700" />
-          </button>
-        </div>
-      </div>
       </div>
 
       {/* Gallery Modal */}
       {showGallery && (
         <>
           {/* Dark Overlay */}
-          <div 
+          <div
             className="fixed inset-0 bg-black bg-opacity-90 z-[200] transition-opacity duration-300"
             onClick={() => setShowGallery(false)}
           />
-          
+
           {/* Gallery Content */}
           <div className="fixed inset-0 z-[210] flex items-center justify-center p-4">
             {/* Close Button */}
@@ -148,7 +149,7 @@ const Header = ({ restaurant }) => {
             )}
 
             {/* Current Image */}
-            <div 
+            <div
               className="max-w-5xl max-h-[80vh] w-full h-full flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
@@ -176,7 +177,9 @@ const Header = ({ restaurant }) => {
                   key={index}
                   onClick={() => setCurrentImageIndex(index)}
                   className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-all ${
-                    currentImageIndex === index ? "border-orange-500 scale-110" : "border-transparent opacity-60 hover:opacity-100"
+                    currentImageIndex === index
+                      ? "border-orange-500 scale-110"
+                      : "border-transparent opacity-60 hover:opacity-100"
                   }`}
                 >
                   <img
@@ -202,12 +205,18 @@ const Header = ({ restaurant }) => {
           {data.deliveryCount > 0 && (
             <div className="flex items-center gap-3">
               <div className="flex flex-col items-center justify-center bg-green-50 rounded-lg w-16 h-16 border-2 border-green-600">
-                <span className="text-xl font-bold text-green-600">{data.deliveryRating}</span>
-                <span className="text-xs text-green-600 font-semibold">Delivery</span>
+                <span className="text-xl font-bold text-green-600">
+                  {data.deliveryRating}
+                </span>
+                <span className="text-xs text-green-600 font-semibold">
+                  Delivery
+                </span>
               </div>
               <div>
                 <p className="text-xs text-gray-500">Delivery Ratings</p>
-                <p className="text-sm font-semibold text-gray-700">{data.deliveryCount.toLocaleString()}</p>
+                <p className="text-sm font-semibold text-gray-700">
+                  {data.deliveryCount.toLocaleString()}
+                </p>
               </div>
             </div>
           )}
@@ -215,12 +224,18 @@ const Header = ({ restaurant }) => {
           {data.diningCount > 0 && (
             <div className="flex items-center gap-3">
               <div className="flex flex-col items-center justify-center bg-blue-50 rounded-lg w-16 h-16 border-2 border-blue-600">
-                <span className="text-xl font-bold text-blue-600">{data.diningRating}</span>
-                <span className="text-xs text-blue-600 font-semibold">Dining</span>
+                <span className="text-xl font-bold text-blue-600">
+                  {data.diningRating}
+                </span>
+                <span className="text-xs text-blue-600 font-semibold">
+                  Dining
+                </span>
               </div>
               <div>
                 <p className="text-xs text-gray-500">Dining Ratings</p>
-                <p className="text-sm font-semibold text-gray-700">{data.diningCount.toLocaleString()}</p>
+                <p className="text-sm font-semibold text-gray-700">
+                  {data.diningCount.toLocaleString()}
+                </p>
               </div>
             </div>
           )}
@@ -243,13 +258,20 @@ const Header = ({ restaurant }) => {
       <div className="max-w-6xl mx-auto px-4 py-4 bg-gray-50 border-b border-gray-200">
         <div className="flex items-start gap-3 mb-3">
           <Phone size={18} className="text-red-500 flex-shrink-0 mt-1" />
-          <a href={`tel:${data.phone}`} className="text-red-500 font-semibold hover:underline">
+          <a
+            href={`tel:${data.phone}`}
+            className="text-red-500 font-semibold hover:underline"
+          >
             {data.phone}
           </a>
         </div>
         <div className="flex items-start gap-3">
           <MapPin size={18} className="text-gray-600 flex-shrink-0 mt-1" />
-          <p className="text-gray-700 text-sm">{data.address}</p>
+          <p className="text-gray-700 text-sm">
+            {typeof data.address === "object" && data.address
+              ? `${data.address.street || ""} ${data.address.area || ""}, ${data.address.city || ""}`.trim()
+              : data.address || "Address not available"}
+          </p>
         </div>
       </div>
 

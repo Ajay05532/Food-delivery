@@ -1,6 +1,7 @@
 import React from "react";
 import pizzaGirl from "../../../assets/girl1.png";
 import noodlesGirl from "../../../assets/girl2.png";
+import { MapPin } from "lucide-react";
 
 export default function Hero() {
   return (
@@ -15,10 +16,18 @@ export default function Hero() {
 
             <h1 className="text-5xl lg:text-5xl font-bold leading-tight">
               Feast Your Senses, <br />
-              <span className="text-orange-500">Fast and Fresh</span>
+              <span className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+                Fast and Fresh
+              </span>
             </h1>
 
+            <p className="text-base text-gray-600">
+              Delicious food delivered in 30 minutes or less. Hot, fresh, and
+              ready to enjoy.
+            </p>
+
             <div className="flex items-center gap-2 border-2 border-gray-300 rounded-full px-5 py-3 w-full max-w-sm">
+              <MapPin className="h-5 w-5 text-orange-500 flex-shrink-0" />
               <input
                 type="text"
                 placeholder="e.g. EC4R 3TE"
@@ -30,10 +39,10 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* RIGHT SIDE (orange BG + noodles girl + cards) */}
+          {/* RIGHT SIDE (gradient BG + noodles girl + cards) */}
           <div className="relative h-full flex items-center justify-center">
-            {/* ORANGE SHAPE */}
-            <div className="absolute -right-10 bottom-0 h-[96%] w-[80%] bg-orange-500 rounded-tl-[200px] z-0"></div>
+            {/* GRADIENT SHAPE */}
+            <div className="absolute -right-10 bottom-0 h-[96%] w-[80%] bg-gradient-to-br from-orange-500 via-pink-500 to-purple-600 rounded-tl-[200px] z-0"></div>
 
             {/* NOODLES GIRL (right side) */}
             <img
@@ -42,44 +51,88 @@ export default function Hero() {
               className="absolute left-13 bottom-0 h-[400px] rounded-lg shadow-xl z-20"
             />
 
-            {/* ORDER CARD 1 */}
-            <div className="absolute top-10 right-10 bg-white shadow-xl p-3 rounded-lg w-56 z-30">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-bold">Order</p>
-                <span className="text-xs text-gray-400">now</span>
+            {/* ORDER CARD 1 - Enhanced */}
+            <div className="absolute top-10 right-10 bg-white/90 backdrop-blur-md shadow-2xl p-4 rounded-2xl w-60 z-30 border border-white/40 hover:scale-105 transition-all duration-300 animate-float">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">🍕</span>
+                  </div>
+                  <p className="text-sm font-bold text-gray-900">New Order</p>
+                </div>
+                <span className="text-xs text-gray-400 font-medium">
+                  Just now
+                </span>
               </div>
-              <p className="text-xs text-gray-600 font-medium">
+              <p className="text-sm text-gray-700 font-semibold mb-1">
                 We've received your order!
               </p>
               <p className="text-xs text-gray-500">
                 Awaiting restaurant acceptance
               </p>
+              <div className="mt-3 bg-orange-50 rounded-lg p-2">
+                <div className="flex gap-1">
+                  <div className="h-1 flex-1 bg-orange-500 rounded-full"></div>
+                  <div className="h-1 flex-1 bg-gray-200 rounded-full"></div>
+                  <div className="h-1 flex-1 bg-gray-200 rounded-full"></div>
+                </div>
+              </div>
             </div>
 
-            {/* ORDER CARD 2 */}
-            <div className="absolute top-44 right-10 bg-white shadow-xl p-3 rounded-lg w-56 z-30">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-bold">Order Accepted!</p>
-                <span className="text-xs text-gray-400">now</span>
+            {/* ORDER CARD 2 - Enhanced */}
+            <div className="absolute top-44 right-10 bg-white/90 backdrop-blur-md shadow-2xl p-4 rounded-2xl w-60 z-30 border border-white/40 hover:scale-105 transition-all duration-300 animate-float-delay-1">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-lg">✓</span>
+                  </div>
+                  <p className="text-sm font-bold text-gray-900">Accepted!</p>
+                </div>
+                <span className="text-xs text-gray-400 font-medium">
+                  2 min ago
+                </span>
               </div>
-              <p className="text-xs text-gray-500">
-                Your order will be delivered shortly
+              <p className="text-sm text-gray-700 font-semibold mb-1">
+                Your order is being prepared
               </p>
-              <p className="text-xs text-green-600 font-semibold">✓</p>
+              <p className="text-xs text-gray-500">
+                Estimated time: 25 minutes
+              </p>
+              <div className="mt-3 bg-green-50 rounded-lg p-2">
+                <div className="flex gap-1">
+                  <div className="h-1 flex-1 bg-green-500 rounded-full"></div>
+                  <div className="h-1 flex-1 bg-green-500 rounded-full"></div>
+                  <div className="h-1 flex-1 bg-gray-200 rounded-full"></div>
+                </div>
+              </div>
             </div>
 
-            {/* ORDER CARD 3 */}
-            <div className="absolute bottom-12 right-10 bg-white shadow-xl p-3 rounded-lg w-56 z-30">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-bold">Order</p>
-                <span className="text-xs text-gray-400">now</span>
+            {/* ORDER CARD 3 - Enhanced */}
+            <div className="absolute bottom-12 right-10 bg-white/90 backdrop-blur-md shadow-2xl p-4 rounded-2xl w-60 z-30 border border-white/40 hover:scale-105 transition-all duration-300 animate-float-delay-2">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">🏍️</span>
+                  </div>
+                  <p className="text-sm font-bold text-gray-900">On the way</p>
+                </div>
+                <span className="text-xs text-gray-400 font-medium">
+                  5 min ago
+                </span>
               </div>
-              <p className="text-xs text-gray-600 font-medium">
+              <p className="text-sm text-gray-700 font-semibold mb-1">
                 Your rider is nearby!
               </p>
               <p className="text-xs text-gray-500">
                 They're almost there — get ready!
               </p>
+              <div className="mt-3 bg-blue-50 rounded-lg p-2">
+                <div className="flex gap-1">
+                  <div className="h-1 flex-1 bg-blue-500 rounded-full"></div>
+                  <div className="h-1 flex-1 bg-blue-500 rounded-full"></div>
+                  <div className="h-1 flex-1 bg-blue-500 rounded-full"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@ import authRoutes from "./src/routes/auth.routes.js";
 import restaurantRoutes from "./src/routes/restaurant.routes.js";
 import orderRoutes from "./src/routes/order.routes.js";
 import cartRoutes from "./src/routes/cart.routes.js";
-
+import menuRoutes from "./src/routes/menu.routes.js";
 /* Env + DB */
 dotenv.config();
 connectDB();
@@ -33,6 +33,7 @@ app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/checkout", cartRoutes);
 app.use("/api/orders", orderRoutes);
 
+app.use("/api/menu", menuRoutes);
 /* Health check */
 app.get("/", (req, res) => {
   res.send("Food Delivery Backend Running");

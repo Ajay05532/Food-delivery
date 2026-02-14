@@ -5,8 +5,9 @@ import { useCart } from "../../../redux/hooks/useCart";
 import RestaurantSwitchModal from "../../../components/RestaurantSwitchModal";
 
 const Menu = ({
-  restaurantId = "65d8b1b1b1b1b1b1b1b10001", // MongoDB ObjectId for restaurant
+  restaurantId = "65d8b1b1b1b1b1b1b1b10001",
   restaurantName = "Punjabi Angithi By Vegorama Group",
+  menuItems = [], // Menu items from backend
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilters, setSelectedFilters] = useState(["veg", "non-veg"]);
@@ -27,179 +28,55 @@ const Menu = ({
     restaurantName: cartRestaurantName,
   } = useCart();
 
-  const categories = [
-    { id: 0, name: "Want to repeat?", items: 3 },
-    { id: 1, name: "Crazy Biryani Box (1 Kg Serves 2)", items: 11 },
-    { id: 2, name: "Hyderabadi Biryani", items: 8 },
-    { id: 3, name: "Chicken Biryani", items: 6 },
-    { id: 4, name: "Mutton Biryani", items: 5 },
-    { id: 5, name: "Veg Biryani", items: 4 },
-    { id: 6, name: "Appetizers", items: 10 },
-    { id: 7, name: "Breads", items: 7 },
-  ];
+  // Organize menu items by category
+  const organizeMenuByCategory = () => {
+    if (!menuItems || menuItems.length === 0) {
+      return { categories: [], itemsByCategory: {} };
+    }
 
-  const menuItems = {
-    0: [
-      {
-        _id: "65d8a1a1a1a1a1a1a1a10001",
-        id: 1,
-        name: "Egg Biryani Bowl - 500ml",
-        type: "veg",
-        category: "Want to repeat?",
-        price: 289,
-        badge: "bestseller",
-        image:
-          "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
-      },
-      {
-        _id: "65d8a1a1a1a1a1a1a1a10002",
-        id: 2,
-        name: "Basmati Biryani Rice (400 Grams)",
-        type: "veg",
-        category: "Want to repeat?",
-        price: 199,
-        image:
-          "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
-      },
-      {
-        _id: "65d8a1a1a1a1a1a1a1a10003",
-        id: 3,
-        name: "Biryani Mix (400g)",
-        type: "veg",
-        category: "Want to repeat?",
-        price: 249,
-        image:
-          "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
-      },
-    ],
+    const itemsByCategory = {};
+    const categoryNames = new Set();
 
-    1: [
-      {
-        _id: "65d8a1a1a1a1a1a1a1a10004",
-        id: 4,
-        name: "Veg Dum Hyderabadi Biryani (1 Kg Serves 2)",
-        type: "veg",
-        category: "Crazy Biryani Box (1 Kg Serves 2)",
-        price: 479,
-        originalPrice: 599,
-        discount: "20% OFF",
-        rating: 5.0,
-        ratingCount: 1,
-        image:
-          "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
-      },
-      {
-        _id: "65d8a1a1a1a1a1a1a1a10005",
-        id: 5,
-        name: "Paneer 65 Hyderabadi Biryani (1 Kg Serves 2)",
-        type: "veg",
-        category: "Crazy Biryani Box (1 Kg Serves 2)",
-        price: 519,
-        originalPrice: 649,
-        discount: "20% OFF",
-        rating: 4.8,
-        ratingCount: 5,
-        image:
-          "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
-      },
-      {
-        _id: "65d8a1a1a1a1a1a1a1a10006",
-        id: 6,
-        name: "Paneer 65 Hyderabadi Biryani (1 Kg Serves 2)",
-        type: "veg",
-        category: "Crazy Biryani Box (1 Kg Serves 2)",
-        price: 699,
-        image:
-          "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
-      },
-    ],
+    menuItems.forEach((item) => {
+      const category = item.category || "Uncategorized";
+      categoryNames.add(category);
 
-    2: [
-      {
-        _id: "65d8a1a1a1a1a1a1a1a10007",
-        id: 7,
-        name: "Chicken Hyderabadi Biryani",
-        type: "non-veg",
-        category: "Hyderabadi Biryani",
-        price: 599,
-        rating: 4.6,
-        ratingCount: 12,
-        image:
-          "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
-      },
-    ],
+      if (!itemsByCategory[category]) {
+        itemsByCategory[category] = [];
+      }
 
-    3: [
-      {
-        _id: "65d8a1a1a1a1a1a1a1a10008",
-        id: 8,
-        name: "Murgh Hyderabadi Biryani",
-        type: "non-veg",
-        category: "Chicken Biryani",
-        price: 649,
-        rating: 4.5,
-        ratingCount: 8,
+      // Add item with proper structure
+      itemsByCategory[category].push({
+        _id: item._id,
+        id: item._id, // Use _id as id for cart functionality
+        name: item.name,
+        type: item.isVeg === true ? "veg" : "non-veg", // Map isVeg boolean to type string
+        category: category,
+        price: item.price,
+        description: item.description,
         image:
-          "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
-      },
-    ],
+          item.image ||
+          "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=200&fit=crop",
+        isAvailable: item.isAvailable !== false,
+        // Optional fields
+        originalPrice: item.originalPrice,
+        discount: item.discount,
+        rating: item.rating,
+        ratingCount: item.ratingCount,
+        badge: item.badge,
+      });
+    });
 
-    4: [
-      {
-        _id: "65d8a1a1a1a1a1a1a1a10009",
-        id: 9,
-        name: "Goat Biryani",
-        type: "non-veg",
-        category: "Mutton Biryani",
-        price: 749,
-        rating: 4.7,
-        ratingCount: 6,
-        image:
-          "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
-      },
-    ],
+    const categories = Array.from(categoryNames).map((name, index) => ({
+      id: index,
+      name: name,
+      items: itemsByCategory[name].length,
+    }));
 
-    5: [
-      {
-        _id: "65d8a1a1a1a1a1a1a1a10010",
-        id: 10,
-        name: "Vegetables Biryani",
-        type: "veg",
-        category: "Veg Biryani",
-        price: 399,
-        rating: 4.4,
-        ratingCount: 15,
-        image:
-          "https://images.unsplash.com/photo-1631040822134-bfd8a6b72e2f?w=200&h=200&fit=crop",
-      },
-    ],
-
-    6: [
-      {
-        _id: "65d8a1a1a1a1a1a1a1a10011",
-        id: 11,
-        name: "Paneer Tikka",
-        type: "veg",
-        category: "Appetizers",
-        price: 249,
-        image:
-          "https://images.unsplash.com/photo-1612874742237-415221591328?w=200&h=200&fit=crop",
-      },
-    ],
-
-    7: [
-      {
-        _id: "65d8a1a1a1a1a1a1a1a10012",
-        id: 12,
-        name: "Garlic Naan",
-        type: "veg",
-        category: "Breads",
-        price: 79,
-        image:
-          "https://images.unsplash.com/photo-1626082927389-6cd097cfd330?w=200&h=200&fit=crop",
-      },
-    ],
+    return { categories, itemsByCategory };
   };
+
+  const { categories, itemsByCategory } = organizeMenuByCategory();
 
   const filters = [
     { id: "veg", label: "Veg", icon: "🟢" },
@@ -243,8 +120,9 @@ const Menu = ({
     }
   };
 
-  const getFilteredItems = (categoryId) => {
-    const allItems = menuItems[categoryId] || [];
+  const getFilteredItems = (category) => {
+    const categoryName = category.name;
+    const allItems = itemsByCategory[categoryName] || [];
     return allItems.filter((item) => selectedFilters.includes(item.type));
   };
 
@@ -306,10 +184,22 @@ const Menu = ({
 
       {/* Menu Content */}
       <div className="max-w-6xl mx-auto px-4 py-8 pb-24">
+        {/* Empty State */}
+        {categories.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg mb-2">
+              No menu items available
+            </p>
+            <p className="text-gray-400 text-sm">
+              This restaurant hasn't added their menu yet
+            </p>
+          </div>
+        )}
+
         {/* Categories */}
         <div className="space-y-6">
           {categories.map((category) => {
-            const filteredItems = getFilteredItems(category.id);
+            const filteredItems = getFilteredItems(category);
             if (filteredItems.length === 0) return null;
 
             return (

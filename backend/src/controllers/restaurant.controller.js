@@ -1,5 +1,6 @@
 import Restaurant from "../models/Restaurant.model.js";
 import Address from "../models/Address.model.js"; // Import to register the schema
+import mongoose from "mongoose";
 
 export const getRestaurants = async (req, res) => {
   try {
@@ -37,6 +38,44 @@ export const getRestaurants = async (req, res) => {
   } catch (error) {
     console.error("❌ Error in getRestaurants:", error.message);
     console.error("Stack:", error.stack);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+export const getRestaurantById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid restaurant ID format",
+      });
+    }
+
+    // Fetch restaurant by ID and populate address
+    const restaurant = await Restaurant.findById(id)
+      .populate("address", "city area street pincode")
+      .lean();
+
+    if (!restaurant) {
+      return res.status(404).json({
+        success: false,
+        message: "Restaurant not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: restaurant,
+    });
+  } catch (error) {
+    console.error("❌ Error in getRestaurantById:", error.message);
     res.status(500).json({
       success: false,
       message: "Internal server error",

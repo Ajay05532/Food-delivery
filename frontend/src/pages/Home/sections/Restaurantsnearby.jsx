@@ -10,7 +10,7 @@ const RestaurantsNearby = () => {
 
   const dispatch = useDispatch();
   // Get state from Redux
-  const { items, loading, hasNextPage, page } = useSelector(
+  const { items, loading, hasNextPage, currentPage } = useSelector(
     (state) => state.restaurants,
   );
 
@@ -23,7 +23,8 @@ const RestaurantsNearby = () => {
 
   const handleLoadMore = () => {
     if (!loading && hasNextPage) {
-      dispatch(fetchRestaurants({ page, limit: 12 }));
+      // Fetch the next page (currentPage + 1)
+      dispatch(fetchRestaurants({ page: currentPage + 1, limit: 12 }));
     }
   };
 
@@ -63,7 +64,7 @@ const RestaurantsNearby = () => {
 
   return (
     <div className="w-full bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto  py-8">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
@@ -170,7 +171,7 @@ const RestaurantsNearby = () => {
 
                   {/* Cuisine */}
                   <p className="text-xs text-gray-600 mb-2 line-clamp-1">
-                    {restaurant.cuisine}
+                    {restaurant.description}
                   </p>
 
                   {/* Location */}

@@ -12,6 +12,7 @@ import {
   LifeBuoy,
   ChevronDown,
   LogOut,
+  Utensils,
 } from "lucide-react";
 
 const Navbar = ({ onLoginClick }) => {
@@ -46,55 +47,78 @@ const Navbar = ({ onLoginClick }) => {
   };
 
   return (
-    <header className="w-full border-b border-gray-200 bg-white shadow-sm">
-      <div className="flex h-24 items-center justify-between px-12">
-        <div className="flex items-center gap-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 text-base font-bold text-white shadow-md hover:shadow-lg transition-shadow cursor-pointer">
-            Logo
+    <header className="w-full border-b border-gray-200/50 bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50">
+      <div className="flex h-20 items-center justify-between px-8 lg:px-12 max-w-7xl mx-auto">
+        {/* LEFT SECTION */}
+        <div className="flex items-center gap-8">
+          {/* Logo */}
+          <div
+            onClick={() => navigate("/")}
+            className="flex items-center gap-3 cursor-pointer group"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 via-pink-500 to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-110">
+              <Utensils className="h-6 w-6" />
+            </div>
+            <div className="hidden lg:block">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+                FoodHub
+              </h1>
+              <p className="text-xs text-gray-500">Fast & Fresh</p>
+            </div>
           </div>
 
-          <button className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-orange-500 transition-colors rounded-lg hover:bg-gray-50">
-            <span>Others</span>
+          {/* Location Selector */}
+          <button className="hidden md:flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:text-orange-500 transition-all duration-300 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 border border-transparent hover:border-orange-200">
+            <span>Deliver to</span>
+            <span className="font-bold text-orange-500">Others</span>
             <ChevronDown className="h-4 w-4 text-orange-500" />
           </button>
         </div>
 
-        <nav className="flex items-center gap-10">
+        {/* RIGHT SECTION - Navigation */}
+        <nav className="flex items-center gap-2 lg:gap-4">
+          {/* Home Button */}
           <button
-            className="rounded-full bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200"
+            className="hidden lg:flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-pink-500 px-6 py-2.5 text-sm font-bold text-white hover:shadow-lg hover:shadow-orange-500/30 hover:from-orange-600 hover:to-pink-600 transition-all duration-300 hover:scale-105 active:scale-95"
             onClick={() => navigate("/")}
           >
-            Home
+            <span>Home</span>
           </button>
 
+          {/* Search Button */}
           <button
             onClick={() => navigate("/search")}
-            className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors px-3 py-2 rounded-lg hover:bg-gray-50"
+            className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-orange-500 transition-all duration-300 px-3 lg:px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 group"
           >
-            <Search className="h-5 w-5" />
-            <span>Search</span>
+            <Search className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+            <span className="hidden lg:inline">Search</span>
           </button>
 
-          <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
-            <BadgeDollarSign className="h-5 w-5" />
-            <span>Offers</span>
+          {/* Offers Button */}
+          <button className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-orange-500 transition-all duration-300 px-3 lg:px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 group relative">
+            <BadgeDollarSign className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+            <span className="hidden lg:inline">Offers</span>
+            <span className="absolute -top-1 -right-1 w-2 h-2 bg-pink-500 rounded-full animate-pulse"></span>
           </button>
 
-          <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
-            <LifeBuoy className="h-5 w-5" />
-            <span>Help</span>
+          {/* Help Button */}
+          <button className="hidden md:flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-orange-500 transition-all duration-300 px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 group">
+            <LifeBuoy className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+            <span className="hidden lg:inline">Help</span>
           </button>
 
           {/* Cart */}
           <div className="relative group cursor-pointer">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-orange-500 px-3 py-2 rounded-lg hover:bg-gray-50">
-              <div className="relative">
+            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-orange-500 px-3 lg:px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 transition-all duration-300">
+              <div className="relative group-hover:scale-110 transition-transform duration-300">
                 <ShoppingCart className="h-6 w-6" />
-                <span className="absolute -top-2 -right-3 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white shadow-md">
-                  {totalQuantity}
-                </span>
+                {totalQuantity > 0 && (
+                  <span className="absolute -top-2 -right-3 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-pink-500 text-xs font-bold text-white shadow-lg animate-pulse">
+                    {totalQuantity}
+                  </span>
+                )}
               </div>
-              <span>Cart</span>
+              <span className="hidden lg:inline">Cart</span>
             </div>
             <CartHover items={cartItems} />
           </div>
@@ -102,29 +126,33 @@ const Navbar = ({ onLoginClick }) => {
           {/* User Profile or Login Button */}
           {isAuthenticated && user ? (
             <div className="relative group">
-              <button className="flex items-center gap-2.5 rounded-full bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-gray-950 hover:to-gray-900 transition-all duration-200">
-                <CircleUserRound className="h-5 w-5 bg-orange-500 rounded-full" />
-                <span>{user.name}</span>
-                <ChevronDown className="h-4 w-4" />
+              <button className="flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 px-5 py-2.5 text-sm font-bold text-white hover:shadow-lg hover:shadow-gray-900/30 hover:from-gray-950 hover:to-gray-900 transition-all duration-300 hover:scale-105 border border-gray-700">
+                <div className="w-7 h-7 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
+                  <CircleUserRound className="h-4 w-4 text-white" />
+                </div>
+                <span className="hidden lg:inline">{user.name}</span>
+                <ChevronDown className="h-4 w-4 group-hover:rotate-180 transition-transform duration-300" />
               </button>
 
-              {/* Profile Dropdown */}
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div className="px-4 py-3 border-b border-gray-200">
-                  <p className="text-sm font-semibold text-gray-900">
+              {/* Profile Dropdown - Enhanced */}
+              <div className="absolute right-0 mt-3 w-56 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-200/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 overflow-hidden">
+                <div className="px-5 py-4 bg-gradient-to-r from-orange-50 to-pink-50 border-b border-gray-200/50">
+                  <p className="text-sm font-bold text-gray-900 truncate">
                     {user.name}
                   </p>
-                  <p className="text-xs text-gray-500">{user.email}</p>
+                  <p className="text-xs text-gray-600 truncate">{user.email}</p>
                 </div>
-                <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                  My Orders
-                </button>
-                <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                  Account Settings
-                </button>
+                <div className="py-2">
+                  <button className="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 hover:text-orange-600 transition-all duration-200">
+                    My Orders
+                  </button>
+                  <button className="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 hover:text-orange-600 transition-all duration-200">
+                    Account Settings
+                  </button>
+                </div>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 border-t border-gray-200"
+                  className="w-full text-left px-5 py-2.5 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-2 border-t border-gray-200/50 transition-all duration-200"
                 >
                   <LogOut className="h-4 w-4" />
                   Logout
@@ -134,9 +162,11 @@ const Navbar = ({ onLoginClick }) => {
           ) : (
             <button
               onClick={onLoginClick}
-              className="flex w-auto items-center gap-2.5 rounded-full bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 text-sm font-semibold text-white hover:shadow-lg hover:from-gray-950 hover:to-gray-900 transition-all duration-200"
+              className="flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 px-5 py-2.5 text-sm font-bold text-white hover:shadow-lg hover:shadow-gray-900/30 hover:from-gray-950 hover:to-gray-900 transition-all duration-300 hover:scale-105 active:scale-95 border border-gray-700"
             >
-              <CircleUserRound className="h-5 w-5 bg-orange-500 rounded-full" />
+              <div className="w-7 h-7 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
+                <CircleUserRound className="h-4 w-4 text-white" />
+              </div>
               <span>Sign in</span>
             </button>
           )}

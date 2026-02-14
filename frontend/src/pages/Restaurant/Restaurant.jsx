@@ -1,37 +1,99 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "./section/Header";
 import Menu from "./section/Menu";
 import Footer from "../../layout/footer";
+import { getRestaurantById, getMenu } from "../../services/restaurant.sevice";
 
 const Restaurant = () => {
   const { id } = useParams();
+  const [restaurant, setRestaurant] = useState(null);
+  const [menuItems, setMenuItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Sample restaurant data - in real app, fetch from API
-  const restaurant = {
-    _id: "65d8b1b1b1b1b1b1b1b10001", // MongoDB ObjectId for restaurant
-    id: id,
-    name: "Punjabi Angithi By Vegorama Group",
-    cuisine: "North Indian, Biryani, Chinese, Rolls, Momos",
-    address:
-      "Shop 4, Ground Floor, Janta Market, Jhandewalan, Karol Bagh, New Delhi",
-    phone: "+917428772532",
-    bannerImage:
-      "https://b.zmtcdn.com/data/pictures/9/18198449/f6561b325fd03769300dbc56e530ac22.jpg",
-    galleryImages: [
-      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=800&h=600&fit=crop",
-    ],
-    deliveryRating: 4.1,
-    deliveryCount: 6462,
-    diningRating: 0,
-    diningCount: 0,
-    deliveryTime: "35 min",
-    minOrder: "₹200",
-    deliveryCharge: "Free",
-  };
+  // Fetch restaurant and menu data when component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!id) return;
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Fetch both restaurant and menu data in parallel
+        const [restaurantData, menuData] = await Promise.all([
+          getRestaurantById(id),
+          getMenu(id),
+        ]);
+
+        setRestaurant(restaurantData);
+        setMenuItems(menuData);
+      } catch (err) {
+        console.error("Error fetching restaurant data:", err);
+        setError(
+          err.response?.data?.message ||
+            "Failed to load restaurant. Please try again later.",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading restaurant...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 mr-2"
+          >
+            Retry
+          </button>
+          <button
+            onClick={() => (window.location.href = "/")}
+            className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+          >
+            Go Home
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Restaurant not found
+  if (!restaurant) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">Restaurant not found</p>
+          <button
+            onClick={() => (window.location.href = "/")}
+            className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+          >
+            Go to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white py-4">
@@ -39,7 +101,11 @@ const Restaurant = () => {
       <Header restaurant={restaurant} />
 
       {/* Restaurant Menu */}
-      <Menu restaurantId={restaurant._id} restaurantName={restaurant.name} />
+      <Menu
+        restaurantId={restaurant._id}
+        restaurantName={restaurant.name}
+        menuItems={menuItems}
+      />
 
       <Footer />
     </div>

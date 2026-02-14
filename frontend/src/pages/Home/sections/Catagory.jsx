@@ -1,20 +1,71 @@
 import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Chole from "../../../assets/Chole_Bhature.jpg";
-import Dosa from "../../../assets/dosa.jpeg";
-import Samosa from "../../../assets/samosa.jpeg";
 
 const Category = () => {
   const scrollRef = useRef(null);
 
   const items = [
-    { id: 1, name: "Dosa", src: Dosa },
-    { id: 2, name: "Chole Bhature", src: Chole },
-    { id: 3, name: "Samosa", src: Samosa },
+    {
+      id: 1,
+      name: "Pizza",
+      src: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=400&fit=crop",
+    },
+    {
+      id: 2,
+      name: "Burger",
+      src: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=400&fit=crop",
+    },
+    {
+      id: 3,
+      name: "Biryani",
+      src: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&h=400&fit=crop",
+    },
+    {
+      id: 4,
+      name: "Sushi",
+      src: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=400&fit=crop",
+    },
+    {
+      id: 5,
+      name: "Pasta",
+      src: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&h=400&fit=crop",
+    },
+    {
+      id: 6,
+      name: "Tacos",
+      src: "https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400&h=400&fit=crop",
+    },
+    {
+      id: 7,
+      name: "Desserts",
+      src: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=400&fit=crop",
+    },
+    {
+      id: 8,
+      name: "Salad",
+      src: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop",
+    },
+    {
+      id: 9,
+      name: "Chicken",
+      src: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=400&h=400&fit=crop",
+    },
+    {
+      id: 10,
+      name: "Noodles",
+      src: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=400&fit=crop",
+    },
+    {
+      id: 11,
+      name: "Sandwiches",
+      src: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&h=400&fit=crop",
+    },
+    {
+      id: 12,
+      name: "Ice Cream",
+      src: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&h=400&fit=crop",
+    },
   ];
-
-  // Repeat items for continuous scrolling effect
-  const displayItems = Array(6).fill(items).flat();
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -28,11 +79,12 @@ const Category = () => {
 
   return (
     <div className="w-full bg-white">
-      <div className="px-20 py-6">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-6 ">
-          <h2 className="text-xl font-bold text-gray-900">Popular Category</h2>
-          
+          <h2 className="text-xl font-bold text-gray-900">
+            What's on your mind?
+          </h2>
           {/* Navigation Buttons */}
           <div className="flex gap-2">
             <button
@@ -55,7 +107,7 @@ const Category = () => {
         {/* Scrollable Container */}
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto scroll-smooth pb-2 pt-4"
+          className="flex gap-8 overflow-x-auto scroll-smooth pb-2 pt-4"
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",
@@ -68,23 +120,23 @@ const Category = () => {
             }
           `}</style>
 
-          {displayItems.map((item, idx) => (
+          {items.map((item) => (
             <div
-              key={`${item.id}-${idx}`}
+              key={item.id}
               className="flex flex-col items-center flex-shrink-0 cursor-pointer group"
             >
               {/* Image Container */}
-              <div className="relative mb-3 transition-transform duration-200 group-hover:scale-110">
+              <div className="relative mb-3 transition-transform duration-300 group-hover:scale-110">
                 <img
-                  className="w-24 h-24 rounded-full object-cover border-4 border-orange-500 p-1 bg-white shadow-sm"
+                  className="w-32 h-32 rounded-full object-cover shadow-md group-hover:shadow-xl transition-shadow duration-300"
                   src={item.src}
                   alt={item.name}
                   loading="lazy"
                 />
               </div>
-              
+
               {/* Text Label */}
-              <p className="text-sm font-medium text-gray-800 text-center whitespace-nowrap">
+              <p className="text-sm font-semibold text-gray-800 text-center whitespace-nowrap">
                 {item.name}
               </p>
             </div>

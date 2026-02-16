@@ -277,10 +277,9 @@ const cartSlice = createSlice({
             (sum, item) => sum + item.price * item.quantity,
             0,
           );
-          // Set restaurant name from first item if available
-          if (state.items.length > 0 && state.items[0].restaurantName) {
-            state.restaurantName = state.items[0].restaurantName;
-          }
+          // Set restaurant details
+          state.restaurantName = transformed.restaurantName;
+          state.image = transformed.image;
         }
       }
     });

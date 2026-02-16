@@ -5,45 +5,47 @@ const paymentSchema = new mongoose.Schema(
     orderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Order",
-      required: true
+      required: true,
     },
 
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
 
     razorpayOrderId: {
       type: String,
-      required: true
+      required: true,
     },
 
     razorpayPaymentId: {
-      type: String
+      type: String,
     },
 
     razorpaySignature: {
-      type: String
+      type: String,
     },
 
     amount: {
       type: Number,
-      required: true
+      required: true,
     },
 
     currency: {
       type: String,
-      default: "INR"
+      default: "INR",
     },
 
     status: {
       type: String,
       enum: ["created", "paid", "failed"],
-      default: "created"
-    }
+      default: "created",
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export default mongoose.model("Payment", paymentSchema);
+const Payment =
+  mongoose.models.Payment || mongoose.model("Payment", paymentSchema);
+export default Payment;

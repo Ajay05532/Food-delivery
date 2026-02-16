@@ -60,11 +60,11 @@ const TopRestaurants = () => {
   };
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-white dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
             Top restaurant chains in Delhi
           </h2>
 
@@ -72,14 +72,14 @@ const TopRestaurants = () => {
           <div className="flex gap-2">
             <button
               onClick={() => scroll("left")}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors duration-200 flex items-center justify-center"
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors duration-200 flex items-center justify-center"
               aria-label="Scroll left"
             >
               <ChevronLeft size={20} />
             </button>
             <button
               onClick={() => scroll("right")}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors duration-200 flex items-center justify-center"
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors duration-200 flex items-center justify-center"
               aria-label="Scroll right"
             >
               <ChevronRight size={20} />
@@ -105,21 +105,25 @@ const TopRestaurants = () => {
 
           {loading && topRestaurants.length === 0 ? (
             <div className="flex items-center justify-center w-full py-12">
-              <div className="text-gray-500">Loading top restaurants...</div>
+              <div className="text-gray-500 dark:text-gray-400">
+                Loading top restaurants...
+              </div>
             </div>
           ) : topRestaurants.length === 0 ? (
             <div className="flex items-center justify-center w-full py-12">
-              <div className="text-gray-500">No restaurants available</div>
+              <div className="text-gray-500 dark:text-gray-400">
+                No restaurants available
+              </div>
             </div>
           ) : (
             topRestaurants.map((restaurant) => (
               <Link
                 key={restaurant.id}
                 to={`/restaurant/${restaurant.id}`}
-                className="flex-shrink-0 w-80 rounded-xl overflow-hidden bg-white hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
+                className="flex-shrink-0 w-80 rounded-xl overflow-hidden bg-white dark:bg-gray-800 hover:shadow-lg transition-all duration-300 cursor-pointer group border border-transparent dark:border-gray-700"
               >
                 {/* Image Container with Badge */}
-                <div className="relative h-48 overflow-hidden bg-gray-200">
+                <div className="relative h-48 overflow-hidden bg-gray-200 dark:bg-gray-700">
                   <img
                     src={restaurant.image}
                     alt={restaurant.name}
@@ -138,7 +142,7 @@ const TopRestaurants = () => {
                 {/* Content */}
                 <div className="p-4">
                   {/* Restaurant Name */}
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-1">
                     {restaurant.name}
                   </h3>
 
@@ -147,13 +151,13 @@ const TopRestaurants = () => {
                     <div className="flex items-center gap-1">
                       <Star
                         size={16}
-                        className="text-green-600 fill-green-600"
+                        className="text-green-600 dark:text-green-500 fill-green-600 dark:fill-green-500"
                       />
-                      <span className="text-sm font-semibold text-gray-800">
+                      <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                         {restaurant.rating}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1 text-gray-600">
+                    <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
                       <Clock size={14} />
                       <span className="text-sm font-medium">
                         {restaurant.time}
@@ -162,12 +166,12 @@ const TopRestaurants = () => {
                   </div>
 
                   {/* Cuisine */}
-                  <p className="text-xs text-gray-600 mb-2 line-clamp-1">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-1">
                     {restaurant.cuisine}
                   </p>
 
                   {/* Location */}
-                  <p className="text-xs font-medium text-gray-500">
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
                     {restaurant.location}
                   </p>
                 </div>

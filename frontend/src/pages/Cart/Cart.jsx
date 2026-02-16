@@ -50,17 +50,17 @@ const Cart = () => {
   // Empty Cart State
   if (!items || items.length === 0) {
     return (
-      <div className="w-full min-h-screen bg-gray-50 flex flex-col justify-center items-center gap-2 py-20">
+      <div className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col justify-center items-center gap-2 py-20">
         <img
           src={emptyCart}
           alt="Empty Cart"
           className="w-64 h-64 object-contain"
         />
         <div className="flex flex-col gap-3 items-center">
-          <p className="text-xl font-semibold text-gray-900">
+          <p className="text-xl font-semibold text-gray-900 dark:text-white">
             Your cart is empty
           </p>
-          <span className="font-light text-gray-600">
+          <span className="font-light text-gray-600 dark:text-gray-400">
             You can go to home page to view more restaurants
           </span>
           <button
@@ -120,7 +120,7 @@ const Cart = () => {
 
   // Checkout State
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
 
       {/* Main Content */}
@@ -132,39 +132,39 @@ const Cart = () => {
             {!isAuthenticated && <AuthPrompt />}
 
             {/* Address Section */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300">
               <div className="flex items-start gap-4 mb-4">
                 <MapPin
                   className="text-orange-500 flex-shrink-0 mt-1"
                   size={24}
                 />
                 <div className="flex-1">
-                  <h2 className="text-lg font-bold text-gray-900 mb-1">
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
                     Add a delivery address
                   </h2>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     You seem to be in the new location
                   </p>
                 </div>
               </div>
 
               {selectedAddress ? (
-                <div className="bg-green-50 border-2 border-green-500 rounded-lg p-4 mb-4">
+                <div className="bg-green-50 dark:bg-green-900/20 border-2 border-green-500 rounded-lg p-4 mb-4">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="font-bold text-gray-900 capitalize">
+                      <p className="font-bold text-gray-900 dark:text-white capitalize">
                         {selectedAddress.type}
                       </p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
                         {selectedAddress.street}
                       </p>
                       {selectedAddress.doorFlat && (
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
                           Flat: {selectedAddress.doorFlat}
                         </p>
                       )}
                       {selectedAddress.landmark && (
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
                           Landmark: {selectedAddress.landmark}
                         </p>
                       )}
@@ -180,7 +180,7 @@ const Cart = () => {
               ) : (
                 <button
                   onClick={() => setShowAddressModal(true)}
-                  className="w-full border-2 border-teal-500 text-teal-600 font-bold py-3 rounded-lg hover:bg-teal-50 transition-colors"
+                  className="w-full border-2 border-teal-500 text-teal-600 dark:text-teal-400 font-bold py-3 rounded-lg hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors"
                 >
                   + ADD NEW ADDRESS
                 </button>
@@ -188,7 +188,7 @@ const Cart = () => {
             </div>
 
             {/* No Contact Delivery */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300">
               <div className="flex items-start gap-3">
                 <input
                   type="checkbox"
@@ -197,10 +197,10 @@ const Cart = () => {
                   className="mt-1 w-5 h-5 text-orange-500 rounded border-gray-300 cursor-pointer"
                 />
                 <div>
-                  <p className="font-bold text-gray-900">
+                  <p className="font-bold text-gray-900 dark:text-white">
                     Opt in for No-contact Delivery
                   </p>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                     Unwell, or avoiding contact? Please select no-contact
                     delivery. Partner will safely place the order outside your
                     door (not for COD)
@@ -219,10 +219,12 @@ const Cart = () => {
             />
 
             {/* Payment Section */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300">
               <div className="flex items-center gap-3 mb-4">
                 <Wallet className="text-orange-500" size={24} />
-                <h2 className="text-lg font-bold text-gray-900">Payment</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+                  Payment
+                </h2>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {[
@@ -234,7 +236,7 @@ const Cart = () => {
                 ].map((method, idx) => (
                   <button
                     key={idx}
-                    className="p-4 border-2 border-gray-200 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors text-sm font-semibold text-gray-700"
+                    className="p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-orange-500 dark:hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors text-sm font-semibold text-gray-700 dark:text-gray-300 bg-transparent"
                   >
                     {method}
                   </button>
@@ -246,14 +248,18 @@ const Cart = () => {
           {/* Right Column - Bill & Order Summary */}
           <div className="space-y-6 lg:sticky lg:top-24 lg:h-fit">
             {/* Restaurant Info */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 transition-colors duration-300">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-orange-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
                   <span className="text-xl">🍛</span>
                 </div>
                 <div>
-                  <p className="font-bold text-gray-900">{restaurantName}</p>
-                  <p className="text-xs text-gray-500">Connaught Place</p>
+                  <p className="font-bold text-gray-900 dark:text-white">
+                    {restaurantName}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Connaught Place
+                  </p>
                 </div>
               </div>
             </div>
@@ -264,9 +270,9 @@ const Cart = () => {
             {/* Coupon */}
             <button
               onClick={() => setShowCouponModal(true)}
-              className="w-full border-2 border-dashed border-gray-300 rounded-lg p-4 flex items-center justify-between hover:border-orange-500 hover:bg-orange-50 transition-colors group"
+              className="w-full border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 flex items-center justify-between hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-gray-700 transition-colors group bg-white dark:bg-gray-800"
             >
-              <span className="font-semibold text-gray-700 group-hover:text-orange-600">
+              <span className="font-semibold text-gray-700 dark:text-gray-300 group-hover:text-orange-600 dark:group-hover:text-orange-500">
                 🎟️{" "}
                 {appliedCoupon
                   ? `${appliedCoupon.code} Applied`
@@ -282,7 +288,7 @@ const Cart = () => {
               className={`w-full py-4 rounded-lg font-bold text-white text-lg transition-all ${
                 selectedAddress && !isProcessing && isAuthenticated
                   ? "bg-orange-500 hover:bg-orange-600 cursor-pointer"
-                  : "bg-gray-400 cursor-not-allowed"
+                  : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed"
               }`}
             >
               {isProcessing ? (
@@ -296,31 +302,33 @@ const Cart = () => {
             </button>
 
             {!selectedAddress && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex gap-2">
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-3 flex gap-2">
                 <AlertCircle
-                  className="text-yellow-600 flex-shrink-0"
+                  className="text-yellow-600 dark:text-yellow-500 flex-shrink-0"
                   size={18}
                 />
-                <p className="text-xs text-yellow-800">
+                <p className="text-xs text-yellow-800 dark:text-yellow-400">
                   Please add a delivery address to proceed
                 </p>
               </div>
             )}
 
             {/* Order Summary */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <h3 className="font-bold text-gray-900 mb-3 text-sm">
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 transition-colors duration-300">
+              <h3 className="font-bold text-gray-900 dark:text-white mb-3 text-sm">
                 Order Summary
               </h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">{totalQuantity} items</span>
-                  <span className="font-semibold text-gray-900">
+                  <span className="text-gray-600 dark:text-gray-400">
+                    {totalQuantity} items
+                  </span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
                     ₹{totalPrice}
                   </span>
                 </div>
                 {appliedCoupon && (
-                  <div className="flex justify-between text-green-600">
+                  <div className="flex justify-between text-green-600 dark:text-green-400">
                     <span>{appliedCoupon.code} Discount</span>
                     <span className="font-semibold">-₹{discount}</span>
                   </div>

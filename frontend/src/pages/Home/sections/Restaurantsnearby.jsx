@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchRestaurants } from "../../../redux/slices/restaurantSlice";
+import {
+  fetchRestaurants,
+  resetRestaurants,
+} from "../../../redux/slices/restaurantSlice";
 import { Star, Clock, MapPin, ChevronDown } from "lucide-react";
 
 const RestaurantsNearby = () => {
@@ -14,12 +17,11 @@ const RestaurantsNearby = () => {
     (state) => state.restaurants,
   );
 
-  // Fetch restaurants on mount
+  // Reset and fetch restaurants on mount to ensure we show exactly 12
   useEffect(() => {
-    if (items.length === 0) {
-      dispatch(fetchRestaurants({ page: 1, limit: 12 }));
-    }
-  }, [dispatch, items.length]);
+    dispatch(resetRestaurants());
+    dispatch(fetchRestaurants({ page: 1, limit: 12 }));
+  }, [dispatch]);
 
   const handleLoadMore = () => {
     if (!loading && hasNextPage) {
@@ -63,11 +65,11 @@ const RestaurantsNearby = () => {
   ];
 
   return (
-    <div className="w-full bg-gray-50 min-h-screen">
+    <div className="w-full bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
             Restaurants with online food delivery in Delhi
           </h1>
 
@@ -75,7 +77,7 @@ const RestaurantsNearby = () => {
           <div className="relative inline-block">
             <button
               onClick={() => setShowSortMenu(!showSortMenu)}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition-colors duration-200 text-gray-700 font-medium"
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200 font-medium"
             >
               Sort By
               <ChevronDown size={18} />
@@ -83,7 +85,7 @@ const RestaurantsNearby = () => {
 
             {/* Dropdown Menu */}
             {showSortMenu && (
-              <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+              <div className="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
                 {sortOptions.map((option) => (
                   <button
                     key={option.value}
@@ -91,10 +93,10 @@ const RestaurantsNearby = () => {
                       setSortBy(option.value);
                       setShowSortMenu(false);
                     }}
-                    className={`w-full text-left px-4 py-3 hover:bg-gray-100 transition-colors ${
+                    className={`w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
                       sortBy === option.value
-                        ? "bg-orange-50 text-orange-600 font-semibold"
-                        : "text-gray-700"
+                        ? "bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 font-semibold"
+                        : "text-gray-700 dark:text-gray-300"
                     }`}
                   >
                     {option.label}
@@ -111,7 +113,7 @@ const RestaurantsNearby = () => {
             <Link key={restaurant.id} to={`/restaurant/${restaurant.id}`}>
               <div
                 key={restaurant.id}
-                className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
+                className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group border border-transparent dark:border-gray-700"
                 style={{
                   animation: `fadeInUp 0.5s ease-out ${index * 0.05}s backwards`,
                 }}
@@ -130,7 +132,7 @@ const RestaurantsNearby = () => {
               `}</style>
 
                 {/* Image Container with Badge */}
-                <div className="relative h-40 overflow-hidden bg-gray-200">
+                <div className="relative h-40 overflow-hidden bg-gray-200 dark:bg-gray-700">
                   <img
                     src={restaurant.image}
                     alt={restaurant.name}
@@ -149,7 +151,7 @@ const RestaurantsNearby = () => {
                 {/* Content */}
                 <div className="p-3">
                   {/* Restaurant Name */}
-                  <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-1">
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 line-clamp-1">
                     {restaurant.name}
                   </h3>
 
@@ -158,24 +160,24 @@ const RestaurantsNearby = () => {
                     <div className="flex items-center gap-1">
                       <Star
                         size={14}
-                        className="text-green-600 fill-green-600"
+                        className="text-green-600 dark:text-green-500 fill-green-600 dark:fill-green-500"
                       />
-                      <span className="text-sm font-semibold text-gray-800">
+                      <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                         {restaurant.rating}
                       </span>
-                      <span className="text-xs text-gray-600">
+                      <span className="text-xs text-gray-600 dark:text-gray-400">
                         • {restaurant.time}
                       </span>
                     </div>
                   </div>
 
                   {/* Cuisine */}
-                  <p className="text-xs text-gray-600 mb-2 line-clamp-1">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-1">
                     {restaurant.description}
                   </p>
 
                   {/* Location */}
-                  <div className="flex items-center gap-1 text-xs text-gray-500">
+                  <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                     <MapPin size={12} />
                     <span className="line-clamp-1">{restaurant.location}</span>
                   </div>
@@ -191,7 +193,7 @@ const RestaurantsNearby = () => {
             <button
               onClick={handleLoadMore}
               disabled={loading}
-              className={`px-8 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:border-orange-500 hover:text-orange-500 transition-colors duration-200 ${
+              className={`px-8 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:border-orange-500 dark:hover:border-orange-500 hover:text-orange-500 dark:hover:text-orange-500 transition-colors duration-200 bg-transparent ${
                 loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >

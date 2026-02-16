@@ -46,10 +46,12 @@ const Restaurant = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading restaurant...</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            Loading restaurant...
+          </p>
         </div>
       </div>
     );
@@ -58,9 +60,9 @@ const Restaurant = () => {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
-          <p className="text-red-600 mb-4">{error}</p>
+          <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
             className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 mr-2"
@@ -69,7 +71,7 @@ const Restaurant = () => {
           </button>
           <button
             onClick={() => (window.location.href = "/")}
-            className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+            className="px-6 py-2 bg-gray-500 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-600 dark:hover:bg-gray-600"
           >
             Go Home
           </button>
@@ -81,9 +83,11 @@ const Restaurant = () => {
   // Restaurant not found
   if (!restaurant) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">Restaurant not found</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            Restaurant not found
+          </p>
           <button
             onClick={() => (window.location.href = "/")}
             className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
@@ -96,7 +100,7 @@ const Restaurant = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white py-4">
+    <div className="min-h-screen bg-white dark:bg-gray-900 py-4 transition-colors duration-300">
       {/* Restaurant Header */}
       <Header restaurant={restaurant} />
 

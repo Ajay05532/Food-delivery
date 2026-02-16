@@ -8,6 +8,8 @@ import restaurantRoutes from "./src/routes/restaurant.routes.js";
 import orderRoutes from "./src/routes/order.routes.js";
 import cartRoutes from "./src/routes/cart.routes.js";
 import menuRoutes from "./src/routes/menu.routes.js";
+import searchRoutes from "./src/routes/search.routes.js";
+import userAddressRoutes from "./src/routes/userAddress.routes.js";
 /* Env + DB */
 dotenv.config();
 connectDB();
@@ -19,7 +21,7 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
-  })
+  }),
 );
 
 /* Core middleware */
@@ -32,8 +34,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/checkout", cartRoutes);
 app.use("/api/orders", orderRoutes);
-
 app.use("/api/menu", menuRoutes);
+app.use("/api/search", searchRoutes);
+app.use("/api/address", userAddressRoutes);
 /* Health check */
 app.get("/", (req, res) => {
   res.send("Food Delivery Backend Running");

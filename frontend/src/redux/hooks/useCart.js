@@ -38,6 +38,7 @@ export const useCart = () => {
       name: item.name,
       price: item.price,
       restaurantId: item.restaurantId,
+      restaurantName: item.restaurantName,
       category: item.category,
     });
 
@@ -62,11 +63,8 @@ export const useCart = () => {
       price: item.price, // NOT cost
       quantity: 1,
       restaurantId: item.restaurantId,
-    };
-
-    console.log("🛒 Cart payload:", payload);
-    console.log("� Payload JSON:", JSON.stringify(payload, null, 2));
-    console.log("�🔍 item._id:", item._id, "item.id:", item.id);
+      restaurantName: item.restaurantName,
+      };
 
     // optimistic update
     dispatch(addToCartLocal(payload));
@@ -86,13 +84,6 @@ export const useCart = () => {
     const cartItem = items.find((item) => item.id === id);
     if (!cartItem) return;
 
-    console.log("🔄 Updating quantity:", {
-      id,
-      menuItemId: cartItem.menuItemId,
-      name: cartItem.name,
-      newQuantity: quantity,
-    });
-
     dispatch(updateItemQuantityLocal({ id, quantity }));
     dispatch(updateCartItemAsync({ id: cartItem.menuItemId, quantity }));
   };
@@ -105,12 +96,6 @@ export const useCart = () => {
     // Find the menuItemId from cart state
     const cartItem = items.find((item) => item.id === id);
     if (!cartItem) return;
-
-    console.log("🗑️ Removing item:", {
-      id,
-      menuItemId: cartItem.menuItemId,
-      name: cartItem.name,
-    });
 
     dispatch(removeFromCartLocal(id));
     dispatch(removeFromCartAsync(cartItem.menuItemId));

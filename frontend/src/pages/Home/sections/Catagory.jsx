@@ -78,25 +78,25 @@ const Category = () => {
   };
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-white dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-6 ">
-          <h2 className="text-xl font-bold text-gray-900">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             What's on your mind?
           </h2>
           {/* Navigation Buttons */}
           <div className="flex gap-2">
             <button
               onClick={() => scroll("left")}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors duration-200 flex items-center justify-center"
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors duration-200 flex items-center justify-center"
               aria-label="Scroll left"
             >
               <ChevronLeft size={20} />
             </button>
             <button
               onClick={() => scroll("right")}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors duration-200 flex items-center justify-center"
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors duration-200 flex items-center justify-center"
               aria-label="Scroll right"
             >
               <ChevronRight size={20} />
@@ -136,7 +136,7 @@ const Category = () => {
               </div>
 
               {/* Text Label */}
-              <p className="text-sm font-semibold text-gray-800 text-center whitespace-nowrap">
+              <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 text-center whitespace-nowrap">
                 {item.name}
               </p>
             </div>

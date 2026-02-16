@@ -1,5 +1,25 @@
 @import "tailwindcss";
 
+:root {
+  --bg-primary: #f9fafb; /* gray-50 */
+  --text-primary: #111827; /* gray-900 */
+  --bg-card: #ffffff;
+  --text-secondary: #4b5563; /* gray-600 */
+}
+
+.dark {
+  --bg-primary: #030712; /* gray-950 */
+  --text-primary: #f9fafb; /* gray-50 */
+  --bg-card: #111827; /* gray-900 */
+  --text-secondary: #9ca3af; /* gray-400 */
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 @keyframes float {
   0%,
   100% {

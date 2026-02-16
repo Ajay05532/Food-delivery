@@ -14,6 +14,7 @@ import {
   LogOut,
   Utensils,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Navbar = ({ onLoginClick }) => {
   const dispatch = useDispatch();
@@ -47,7 +48,7 @@ const Navbar = ({ onLoginClick }) => {
   };
 
   return (
-    <header className="w-full border-b border-gray-200/50 bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50">
+    <header className="w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-lg shadow-sm sticky top-0 z-50 transition-colors duration-300">
       <div className="flex h-20 items-center justify-between px-8 lg:px-12 max-w-7xl mx-auto">
         {/* LEFT SECTION */}
         <div className="flex items-center gap-8">
@@ -56,19 +57,25 @@ const Navbar = ({ onLoginClick }) => {
             onClick={() => navigate("/")}
             className="flex items-center gap-3 cursor-pointer group"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 via-pink-500 to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-110">
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 10 }}
+              whileTap={{ scale: 0.9 }}
+              className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 via-pink-500 to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+            >
               <Utensils className="h-6 w-6" />
-            </div>
+            </motion.div>
             <div className="hidden lg:block">
               <h1 className="text-xl font-bold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
                 FoodHub
               </h1>
-              <p className="text-xs text-gray-500">Fast & Fresh</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Fast & Fresh
+              </p>
             </div>
           </div>
 
           {/* Location Selector */}
-          <button className="hidden md:flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:text-orange-500 transition-all duration-300 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 border border-transparent hover:border-orange-200">
+          <button className="hidden md:flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:text-orange-500 dark:hover:text-orange-400 transition-all duration-300 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 border border-transparent hover:border-orange-200 dark:hover:border-gray-700">
             <span>Deliver to</span>
             <span className="font-bold text-orange-500">Others</span>
             <ChevronDown className="h-4 w-4 text-orange-500" />
@@ -88,28 +95,28 @@ const Navbar = ({ onLoginClick }) => {
           {/* Search Button */}
           <button
             onClick={() => navigate("/search")}
-            className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-orange-500 transition-all duration-300 px-3 lg:px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 group"
+            className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:text-orange-500 dark:hover:text-orange-400 transition-all duration-300 px-3 lg:px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 group"
           >
             <Search className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
             <span className="hidden lg:inline">Search</span>
           </button>
 
           {/* Offers Button */}
-          <button className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-orange-500 transition-all duration-300 px-3 lg:px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 group relative">
+          <button className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:text-orange-500 dark:hover:text-orange-400 transition-all duration-300 px-3 lg:px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 group relative">
             <BadgeDollarSign className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
             <span className="hidden lg:inline">Offers</span>
             <span className="absolute -top-1 -right-1 w-2 h-2 bg-pink-500 rounded-full animate-pulse"></span>
           </button>
 
           {/* Help Button */}
-          <button className="hidden md:flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-orange-500 transition-all duration-300 px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 group">
+          <button className="hidden md:flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:text-orange-500 dark:hover:text-orange-400 transition-all duration-300 px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 group">
             <LifeBuoy className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
             <span className="hidden lg:inline">Help</span>
           </button>
 
           {/* Cart */}
           <div className="relative group cursor-pointer">
-            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-orange-500 px-3 lg:px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 transition-all duration-300">
+            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:text-orange-500 dark:hover:text-orange-400 px-3 lg:px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 transition-all duration-300">
               <div className="relative group-hover:scale-110 transition-transform duration-300">
                 <ShoppingCart className="h-6 w-6" />
                 {totalQuantity > 0 && (
@@ -126,7 +133,7 @@ const Navbar = ({ onLoginClick }) => {
           {/* User Profile or Login Button */}
           {isAuthenticated && user ? (
             <div className="relative group">
-              <button className="flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 px-5 py-2.5 text-sm font-bold text-white hover:shadow-lg hover:shadow-gray-900/30 hover:from-gray-950 hover:to-gray-900 transition-all duration-300 hover:scale-105 border border-gray-700">
+              <button className="flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 px-5 py-2.5 text-sm font-bold text-white hover:shadow-lg hover:shadow-gray-900/30 hover:from-gray-950 hover:to-gray-900 transition-all duration-300 hover:scale-105 border border-gray-700">
                 <div className="w-7 h-7 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
                   <CircleUserRound className="h-4 w-4 text-white" />
                 </div>
@@ -135,24 +142,26 @@ const Navbar = ({ onLoginClick }) => {
               </button>
 
               {/* Profile Dropdown - Enhanced */}
-              <div className="absolute right-0 mt-3 w-56 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-200/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 overflow-hidden">
-                <div className="px-5 py-4 bg-gradient-to-r from-orange-50 to-pink-50 border-b border-gray-200/50">
-                  <p className="text-sm font-bold text-gray-900 truncate">
+              <div className="absolute right-0 mt-3 w-56 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 overflow-hidden">
+                <div className="px-5 py-4 bg-gradient-to-r from-orange-50 to-pink-50 dark:from-gray-800 dark:to-gray-800 border-b border-gray-200/50 dark:border-gray-700/50">
+                  <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
                     {user.name}
                   </p>
-                  <p className="text-xs text-gray-600 truncate">{user.email}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                    {user.email}
+                  </p>
                 </div>
                 <div className="py-2">
-                  <button className="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 hover:text-orange-600 transition-all duration-200">
+                  <button className="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 hover:text-orange-600 transition-all duration-200">
                     My Orders
                   </button>
-                  <button className="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 hover:text-orange-600 transition-all duration-200">
+                  <button className="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 hover:text-orange-600 transition-all duration-200">
                     Account Settings
                   </button>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-5 py-2.5 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-2 border-t border-gray-200/50 transition-all duration-200"
+                  className="w-full text-left px-5 py-2.5 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 flex items-center gap-2 border-t border-gray-200/50 dark:border-gray-700/50 transition-all duration-200"
                 >
                   <LogOut className="h-4 w-4" />
                   Logout
@@ -162,7 +171,7 @@ const Navbar = ({ onLoginClick }) => {
           ) : (
             <button
               onClick={onLoginClick}
-              className="flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 px-5 py-2.5 text-sm font-bold text-white hover:shadow-lg hover:shadow-gray-900/30 hover:from-gray-950 hover:to-gray-900 transition-all duration-300 hover:scale-105 active:scale-95 border border-gray-700"
+              className="flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 px-5 py-2.5 text-sm font-bold text-white hover:shadow-lg hover:shadow-gray-900/30 hover:from-gray-950 hover:to-gray-900 transition-all duration-300 hover:scale-105 active:scale-95 border border-gray-700"
             >
               <div className="w-7 h-7 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
                 <CircleUserRound className="h-4 w-4 text-white" />

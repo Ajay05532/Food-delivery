@@ -18,7 +18,7 @@ const PopularCuisines = ({ onCuisineClick }) => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
         Popular Cuisines
       </h2>
 
@@ -29,10 +29,10 @@ const PopularCuisines = ({ onCuisineClick }) => {
             onClick={() => onCuisineClick(cuisine.name)}
             className="flex flex-col items-center gap-2 min-w-[80px] group"
           >
-            <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center text-4xl group-hover:bg-orange-50 transition-colors shadow-sm">
+            <div className="w-20 h-20 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-4xl group-hover:bg-orange-50 dark:group-hover:bg-gray-700 transition-colors shadow-sm">
               {cuisine.emoji}
             </div>
-            <span className="text-sm font-medium text-gray-700 text-center">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">
               {cuisine.name}
             </span>
           </button>

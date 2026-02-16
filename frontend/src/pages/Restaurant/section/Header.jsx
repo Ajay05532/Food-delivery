@@ -14,8 +14,7 @@ const Header = ({ restaurant }) => {
   const [showGallery, setShowGallery] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-
-  const data = restaurant
+  const data = restaurant;
 
   // Use gallery images from backend if available, fallback to coverImage, then default
   const galleryImages =
@@ -38,10 +37,10 @@ const Header = ({ restaurant }) => {
   };
 
   return (
-    <div className="bg-white shadow-md">
+    <div className="bg-white dark:bg-gray-900 shadow-md transition-colors duration-300">
       {/* Banner Section - Multi Image Grid */}
       <div className="max-w-6xl mx-auto px-4 py-4">
-        <div className="relative h-120 bg-gray-200 overflow-hidden rounded-lg">
+        <div className="relative h-64 md:h-96 lg:h-120 bg-gray-200 dark:bg-gray-800 overflow-hidden rounded-lg">
           <div className="flex h-full gap-1">
             {/* Main Large Image - Left Side */}
             <div className="flex-[2] relative overflow-hidden">
@@ -52,8 +51,8 @@ const Header = ({ restaurant }) => {
               />
             </div>
 
-            {/* Right Side - Grid of 3 Images */}
-            <div className="flex-1 flex flex-col gap-1">
+            {/* Right Side - Grid of 3 Images - Hidden on Mobile */}
+            <div className="hidden md:flex flex-1 flex-col gap-1">
               {galleryImages.slice(1, 4).map((image, index) => (
                 <div
                   key={index}
@@ -78,7 +77,7 @@ const Header = ({ restaurant }) => {
                           setCurrentImageIndex(0);
                           setShowGallery(true);
                         }}
-                        className="px-6 py-3 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-100 transition-colors"
+                        className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-bold rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                       >
                         View Gallery
                       </button>
@@ -98,17 +97,19 @@ const Header = ({ restaurant }) => {
           <div className="absolute top-4 right-4 flex gap-3 z-10">
             <button
               onClick={() => setIsFavorite(!isFavorite)}
-              className="bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-all"
+              className="bg-white dark:bg-gray-800 rounded-full p-2 shadow-md hover:shadow-lg transition-all"
             >
               <Heart
                 size={24}
                 className={
-                  isFavorite ? "fill-red-500 text-red-500" : "text-gray-700"
+                  isFavorite
+                    ? "fill-red-500 text-red-500"
+                    : "text-gray-700 dark:text-gray-300"
                 }
               />
             </button>
-            <button className="bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-all">
-              <Share2 size={24} className="text-gray-700" />
+            <button className="bg-white dark:bg-gray-800 rounded-full p-2 shadow-md hover:shadow-lg transition-all">
+              <Share2 size={24} className="text-gray-700 dark:text-gray-300" />
             </button>
           </div>
         </div>
@@ -128,9 +129,9 @@ const Header = ({ restaurant }) => {
             {/* Close Button */}
             <button
               onClick={() => setShowGallery(false)}
-              className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors z-10"
+              className="absolute top-4 right-4 bg-white dark:bg-gray-800 rounded-full p-2 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors z-10"
             >
-              <X size={24} className="text-gray-900" />
+              <X size={24} className="text-gray-900 dark:text-white" />
             </button>
 
             {/* Image Counter */}
@@ -142,9 +143,12 @@ const Header = ({ restaurant }) => {
             {galleryImages.length > 1 && (
               <button
                 onClick={handlePrevImage}
-                className="absolute left-4 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
+                className="absolute left-4 bg-white dark:bg-gray-800 rounded-full p-3 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
-                <ChevronLeft size={28} className="text-gray-900" />
+                <ChevronLeft
+                  size={28}
+                  className="text-gray-900 dark:text-white"
+                />
               </button>
             )}
 
@@ -164,9 +168,12 @@ const Header = ({ restaurant }) => {
             {galleryImages.length > 1 && (
               <button
                 onClick={handleNextImage}
-                className="absolute right-4 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
+                className="absolute right-4 bg-white dark:bg-gray-800 rounded-full p-3 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
-                <ChevronRight size={28} className="text-gray-900" />
+                <ChevronRight
+                  size={28}
+                  className="text-gray-900 dark:text-white"
+                />
               </button>
             )}
 
@@ -195,26 +202,32 @@ const Header = ({ restaurant }) => {
       )}
 
       {/* Restaurant Info Section */}
-      <div className="max-w-6xl mx-auto px-4 py-6 border-b border-gray-200">
+      <div className="max-w-6xl mx-auto px-4 py-6 border-b border-gray-200 dark:border-gray-800">
         {/* Name and Cuisine */}
-        <h1 className="text-3xl font-bold text-gray-900 mb-1">{data.name}</h1>
-        <p className="text-gray-600 text-sm mb-4">{data.cuisine}</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-1">
+          {data.name}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+          {data.cuisine}
+        </p>
 
         {/* Ratings Section */}
-        <div className="flex gap-6 mb-4">
+        <div className="flex flex-wrap gap-4 md:gap-6 mb-4">
           {data.deliveryCount > 0 && (
             <div className="flex items-center gap-3">
-              <div className="flex flex-col items-center justify-center bg-green-50 rounded-lg w-16 h-16 border-2 border-green-600">
-                <span className="text-xl font-bold text-green-600">
+              <div className="flex flex-col items-center justify-center bg-green-50 dark:bg-green-900/20 rounded-lg w-16 h-16 border-2 border-green-600 dark:border-green-500">
+                <span className="text-xl font-bold text-green-600 dark:text-green-500">
                   {data.deliveryRating}
                 </span>
-                <span className="text-xs text-green-600 font-semibold">
+                <span className="text-xs text-green-600 dark:text-green-500 font-semibold">
                   Delivery
                 </span>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Delivery Ratings</p>
-                <p className="text-sm font-semibold text-gray-700">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Delivery Ratings
+                </p>
+                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                   {data.deliveryCount.toLocaleString()}
                 </p>
               </div>
@@ -223,17 +236,19 @@ const Header = ({ restaurant }) => {
 
           {data.diningCount > 0 && (
             <div className="flex items-center gap-3">
-              <div className="flex flex-col items-center justify-center bg-blue-50 rounded-lg w-16 h-16 border-2 border-blue-600">
-                <span className="text-xl font-bold text-blue-600">
+              <div className="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900/20 rounded-lg w-16 h-16 border-2 border-blue-600 dark:border-blue-500">
+                <span className="text-xl font-bold text-blue-600 dark:text-blue-500">
                   {data.diningRating}
                 </span>
-                <span className="text-xs text-blue-600 font-semibold">
+                <span className="text-xs text-blue-600 dark:text-blue-500 font-semibold">
                   Dining
                 </span>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Dining Ratings</p>
-                <p className="text-sm font-semibold text-gray-700">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Dining Ratings
+                </p>
+                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                   {data.diningCount.toLocaleString()}
                 </p>
               </div>
@@ -243,11 +258,11 @@ const Header = ({ restaurant }) => {
 
         {/* Action Buttons */}
         <div className="flex gap-3">
-          <button className="flex items-center justify-center gap-2 px-4 py-2 border-2 border-red-500 text-red-500 rounded-lg font-semibold hover:bg-red-50 transition-colors">
+          <button className="flex items-center justify-center gap-2 px-4 py-2 border-2 border-red-500 text-red-500 rounded-lg font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
             <MapPin size={18} />
             Direction
           </button>
-          <button className="flex items-center justify-center gap-2 px-4 py-2 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:border-red-500 hover:text-red-500 transition-colors">
+          <button className="flex items-center justify-center gap-2 px-4 py-2 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-semibold hover:border-red-500 hover:text-red-500 transition-colors">
             <Share2 size={18} />
             Share
           </button>
@@ -255,7 +270,7 @@ const Header = ({ restaurant }) => {
       </div>
 
       {/* Contact and Details */}
-      <div className="max-w-6xl mx-auto px-4 py-4 bg-gray-50 border-b border-gray-200">
+      <div className="max-w-6xl mx-auto px-4 py-4 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
         <div className="flex items-start gap-3 mb-3">
           <Phone size={18} className="text-red-500 flex-shrink-0 mt-1" />
           <a
@@ -266,8 +281,11 @@ const Header = ({ restaurant }) => {
           </a>
         </div>
         <div className="flex items-start gap-3">
-          <MapPin size={18} className="text-gray-600 flex-shrink-0 mt-1" />
-          <p className="text-gray-700 text-sm">
+          <MapPin
+            size={18}
+            className="text-gray-600 dark:text-gray-400 flex-shrink-0 mt-1"
+          />
+          <p className="text-gray-700 dark:text-gray-300 text-sm">
             {typeof data.address === "object" && data.address
               ? `${data.address.street || ""} ${data.address.area || ""}, ${data.address.city || ""}`.trim()
               : data.address || "Address not available"}
@@ -276,20 +294,32 @@ const Header = ({ restaurant }) => {
       </div>
 
       {/* Quick Info */}
-      <div className="max-w-6xl mx-auto px-4 py-4 bg-white flex gap-6 text-sm">
+      <div className="max-w-6xl mx-auto px-4 py-4 bg-white dark:bg-gray-900 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-sm">
         <div>
-          <p className="text-gray-500 text-xs mb-1">Delivery Time</p>
-          <p className="font-semibold text-gray-900">{data.deliveryTime}</p>
+          <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">
+            Delivery Time
+          </p>
+          <p className="font-semibold text-gray-900 dark:text-white">
+            {data.deliveryTime}
+          </p>
         </div>
-        <div className="border-l border-gray-200"></div>
+        <div className="hidden md:block border-l border-gray-200 dark:border-gray-800"></div>
         <div>
-          <p className="text-gray-500 text-xs mb-1">Min Order</p>
-          <p className="font-semibold text-gray-900">{data.minOrder}</p>
+          <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">
+            Min Order
+          </p>
+          <p className="font-semibold text-gray-900 dark:text-white">
+            {data.minOrder}
+          </p>
         </div>
-        <div className="border-l border-gray-200"></div>
+        <div className="hidden md:block border-l border-gray-200 dark:border-gray-800"></div>
         <div>
-          <p className="text-gray-500 text-xs mb-1">Delivery Charge</p>
-          <p className="font-semibold text-gray-900">{data.deliveryCharge}</p>
+          <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">
+            Delivery Charge
+          </p>
+          <p className="font-semibold text-gray-900 dark:text-white">
+            {data.deliveryCharge}
+          </p>
         </div>
       </div>
     </div>

@@ -3,7 +3,10 @@ import Cart from "../models/cart.model.js";
 
 const getCart = async (req, res) => {
   try {
-    const cart = await Cart.findOne({ user: req.user.id });
+    const cart = await Cart.findOne({ user: req.user.id }).populate(
+      "restaurant",
+      "name image",
+    );
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
     }

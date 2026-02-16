@@ -18,15 +18,12 @@ const Otp = ({ phone, onSuccess }) => {
     dispatch(setError(""));
 
     try {
-      const res = await fetch(
-        "http://localhost:3000/api/auth/verify-otp",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ phone, otp }),
-        }
-      );
+      const res = await fetch("http://localhost:3000/api/auth/verify-otp", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, otp }),
+      });
 
       const data = await res.json();
 
@@ -46,9 +43,11 @@ const Otp = ({ phone, onSuccess }) => {
 
   return (
     <>
-      <h2 className="text-3xl font-bold mb-4">Verify OTP</h2>
-      <p className="text-sm text-gray-600 mb-6">
-        OTP sent to <b>{phone}</b>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+        Verify OTP
+      </h2>
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+        OTP sent to <b className="text-gray-900 dark:text-gray-200">{phone}</b>
       </p>
 
       <form onSubmit={handleVerify} className="space-y-4">
@@ -58,7 +57,7 @@ const Otp = ({ phone, onSuccess }) => {
           value={otp}
           onChange={(e) => setOtp(e.target.value)}
           placeholder="Enter 6-digit OTP"
-          className="w-full border px-4 py-3 rounded-lg text-center tracking-widest text-lg"
+          className="w-full border border-gray-300 dark:border-gray-600 px-4 py-3 rounded-lg text-center tracking-widest text-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-orange-600 focus:border-transparent outline-none transition-all"
         />
 
         <button

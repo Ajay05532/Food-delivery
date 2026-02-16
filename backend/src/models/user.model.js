@@ -1,32 +1,37 @@
 import mongoose from "mongoose";
+import { userAddressSchema } from "./userAddress.model.js";
 
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     phone: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     email: {
       type: String,
       required: true,
       trim: true,
       lowercase: true,
-      unique: true
+      unique: true,
     },
     role: {
       type: String,
       enum: ["user", "admin", "restaurant"],
-      default: "user"
-    }
+      default: "user",
+    },
+    addresses: {
+      type: [userAddressSchema],
+      default: [],
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-
-export default mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
+export default User;

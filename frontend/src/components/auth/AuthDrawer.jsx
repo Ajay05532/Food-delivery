@@ -16,13 +16,13 @@ const AuthDrawer = ({ open, onClose }) => {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[600px] bg-white z-[101] shadow-xl
+        className={`fixed top-0 right-0 h-full w-full sm:w-[600px] bg-white dark:bg-gray-800 z-[101] shadow-xl
         transform transition-transform duration-300
         ${open ? "translate-x-0" : "translate-x-full"}`}
       >
         {/* Close Button - Top */}
         <button
-          className="absolute top-6 left-6 text-2xl text-gray-600 hover:text-gray-900 z-10"
+          className="absolute top-6 left-6 text-2xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white z-10 transition-colors"
           onClick={onClose}
         >
           ✕
@@ -30,7 +30,7 @@ const AuthDrawer = ({ open, onClose }) => {
 
         <div className="h-full flex">
           {/* Left Side - Form */}
-          <div className="w-[60%] p-8 overflow-y-auto flex flex-col justify-center">
+          <div className="w-[60%] p-8 overflow-y-auto flex flex-col justify-center bg-white dark:bg-gray-800 transition-colors">
             {mode === "login" ? (
               <Login
                 switchToSignup={() => setMode("signup")}
@@ -45,23 +45,27 @@ const AuthDrawer = ({ open, onClose }) => {
           </div>
 
           {/* Right Side - Image */}
-          <div className="w-[40%] bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-6">
+          <div className="w-[40%] bg-gradient-to-br from-orange-50 to-orange-100 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center p-6 transition-colors">
             <div className="text-center">
               {mode === "login" ? (
                 <>
                   <div className="text-6xl mb-4">🍕</div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                  <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
                     Welcome Back!
                   </h3>
-                  <p className="text-gray-600">Fast and Fresh Food Delivery</p>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Fast and Fresh Food Delivery
+                  </p>
                 </>
               ) : (
                 <>
                   <div className="text-6xl mb-4">🎉</div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                  <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
                     Join Us Today
                   </h3>
-                  <p className="text-gray-600">Discover amazing restaurants</p>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Discover amazing restaurants
+                  </p>
                 </>
               )}
             </div>

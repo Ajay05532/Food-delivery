@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/slices/userSlice.js";
+import { useAddress } from "../redux/hooks/useAddress";
 import CartHover from "../components/cart/NavCartHover.jsx";
+import AddressModal from "../pages/Cart/section/AddressModal.jsx";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -19,10 +21,41 @@ import { motion } from "framer-motion";
 const Navbar = ({ onLoginClick }) => {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.user);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   const cartItems = useSelector((state) => state.cart.items);
+
+  const { addresses, getAddresses, updateAddress } = useAddress();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getAddresses();
+    }
+  }, [isAuthenticated, getAddresses]);
+
+  const address = addresses.find((addr) => addr.isDefault) || addresses[0];
+
+  const handleAddressClick = () => {
+    if (!isAuthenticated) {
+      // If not logged in, prompt user to login first
+      onLoginClick();
+    } else {
+      // If logged in, open address modal
+      setIsAddressModalOpen(true);
+    }
+  };
+
+  const handleSelectAddress = async (selectedAddress) => {
+    // Update the selected address as default
+    if (selectedAddress._id) {
+      await updateAddress({ ...selectedAddress, isDefault: true });
+      // Refresh addresses to get updated list
+      getAddresses();
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -48,7 +81,7 @@ const Navbar = ({ onLoginClick }) => {
   };
 
   return (
-    <header className="w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-lg shadow-sm sticky top-0 z-50 transition-colors duration-300">
+    <header className="w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-lg shadow-sm sticky top-0 z-500 transition-colors duration-300">
       <div className="flex h-20 items-center justify-between px-8 lg:px-12 max-w-7xl mx-auto">
         {/* LEFT SECTION */}
         <div className="flex items-center gap-8">
@@ -75,9 +108,22 @@ const Navbar = ({ onLoginClick }) => {
           </div>
 
           {/* Location Selector */}
-          <button className="hidden md:flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:text-orange-500 dark:hover:text-orange-400 transition-all duration-300 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 border border-transparent hover:border-orange-200 dark:hover:border-gray-700">
+          <button
+            onClick={handleAddressClick}
+            className="hidden md:flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:text-orange-500 dark:hover:text-orange-400 transition-all duration-300 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 border border-transparent hover:border-orange-200 dark:hover:border-gray-700"
+          >
             <span>Deliver to</span>
-            <span className="font-bold text-orange-500">Others</span>
+            <span className="font-bold text-orange-500 max-w-[200px] truncate">
+              {isAuthenticated && address
+                ? (address.city && address.city !== "Unknown City"
+                    ? address.city
+                    : "") ||
+                  (address.area && address.area !== "Unknown Area"
+                    ? address.area
+                    : "") ||
+                  address.street
+                : "Others"}
+            </span>
             <ChevronDown className="h-4 w-4 text-orange-500" />
           </button>
         </div>
@@ -181,6 +227,15 @@ const Navbar = ({ onLoginClick }) => {
           )}
         </nav>
       </div>
+
+      {/* Address Selection Modal */}
+      {isAuthenticated && (
+        <AddressModal
+          isOpen={isAddressModalOpen}
+          onClose={() => setIsAddressModalOpen(false)}
+          onSelectAddress={handleSelectAddress}
+        />
+      )}
     </header>
   );
 };

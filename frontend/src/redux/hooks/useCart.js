@@ -4,6 +4,7 @@ import {
   removeFromCart as removeFromCartLocal,
   updateItemQuantity as updateItemQuantityLocal,
   clearCart as clearCartLocal,
+  clearCartAndAddItem as clearCartAndAddItemLocal,
   clearError,
   fetchCartFromServer,
   addToCartAsync,
@@ -110,6 +111,37 @@ export const useCart = () => {
     dispatch(clearCartAsync());
   };
 
+  /* ======================
+     CLEAR AND ADD FROM NEW RESTAURANT
+  ====================== */
+
+  const clearCartAndAddItem = (item) => {
+    console.log("🔄 Clearing cart and adding item from new restaurant:", item);
+
+    // 🔹 FRONTEND NORMALIZATION
+    const payload = {
+      id: item.id, // frontend id (for cart state)
+      menuItemId: item._id, // backend MongoDB ObjectId
+      name: item.name,
+      image: item.image,
+      category: item.category,
+      price: item.price,
+      quantity: 1,
+      restaurantId: item.restaurantId,
+      restaurantName: item.restaurantName,
+    };
+
+    // Clear old cart and add new item atomically
+    dispatch(clearCartAndAddItemLocal(payload));
+
+    // Clear backend cart first, then add new item
+    dispatch(clearCartAsync()).then(() => {
+      dispatch(addToCartAsync(payload));
+    });
+
+    return { success: true };
+  };
+
   return {
     // State
     items,
@@ -126,6 +158,7 @@ export const useCart = () => {
     updateQuantity,
     removeItem,
     clearCart,
+    clearCartAndAddItem,
     clearError: () => dispatch(clearError()),
     fetchCart: () => dispatch(fetchCartFromServer()),
   };

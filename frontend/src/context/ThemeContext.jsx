@@ -32,8 +32,20 @@ export const ThemeProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, []);
 
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => {
+      const newMode = !prev;
+      if (newMode) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+      return newMode;
+    });
+  };
+
   return (
-    <ThemeContext.Provider value={{ isDarkMode }}>
+    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -25,6 +25,7 @@ const Menu = ({
     updateQuantity,
     removeItem,
     clearCart,
+    clearCartAndAddItem,
     restaurantId: cartRestaurantId,
     restaurantName: cartRestaurantName,
   } = useCart();
@@ -421,9 +422,13 @@ const Menu = ({
         }}
         onClearAndAdd={() => {
           if (pendingItem) {
-            // Clear cart and add the new item
-            clearCart();
-            handleAddToCart(pendingItem);
+            // Clear cart and add the new item atomically
+            clearCartAndAddItem({
+              ...pendingItem,
+              restaurantId,
+              restaurantName,
+              image: pendingItem.image,
+            });
           }
           setShowSwitchModal(false);
           setPendingItem(null);

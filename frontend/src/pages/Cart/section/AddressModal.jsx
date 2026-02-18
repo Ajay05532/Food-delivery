@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, MapPin, ArrowLeft } from "lucide-react";
 import AddressMapPicker from "./AddressMapPicker";
 import { useAddress } from "../../../redux/hooks/useAddress";
@@ -42,8 +43,8 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
         street: newAddress.doorFlat
           ? `${newAddress.doorFlat}, ${newAddress.street}`
           : newAddress.street,
-        area: "Unknown Area", // Placeholder as map picker doesn't provide this yet
-        city: "Unknown City", // Placeholder
+        area: newAddress.area || "",
+        city: newAddress.city || "",
         landmark: newAddress.landmark,
         isDefault: false,
       };
@@ -73,18 +74,18 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <>
       {/* Dark Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-[100] transition-opacity
+        className={`fixed inset-0 bg-black/50 z-[9999] transition-opacity
         ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         onClick={onClose}
       />
 
       {/* Left Drawer */}
       <div
-        className={`fixed left-0 top-0 h-full bg-white dark:bg-gray-800 z-[110] shadow-2xl w-full max-w-md overflow-y-auto transform transition-transform duration-300 ease-in-out
+        className={`fixed left-0 top-0 h-full bg-white dark:bg-gray-800 z-[10000] shadow-2xl w-full max-w-md overflow-y-auto transform transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "translate-x-full"}`}
         style={{
           animation: "slideIn 0.3s ease-out",
@@ -243,9 +244,17 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
           <div className="p-4 space-y-4">
             {/* Map Component */}
             <AddressMapPicker
-              onAddressChange={(address) =>
-                setNewAddress({ ...newAddress, street: address })
-              }
+              onAddressChange={(address, details) => {
+                setNewAddress((prev) => ({
+                  ...prev,
+                  street: address,
+                  city: details?.city || "",
+                  area: details?.area || "",
+                  state: details?.state || "",
+                  pincode: details?.postcode || "",
+                  country: details?.country || "",
+                }));
+              }}
             />
 
             <div>
@@ -347,7 +356,8 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }) => {
           </div>
         )}
       </div>
-    </>
+    </>,
+    document.body,
   );
 };
 

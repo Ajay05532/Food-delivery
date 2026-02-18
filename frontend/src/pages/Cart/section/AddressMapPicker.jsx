@@ -9,8 +9,7 @@ L.Icon.Default.mergeOptions({
   iconRetinaUrl:
     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
 // Track map center when user drags
@@ -55,15 +54,41 @@ const AddressMapPicker = ({ onAddressChange }) => {
     setIsLoadingAddress(true);
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
       );
       const data = await res.json();
       const fetchedAddress = data.display_name || "Address not found";
       setAddress(fetchedAddress);
-      
-      // Pass address to parent component
+
+      // Extract details
+      const addressDetails = {
+        label: "Home", // Default
+        street: fetchedAddress,
+        city:
+          data.address?.city ||
+          data.address?.town ||
+          data.address?.village ||
+          data.address?.municipality ||
+          data.address?.city_district ||
+          data.address?.county ||
+          data.address?.state_district ||
+          "",
+        area:
+          data.address?.suburb ||
+          data.address?.neighbourhood ||
+          data.address?.quarter ||
+          data.address?.residential ||
+          data.address?.industrial ||
+          data.address?.hamlet ||
+          "",
+        state: data.address?.state || "",
+        postcode: data.address?.postcode || "",
+        country: data.address?.country || "",
+      };
+
+      // Pass address details to parent component
       if (onAddressChange) {
-        onAddressChange(fetchedAddress);
+        onAddressChange(fetchedAddress, addressDetails);
       }
     } catch {
       setAddress("Unable to fetch address");
@@ -99,7 +124,7 @@ const AddressMapPicker = ({ onAddressChange }) => {
         // allow manual movement again
         setTimeout(() => setTargetLocation(null), 1000);
       },
-      () => alert("Location access denied")
+      () => alert("Location access denied"),
     );
   };
 

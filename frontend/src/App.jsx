@@ -11,6 +11,7 @@ import Restaurant from "./pages/Restaurant/Restaurant";
 import Order from "./pages/Order/Order";
 import Search from "./pages/Search/Search";
 import NotFound from "./pages/NotFound";
+import Payment from "./pages/Payment/Payment";
 import CheckoutLayout from "./layout/CheckoutLayout";
 
 const App = () => {
@@ -43,6 +44,7 @@ const App = () => {
 
         <Route element={<CheckoutLayout />}>
           <Route path="/checkout" element={<Cart />} />
+          <Route path="/payment" element={<Payment />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

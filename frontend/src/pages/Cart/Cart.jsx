@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useCart } from "../../redux/hooks/useCart";
+import { useAddress } from "../../redux/hooks/useAddress";
 import emptyCart from "../../assets/empty_cart.png";
 import AddressModal from "./section/AddressModal";
 import CouponModal from "./section/CouponModal";
@@ -9,6 +10,7 @@ import CartItems from "./section/CartItems";
 import BillDetails from "./section/BillDetails";
 import AuthPrompt from "./section/AuthPrompt";
 import { MapPin, Wallet, AlertCircle, ChevronRight } from "lucide-react";
+import Payment from "../Payment/Payment";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -22,6 +24,24 @@ const Cart = () => {
     removeItem,
     clearCart,
   } = useCart();
+
+  const { addresses, getAddresses } = useAddress();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getAddresses();
+    }
+  }, [isAuthenticated, getAddresses]);
+
+  const [selectedAddress, setSelectedAddress] = useState(null);
+
+  useEffect(() => {
+    if (addresses && addresses.length > 0 && !selectedAddress) {
+      const defaultAddr =
+        addresses.find((addr) => addr.isDefault) || addresses[0];
+      setSelectedAddress(defaultAddr);
+    }
+  }, [addresses, selectedAddress]);
 
   // Wrapper functions for quantity changes
   const increaseQuantity = (id) => {
@@ -42,7 +62,6 @@ const Cart = () => {
 
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showCouponModal, setShowCouponModal] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(null);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [noContactDelivery, setNoContactDelivery] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -102,11 +121,7 @@ const Cart = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Show success and clear cart
-      alert("Order placed successfully!");
-      clearCart();
-      navigate("/order");
+      navigate("/payment");
     } catch (error) {
       alert("Failed to place order. Please try again.");
     } finally {
@@ -140,10 +155,14 @@ const Cart = () => {
                 />
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
-                    Add a delivery address
+                    {selectedAddress
+                      ? "Delivery Address"
+                      : "Add a delivery address"}
                   </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    You seem to be in the new location
+                    {selectedAddress
+                      ? "Your order will be delivered here"
+                      : "You seem to be in the new location"}
                   </p>
                 </div>
               </div>
@@ -153,7 +172,7 @@ const Cart = () => {
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-bold text-gray-900 dark:text-white capitalize">
-                        {selectedAddress.type}
+                        {selectedAddress.label || "Home"}
                       </p>
                       <p className="text-sm text-gray-600 dark:text-gray-300">
                         {selectedAddress.street}

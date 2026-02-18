@@ -28,7 +28,3 @@ export const userAddressSchema = new mongoose.Schema(
   { _id: true, timestamps: true },
 );
 
-const UserAddress =
-  mongoose.models.UserAddress ||
-  mongoose.model("UserAddress", userAddressSchema);
-export default UserAddress;

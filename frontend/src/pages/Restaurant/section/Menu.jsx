@@ -3,6 +3,7 @@ import {
   Search,
   ChevronUp,
   ChevronDown,
+  ChevronRight,
   Plus,
   Minus,
   Star,

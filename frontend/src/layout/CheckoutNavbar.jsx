@@ -5,27 +5,24 @@ import {
   ChevronDown,
   LogOut,
   ShieldCheck,
-  Sun,
-  Moon,
 } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/slices/userSlice";
 import { clearCart } from "../redux/slices/cartSlice";
-import { useTheme } from "../context/ThemeContext";
 import { motion } from "framer-motion";
 
 const CheckoutNavbar = ({ onLoginClick }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.user);
-  const { isDarkMode, toggleTheme } = useTheme();
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      await axios.post(
+        "http://localhost:3000/api/auth/logout",
+        {},
+        { withCredentials: true },
+      );
       dispatch(logout());
       dispatch(clearCart());
       navigate("/");
@@ -57,17 +54,6 @@ const CheckoutNavbar = ({ onLoginClick }) => {
 
         {/* Right: Actions */}
         <div className="flex items-center gap-4 lg:gap-6">
-          <button
-            onClick={toggleTheme}
-            className="p-2.5 rounded-xl bg-gray-50 hover:bg-gray-100 dark:bg-gray-900 border border-gray-200/50 dark:border-gray-800 dark:hover:bg-gray-800 transition-all text-gray-500 dark:text-gray-400 hover:text-orange-500 shadow-sm"
-          >
-            {isDarkMode ? (
-              <Sun className="w-5 h-5" />
-            ) : (
-              <Moon className="w-5 h-5" />
-            )}
-          </button>
-
           <button className="hidden sm:block text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">
             Help
           </button>

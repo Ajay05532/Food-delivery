@@ -1,86 +1,53 @@
 import React, { useState } from "react";
-import { User } from "lucide-react";
+import { User, LogIn, UserPlus } from "lucide-react";
+import AuthDrawer from "../../../components/auth/AuthDrawer";
 
 const AuthPrompt = () => {
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSignupModal, setShowSignupModal] = useState(false);
-
-  const handleLogin = () => {
-    // TODO: Implement actual login logic
-    setShowLoginModal(true);
-    console.log("Login clicked");
-  };
-
-  const handleSignup = () => {
-    // TODO: Implement actual signup logic
-    setShowSignupModal(true);
-    console.log("Signup clicked");
-  };
+  const [showAuthDrawer, setShowAuthDrawer] = useState(false);
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-      <div className="flex items-start gap-4">
-        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
-          <User className="text-gray-600" size={24} />
-        </div>
-        <div className="flex-1">
-          <h2 className="text-lg font-bold text-gray-900 mb-1">Account</h2>
-          <p className="text-sm text-gray-600 mb-4">
-            To place your order now, log in to your existing account or sign up.
-          </p>
-          <div className="flex gap-3">
+    <>
+      <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-orange-200 dark:hover:border-gray-700 transition-all duration-300 p-6 sm:p-8 mb-8 group relative overflow-hidden">
+        {/* Decorative ambient glow */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 dark:bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/10 transition-colors pointer-events-none" />
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 relative z-10">
+          <div className="w-16 h-16 bg-gradient-to-br from-orange-50 to-pink-50 dark:from-gray-800 dark:to-gray-800 rounded-2xl flex items-center justify-center shrink-0 border border-white dark:border-gray-700 shadow-sm group-hover:scale-105 transition-transform">
+            <User className="text-orange-500 w-8 h-8" />
+          </div>
+
+          <div className="flex-1">
+            <h2 className="text-xl font-black text-gray-900 dark:text-white mb-1.5 flex items-center gap-2">
+              Guest Checkout
+            </h2>
+            <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 leading-relaxed mb-6 sm:mb-0">
+              Log in to your account for a faster checkout experience, exclusive
+              offers, and order tracking.
+            </p>
+          </div>
+
+          <div className="flex w-full sm:w-auto gap-3 shrink-0">
             <button
-              onClick={handleLogin}
-              className="flex-1 border-2 border-teal-500 text-teal-600 font-bold py-2.5 px-6 rounded-lg hover:bg-teal-50 transition-colors"
+              onClick={() => setShowAuthDrawer(true)}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 border-2 border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 text-gray-700 dark:text-gray-300 font-extrabold py-3.5 px-6 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all uppercase tracking-widest text-xs active:scale-95"
             >
-              LOG IN
+              <UserPlus className="w-4 h-4" /> Sign Up
             </button>
             <button
-              onClick={handleSignup}
-              className="flex-1 bg-teal-500 text-white font-bold py-2.5 px-6 rounded-lg hover:bg-teal-600 transition-colors"
+              onClick={() => setShowAuthDrawer(true)}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-extrabold py-3.5 px-6 rounded-xl transition-all shadow-md shadow-orange-500/20 active:scale-95 uppercase tracking-widest text-xs"
             >
-              SIGN UP
+              <LogIn className="w-4 h-4" /> Log In
             </button>
           </div>
         </div>
       </div>
 
-      {/* Optional: Add login modal placeholder */}
-      {showLoginModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-xl font-bold mb-4">Login</h3>
-            <p className="text-gray-600 mb-4">
-              Login functionality will be implemented here
-            </p>
-            <button
-              onClick={() => setShowLoginModal(false)}
-              className="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Optional: Add signup modal placeholder */}
-      {showSignupModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-xl font-bold mb-4">Sign Up</h3>
-            <p className="text-gray-600 mb-4">
-              Sign up functionality will be implemented here
-            </p>
-            <button
-              onClick={() => setShowSignupModal(false)}
-              className="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+      <AuthDrawer
+        open={showAuthDrawer}
+        onClose={() => setShowAuthDrawer(false)}
+      />
+    </>
   );
 };
 

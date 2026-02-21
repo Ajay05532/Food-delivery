@@ -3,12 +3,21 @@ import Cart from "../models/cart.model.js";
 
 const getCart = async (req, res) => {
   try {
+    if (!req.user) {
+      return res
+        .status(200)
+        .json({ items: [], totalQuantity: 0, totalPrice: 0 });
+    }
+
     const cart = await Cart.findOne({ user: req.user.id }).populate(
       "restaurant",
       "name image",
     );
+
     if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
+      return res
+        .status(200)
+        .json({ items: [], totalQuantity: 0, totalPrice: 0 });
     }
 
     res.status(200).json(cart);
@@ -88,7 +97,9 @@ const addToCart = async (req, res) => {
 
     res.status(200).json({ message: "Item added to cart successfully", cart });
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
 

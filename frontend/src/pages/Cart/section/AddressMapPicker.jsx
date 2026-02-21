@@ -1,6 +1,7 @@
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import L from "leaflet";
 
 // Fix Leaflet marker icon issue
@@ -53,10 +54,10 @@ const AddressMapPicker = ({ onAddressChange }) => {
   const fetchAddress = async (lat, lng) => {
     setIsLoadingAddress(true);
     try {
-      const res = await fetch(
+      const res = await axios.get(
         `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
       );
-      const data = await res.json();
+      const data = res.data;
       const fetchedAddress = data.display_name || "Address not found";
       setAddress(fetchedAddress);
 
@@ -129,10 +130,10 @@ const AddressMapPicker = ({ onAddressChange }) => {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="w-full h-full relative">
       {/* Map */}
-      <div className="relative rounded-lg overflow-hidden">
-        <MapContainer center={coords} zoom={17} className="h-64 w-full z-0">
+      <div className="relative w-full h-72 z-0">
+        <MapContainer center={coords} zoom={17} className="h-full w-full z-0">
           <TileLayer
             attribution="© OpenStreetMap contributors"
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -145,7 +146,7 @@ const AddressMapPicker = ({ onAddressChange }) => {
         {/* Floating Current Location Button */}
         <button
           onClick={getCurrentLocation}
-          className="absolute bottom-6 right-4 z-[1000] bg-white text-black p-1.5 rounded-full shadow-lg hover:bg-orange-300 transition"
+          className="absolute bottom-6 right-4 z-[1000] bg-white dark:bg-gray-900 text-black dark:text-white p-3 rounded-2xl shadow-xl hover:shadow-orange-500/30 hover:text-orange-500 transition-all border border-gray-100 dark:border-gray-800 flex items-center justify-center active:scale-95"
           title="Go to current location"
           type="button"
         >

@@ -1,27 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import SearchBar from "./section/SearchBar";
 import PopularCuisines from "./section/PopularCuisines";
 import SearchResults from "./section/SearchResults";
 
 const Search = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [hasSearched, setHasSearched] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialQuery = searchParams.get("q") || "";
+
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [hasSearched, setHasSearched] = useState(!!initialQuery);
+
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q) {
+      setSearchQuery(q);
+      setHasSearched(true);
+    }
+  }, [searchParams]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
     if (query.trim()) {
       setHasSearched(true);
+      setSearchParams({ q: query });
+    } else {
+      setHasSearched(false);
+      setSearchParams({});
     }
   };
 
   const handleBack = () => {
     setHasSearched(false);
     setSearchQuery("");
+    setSearchParams({});
   };
 
   const handleCuisineClick = (cuisineName) => {
     setSearchQuery(cuisineName);
     setHasSearched(true);
+    setSearchParams({ q: cuisineName });
   };
 
   return (

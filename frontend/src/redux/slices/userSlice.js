@@ -57,8 +57,17 @@ const userSlice = createSlice({
         state.loading = true;
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.isAuthenticated = true;
+        // The backend now returns { user: ... } or { user: null } with a 200 OK
+        const userData = action.payload?.user;
+
+        if (userData) {
+          state.user = userData;
+          state.isAuthenticated = true;
+        } else {
+          state.user = null;
+          state.isAuthenticated = false;
+        }
+
         state.loading = false;
         state.error = null;
       })

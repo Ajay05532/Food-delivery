@@ -1,5 +1,5 @@
-import Restaurant from "../models/restaurant.model.js";
-import MenuItem from "../models/menuItem.model.js";
+import Restaurant from "../models/Restaurant.model.js";
+import MenuItem from "../models/MenuItem.model.js";
 
 export default async function search(req, res) {
   const q = req.query.q?.trim();

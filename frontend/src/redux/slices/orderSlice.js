@@ -6,8 +6,9 @@ export const placeOrder = createAsyncThunk(
   "orders/placeOrder",
   async (orderData, { rejectWithValue }) => {
     try {
+      // createOrder() already returns response.data (the full API response object)
       const response = await createOrder(orderData);
-      return response.data;
+      return response.data; // { success, message, data: newOrder } → return the order
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to place order",
@@ -20,8 +21,9 @@ export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
   async (_, { rejectWithValue }) => {
     try {
+      // getUserOrders() already returns response.data (the full API response object)
       const response = await getUserOrders();
-      return response.data;
+      return response.data; // { success, data: orders[] } → return the array
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch orders",
@@ -72,7 +74,7 @@ const orderSlice = createSlice({
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload;
+        state.items = action.payload || [];
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.loading = false;

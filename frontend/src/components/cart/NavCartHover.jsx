@@ -13,6 +13,21 @@ const CartHover = () => {
   const subtotal = totalPrice;
   const navigate = useNavigate();
 
+  if (items.length === 0) {
+    return (
+      <div
+        className="
+      absolute right-0 top-full mt-2 w-[360px] bg-white dark:bg-gray-800 shadow-xl rounded-lg p-4
+      opacity-0 invisible group-hover:opacity-100 group-hover:visible
+      transition-all duration-200 z-[200] border border-gray-200 dark:border-gray-700
+    "
+      >
+        <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">
+          Your cart is empty
+        </p>
+      </div>
+    );
+  }
   return (
     <div
       className="

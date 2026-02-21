@@ -12,6 +12,7 @@ import Order from "./pages/Order/Order";
 import Search from "./pages/Search/Search";
 import NotFound from "./pages/NotFound";
 import Payment from "./pages/Payment/Payment";
+import UpiPending from "./pages/Payment/UpiPending";
 import CheckoutLayout from "./layout/CheckoutLayout";
 
 const App = () => {
@@ -37,7 +38,7 @@ const App = () => {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/order" element={<Order />} />
+          <Route path="/orders" element={<Order />} />
           <Route path="/restaurant/:id" element={<Restaurant />} />
           <Route path="/search" element={<Search />} />
         </Route>
@@ -45,6 +46,7 @@ const App = () => {
         <Route element={<CheckoutLayout />}>
           <Route path="/checkout" element={<Cart />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/payment/upi-pending" element={<UpiPending />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

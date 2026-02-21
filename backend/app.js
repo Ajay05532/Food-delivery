@@ -1,5 +1,5 @@
+import "dotenv/config";
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectDB from "./src/config/mongo.config.js";
@@ -10,8 +10,9 @@ import cartRoutes from "./src/routes/cart.routes.js";
 import menuRoutes from "./src/routes/menu.routes.js";
 import searchRoutes from "./src/routes/search.routes.js";
 import userAddressRoutes from "./src/routes/userAddress.routes.js";
-/* Env + DB */
-dotenv.config();
+import paymentRoutes from "./src/routes/payment.route.js";
+import couponRoutes from "./src/routes/coupon.routes.js";
+
 connectDB();
 
 const app = express();
@@ -37,6 +38,9 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/address", userAddressRoutes);
+app.use("/api/payment", paymentRoutes);
+app.use("/api/coupons", couponRoutes);
+
 /* Health check */
 app.get("/", (req, res) => {
   res.send("Food Delivery Backend Running");

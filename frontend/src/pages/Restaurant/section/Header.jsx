@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin,
   Phone,
@@ -7,79 +8,99 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  Star,
+  Clock,
+  Bike,
+  Utensils,
+  TrendingUp,
 } from "lucide-react";
 
 const Header = ({ restaurant }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [shared, setShared] = useState(false);
 
   const data = restaurant;
-
-  // Use gallery images from backend if available, fallback to coverImage, then default
   const galleryImages =
-    data.gallery && data.gallery.length > 0
+    data.gallery?.length > 0
       ? data.gallery
       : data.coverImage
         ? [data.coverImage]
         : data.galleryImages || [data.bannerImage];
 
-  const handlePrevImage = () => {
-    setCurrentImageIndex((prev) =>
-      prev === 0 ? galleryImages.length - 1 : prev - 1,
-    );
+  const prev = () =>
+    setCurrentImageIndex((i) => (i === 0 ? galleryImages.length - 1 : i - 1));
+  const next = () =>
+    setCurrentImageIndex((i) => (i === galleryImages.length - 1 ? 0 : i + 1));
+
+  const handleShare = () => {
+    navigator.clipboard?.writeText(window.location.href);
+    setShared(true);
+    setTimeout(() => setShared(false), 1800);
   };
 
-  const handleNextImage = () => {
-    setCurrentImageIndex((prev) =>
-      prev === galleryImages.length - 1 ? 0 : prev + 1,
-    );
-  };
+  const quickStats = [
+    {
+      icon: Clock,
+      label: "Delivery Time",
+      value: data.deliveryTime || "30-40 min",
+    },
+    {
+      icon: Bike,
+      label: "Delivery Charge",
+      value: data.deliveryCharge || "Free",
+    },
+    { icon: Utensils, label: "Min Order", value: data.minOrder || "₹0" },
+    {
+      icon: TrendingUp,
+      label: "Avg Rating",
+      value: data.deliveryRating || "4.0",
+    },
+  ];
 
   return (
-    <div className="bg-white dark:bg-gray-900 shadow-md transition-colors duration-300">
-      {/* Banner Section - Multi Image Grid */}
-      <div className="max-w-6xl mx-auto px-4 py-4">
-        <div className="relative h-64 md:h-96 lg:h-120 bg-gray-200 dark:bg-gray-800 overflow-hidden rounded-lg">
-          <div className="flex h-full gap-1">
-            {/* Main Large Image - Left Side */}
-            <div className="flex-[2] relative overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 transition-colors duration-300">
+      {/* ── Hero Banner ─────────────────────────────────────── */}
+      <div className="max-w-6xl mx-auto px-4 pt-4 pb-0">
+        <div className="relative h-64 md:h-[420px] rounded-2xl overflow-hidden shadow-2xl">
+          {/* Image grid */}
+          <div className="flex h-full gap-1.5">
+            <div className="flex-[2] relative overflow-hidden group">
               <img
                 src={galleryImages[0]}
-                alt={`${data.name} - Main`}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                alt={data.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
+              {/* gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
             </div>
-
-            {/* Right Side - Grid of 3 Images - Hidden on Mobile */}
-            <div className="hidden md:flex flex-1 flex-col gap-1">
-              {galleryImages.slice(1, 4).map((image, index) => (
+            <div className="hidden md:flex flex-1 flex-col gap-1.5">
+              {galleryImages.slice(1, 4).map((img, i) => (
                 <div
-                  key={index}
+                  key={i}
                   className="flex-1 relative overflow-hidden group cursor-pointer"
                   onClick={() => {
-                    setCurrentImageIndex(index + 1);
+                    setCurrentImageIndex(i + 1);
                     setShowGallery(true);
                   }}
                 >
                   <img
-                    src={image}
-                    alt={`${data.name} - ${index + 2}`}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    src={img}
+                    alt={`${data.name} ${i + 2}`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-
-                  {/* View Gallery Button on Last Image */}
-                  {index === 2 && (
-                    <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                  {i === 2 && (
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setCurrentImageIndex(0);
                           setShowGallery(true);
                         }}
-                        className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-bold rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        className="px-4 py-2 bg-white/90 backdrop-blur-sm text-gray-900 font-bold rounded-xl text-sm hover:bg-white transition-colors"
                       >
-                        View Gallery
+                        View All Photos
                       </button>
                     </div>
                   )}
@@ -88,238 +109,210 @@ const Header = ({ restaurant }) => {
             </div>
           </div>
 
-          {/* Overlay with Delivery Badge */}
-          <div className="absolute bottom-4 left-4 bg-orange-500 text-white px-3 py-1 rounded-md text-sm font-semibold">
-            Delivery only
+          {/* Delivery badge */}
+          <div className="absolute bottom-4 left-4 flex items-center gap-1.5 bg-gradient-to-r from-orange-500 to-pink-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
+            <Bike className="w-3.5 h-3.5" />
+            Delivery Available
           </div>
 
-          {/* Action Buttons - Top Right */}
-          <div className="absolute top-4 right-4 flex gap-3 z-10">
-            <button
+          {/* Action buttons */}
+          <div className="absolute top-4 right-4 flex gap-2 z-10">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setIsFavorite(!isFavorite)}
-              className="bg-white dark:bg-gray-800 rounded-full p-2 shadow-md hover:shadow-lg transition-all"
+              className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-full p-2.5 shadow-lg hover:shadow-xl transition-all"
             >
               <Heart
-                size={24}
+                size={20}
                 className={
                   isFavorite
-                    ? "fill-red-500 text-red-500"
-                    : "text-gray-700 dark:text-gray-300"
+                    ? "fill-rose-500 text-rose-500"
+                    : "text-gray-600 dark:text-gray-300"
                 }
               />
-            </button>
-            <button className="bg-white dark:bg-gray-800 rounded-full p-2 shadow-md hover:shadow-lg transition-all">
-              <Share2 size={24} className="text-gray-700 dark:text-gray-300" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Gallery Modal */}
-      {showGallery && (
-        <>
-          {/* Dark Overlay */}
-          <div
-            className="fixed inset-0 bg-black bg-opacity-90 z-[200] transition-opacity duration-300"
-            onClick={() => setShowGallery(false)}
-          />
-
-          {/* Gallery Content */}
-          <div className="fixed inset-0 z-[210] flex items-center justify-center p-4">
-            {/* Close Button */}
-            <button
-              onClick={() => setShowGallery(false)}
-              className="absolute top-4 right-4 bg-white dark:bg-gray-800 rounded-full p-2 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors z-10"
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={handleShare}
+              className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-full p-2.5 shadow-lg hover:shadow-xl transition-all"
             >
-              <X size={24} className="text-gray-900 dark:text-white" />
-            </button>
-
-            {/* Image Counter */}
-            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white px-4 py-2 rounded-full text-sm font-semibold">
-              {currentImageIndex + 1} / {galleryImages.length}
-            </div>
-
-            {/* Previous Button */}
-            {galleryImages.length > 1 && (
-              <button
-                onClick={handlePrevImage}
-                className="absolute left-4 bg-white dark:bg-gray-800 rounded-full p-3 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              >
-                <ChevronLeft
-                  size={28}
-                  className="text-gray-900 dark:text-white"
-                />
-              </button>
-            )}
-
-            {/* Current Image */}
-            <div
-              className="max-w-5xl max-h-[80vh] w-full h-full flex items-center justify-center"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img
-                src={galleryImages[currentImageIndex]}
-                alt={`${data.name} - Gallery ${currentImageIndex + 1}`}
-                className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+              <Share2
+                size={20}
+                className={
+                  shared
+                    ? "text-orange-500"
+                    : "text-gray-600 dark:text-gray-300"
+                }
               />
+            </motion.button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Gallery Modal ────────────────────────────────────── */}
+      <AnimatePresence>
+        {showGallery && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/95 z-[200] backdrop-blur-sm"
+              onClick={() => setShowGallery(false)}
+            />
+            <div className="fixed inset-0 z-[210] flex items-center justify-center p-4">
+              <button
+                onClick={() => setShowGallery(false)}
+                className="absolute top-4 right-4 bg-white/10 backdrop-blur-sm rounded-full p-2.5 text-white hover:bg-white/20 transition-colors z-10"
+              >
+                <X size={22} />
+              </button>
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-semibold">
+                {currentImageIndex + 1} / {galleryImages.length}
+              </div>
+              {galleryImages.length > 1 && (
+                <>
+                  <button
+                    onClick={prev}
+                    className="absolute left-4 bg-white/10 backdrop-blur-sm rounded-full p-3 text-white hover:bg-white/20 transition-colors"
+                  >
+                    <ChevronLeft size={26} />
+                  </button>
+                  <button
+                    onClick={next}
+                    className="absolute right-4 bg-white/10 backdrop-blur-sm rounded-full p-3 text-white hover:bg-white/20 transition-colors"
+                  >
+                    <ChevronRight size={26} />
+                  </button>
+                </>
+              )}
+              <motion.div
+                key={currentImageIndex}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                onClick={(e) => e.stopPropagation()}
+                className="max-w-5xl max-h-[80vh] w-full flex items-center justify-center"
+              >
+                <img
+                  src={galleryImages[currentImageIndex]}
+                  alt={`Gallery ${currentImageIndex + 1}`}
+                  className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl"
+                />
+              </motion.div>
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-black/60 backdrop-blur-sm p-2.5 rounded-2xl overflow-x-auto max-w-full">
+                {galleryImages.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentImageIndex(i)}
+                    className={`flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden border-2 transition-all ${currentImageIndex === i ? "border-orange-500 scale-110" : "border-transparent opacity-50 hover:opacity-80"}`}
+                  >
+                    <img
+                      src={img}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ── Restaurant Info ──────────────────────────────────── */}
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <div className="flex-1">
+            <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white mb-1">
+              {data.name}
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+              {data.cuisine}
+            </p>
+
+            {/* Rating badges */}
+            <div className="flex flex-wrap gap-3 mb-5">
+              {data.deliveryCount > 0 && (
+                <div className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl px-3 py-2">
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
+                    <span className="font-bold text-emerald-700 dark:text-emerald-400">
+                      {data.deliveryRating}
+                    </span>
+                  </div>
+                  <div className="w-px h-4 bg-emerald-200 dark:bg-emerald-700" />
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400">
+                    {data.deliveryCount?.toLocaleString()} ratings
+                  </span>
+                </div>
+              )}
+              {data.diningCount > 0 && (
+                <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl px-3 py-2">
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 fill-blue-500 text-blue-500" />
+                    <span className="font-bold text-blue-700 dark:text-blue-400">
+                      {data.diningRating}
+                    </span>
+                  </div>
+                  <div className="w-px h-4 bg-blue-200 dark:bg-blue-700" />
+                  <span className="text-xs text-blue-600 dark:text-blue-400">
+                    {data.diningCount?.toLocaleString()} dine-in
+                  </span>
+                </div>
+              )}
             </div>
 
-            {/* Next Button */}
-            {galleryImages.length > 1 && (
-              <button
-                onClick={handleNextImage}
-                className="absolute right-4 bg-white dark:bg-gray-800 rounded-full p-3 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            {/* Quick actions */}
+            <div className="flex gap-3 flex-wrap">
+              <a
+                href={`tel:${data.phone}`}
+                className="flex items-center gap-2 px-4 py-2 border-2 border-orange-500 text-orange-500 rounded-xl font-semibold text-sm hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
               >
-                <ChevronRight
-                  size={28}
-                  className="text-gray-900 dark:text-white"
-                />
+                <Phone size={16} /> Call
+              </a>
+              <button className="flex items-center gap-2 px-4 py-2 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-semibold text-sm hover:border-orange-400 hover:text-orange-500 transition-colors">
+                <MapPin size={16} /> Directions
               </button>
-            )}
-
-            {/* Thumbnail Strip */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 bg-black bg-opacity-60 p-3 rounded-lg max-w-full overflow-x-auto">
-              {galleryImages.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-all ${
-                    currentImageIndex === index
-                      ? "border-orange-500 scale-110"
-                      : "border-transparent opacity-60 hover:opacity-100"
-                  }`}
-                >
-                  <img
-                    src={image}
-                    alt={`Thumbnail ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
             </div>
           </div>
-        </>
-      )}
 
-      {/* Restaurant Info Section */}
-      <div className="max-w-6xl mx-auto px-4 py-6 border-b border-gray-200 dark:border-gray-800">
-        {/* Name and Cuisine */}
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-1">
-          {data.name}
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-          {data.cuisine}
-        </p>
-
-        {/* Ratings Section */}
-        <div className="flex flex-wrap gap-4 md:gap-6 mb-4">
-          {data.deliveryCount > 0 && (
-            <div className="flex items-center gap-3">
-              <div className="flex flex-col items-center justify-center bg-green-50 dark:bg-green-900/20 rounded-lg w-16 h-16 border-2 border-green-600 dark:border-green-500">
-                <span className="text-xl font-bold text-green-600 dark:text-green-500">
-                  {data.deliveryRating}
-                </span>
-                <span className="text-xs text-green-600 dark:text-green-500 font-semibold">
-                  Delivery
-                </span>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Delivery Ratings
-                </p>
-                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                  {data.deliveryCount.toLocaleString()}
-                </p>
-              </div>
+          {/* Address card */}
+          <div className="bg-gradient-to-br from-orange-50 to-pink-50 dark:from-gray-800 dark:to-gray-800 border border-orange-100 dark:border-gray-700 rounded-2xl p-4 text-sm max-w-xs w-full">
+            <div className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+              <MapPin className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+              <p>
+                {typeof data.address === "object" && data.address
+                  ? `${data.address.street || ""} ${data.address.area || ""}, ${data.address.city || ""}`.trim()
+                  : data.address || "Address not available"}
+              </p>
             </div>
-          )}
-
-          {data.diningCount > 0 && (
-            <div className="flex items-center gap-3">
-              <div className="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900/20 rounded-lg w-16 h-16 border-2 border-blue-600 dark:border-blue-500">
-                <span className="text-xl font-bold text-blue-600 dark:text-blue-500">
-                  {data.diningRating}
-                </span>
-                <span className="text-xs text-blue-600 dark:text-blue-500 font-semibold">
-                  Dining
-                </span>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Dining Ratings
-                </p>
-                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                  {data.diningCount.toLocaleString()}
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-3">
-          <button className="flex items-center justify-center gap-2 px-4 py-2 border-2 border-red-500 text-red-500 rounded-lg font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-            <MapPin size={18} />
-            Direction
-          </button>
-          <button className="flex items-center justify-center gap-2 px-4 py-2 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-semibold hover:border-red-500 hover:text-red-500 transition-colors">
-            <Share2 size={18} />
-            Share
-          </button>
+          </div>
         </div>
       </div>
 
-      {/* Contact and Details */}
-      <div className="max-w-6xl mx-auto px-4 py-4 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
-        <div className="flex items-start gap-3 mb-3">
-          <Phone size={18} className="text-red-500 flex-shrink-0 mt-1" />
-          <a
-            href={`tel:${data.phone}`}
-            className="text-red-500 font-semibold hover:underline"
-          >
-            {data.phone}
-          </a>
-        </div>
-        <div className="flex items-start gap-3">
-          <MapPin
-            size={18}
-            className="text-gray-600 dark:text-gray-400 flex-shrink-0 mt-1"
-          />
-          <p className="text-gray-700 dark:text-gray-300 text-sm">
-            {typeof data.address === "object" && data.address
-              ? `${data.address.street || ""} ${data.address.area || ""}, ${data.address.city || ""}`.trim()
-              : data.address || "Address not available"}
-          </p>
-        </div>
-      </div>
-
-      {/* Quick Info */}
-      <div className="max-w-6xl mx-auto px-4 py-4 bg-white dark:bg-gray-900 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-sm">
-        <div>
-          <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">
-            Delivery Time
-          </p>
-          <p className="font-semibold text-gray-900 dark:text-white">
-            {data.deliveryTime}
-          </p>
-        </div>
-        <div className="hidden md:block border-l border-gray-200 dark:border-gray-800"></div>
-        <div>
-          <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">
-            Min Order
-          </p>
-          <p className="font-semibold text-gray-900 dark:text-white">
-            {data.minOrder}
-          </p>
-        </div>
-        <div className="hidden md:block border-l border-gray-200 dark:border-gray-800"></div>
-        <div>
-          <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">
-            Delivery Charge
-          </p>
-          <p className="font-semibold text-gray-900 dark:text-white">
-            {data.deliveryCharge}
-          </p>
+      {/* ── Quick Stats bar ──────────────────────────────────── */}
+      <div className="max-w-6xl mx-auto px-4 pb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {quickStats.map(({ icon: Icon, label, value }) => (
+            <div
+              key={label}
+              className="bg-gray-50 dark:bg-gray-800 rounded-2xl px-4 py-3 flex items-center gap-3 border border-gray-100 dark:border-gray-700"
+            >
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+                <Icon className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-[11px] text-gray-400 dark:text-gray-500 uppercase tracking-wide">
+                  {label}
+                </p>
+                <p className="font-bold text-gray-900 dark:text-white text-sm">
+                  {value}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

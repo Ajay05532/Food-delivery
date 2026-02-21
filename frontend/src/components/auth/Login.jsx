@@ -29,7 +29,7 @@ const Login = ({ switchToSignup, onClose, onSuccess }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
         { phone },
         { withCredentials: true },
       );

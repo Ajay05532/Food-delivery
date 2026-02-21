@@ -26,7 +26,7 @@ const SignUp = ({ switchToLogin, onClose, onSuccess }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/auth/register",
+        `${import.meta.env.VITE_BACKEND_URL}/auth/register`,
         { name, phone, email, role: "user" },
         { withCredentials: true },
       );

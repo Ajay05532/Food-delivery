@@ -19,7 +19,7 @@ const CheckoutNavbar = ({ onLoginClick }) => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/api/auth/logout",
+        `${import.meta.env.VITE_BACKEND_URL}/auth/logout`,
         {},
         { withCredentials: true },
       );

@@ -13,9 +13,12 @@ const Layout = () => {
   useEffect(() => {
     const restoreSession = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/auth/me", {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/auth/me`,
+          {
+            withCredentials: true,
+          },
+        );
 
         if (res.data && res.data.user) {
           dispatch(setUser(res.data.user));

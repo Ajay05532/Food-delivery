@@ -13,7 +13,7 @@ const Otp = ({ phone, onSuccess }) => {
     dispatch(setError(""));
     try {
       await axios.post(
-        "http://localhost:3000/api/auth/login",
+        `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
         { phone },
         { withCredentials: true },
       );
@@ -37,7 +37,7 @@ const Otp = ({ phone, onSuccess }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/auth/verify-otp",
+        `${import.meta.env.VITE_BACKEND_URL}/auth/verify-otp`,
         { phone, otp },
         { withCredentials: true },
       );

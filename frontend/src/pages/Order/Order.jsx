@@ -23,6 +23,7 @@ import {
   LogOut,
   ShieldCheck,
   ChevronDown,
+  Loader2,
 } from "lucide-react";
 
 const NAV_ITEMS = [

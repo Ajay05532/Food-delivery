@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/slices/userSlice.js";
 import { useAddress } from "../redux/hooks/useAddress";
@@ -59,19 +60,13 @@ const Navbar = ({ onLoginClick }) => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        dispatch(logout());
-        navigate("/");
-      } else {
-        console.error("Logout failed");
-        dispatch(logout());
-        navigate("/");
-      }
+      await axios.post(
+        "http://localhost:3000/api/auth/logout",
+        {},
+        { withCredentials: true },
+      );
+      dispatch(logout());
+      navigate("/");
     } catch (err) {
       console.error("Logout Failed: ", err);
       // Still clear Redux state even if there's an error
@@ -198,7 +193,8 @@ const Navbar = ({ onLoginClick }) => {
                   </p>
                 </div>
                 <div className="py-2">
-                  <button className="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 hover:text-orange-600 transition-all duration-200"
+                  <button
+                    className="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 hover:text-orange-600 transition-all duration-200"
                     onClick={() => navigate("/orders")}
                   >
                     My Orders

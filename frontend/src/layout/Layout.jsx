@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import AuthDrawer from "../components/auth/AuthDrawer";
 import Navbar from "./Navbar";
 import { setUser } from "../redux/slices/userSlice";
+import axios from "axios";
 
 const Layout = () => {
   const [authOpen, setAuthOpen] = useState(false);
@@ -12,16 +13,15 @@ const Layout = () => {
   useEffect(() => {
     const restoreSession = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/auth/me", {
-          credentials: "include",
+        const res = await axios.get("http://localhost:3000/api/auth/me", {
+          withCredentials: true,
         });
 
-        if (!res.ok) return;
-
-        const data = await res.json();
-        dispatch(setUser(data.user));
-      } catch {
-        console.error("Session restore failed");
+        if (res.data && res.data.user) {
+          dispatch(setUser(res.data.user));
+        }
+      } catch (err) {
+        console.error("Session restore failed", err);
       }
     };
 

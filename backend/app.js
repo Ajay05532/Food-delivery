@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectDB from "./src/config/mongo.config.js";
+import { connectRedis } from "./src/config/redis.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import restaurantRoutes from "./src/routes/restaurant.routes.js";
 import orderRoutes from "./src/routes/order.routes.js";
@@ -14,6 +15,7 @@ import paymentRoutes from "./src/routes/payment.route.js";
 import couponRoutes from "./src/routes/coupon.routes.js";
 
 connectDB();
+connectRedis();
 
 const app = express();
 
@@ -41,16 +43,21 @@ app.use("/api/address", userAddressRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/coupons", couponRoutes);
 
+import { errorHandler } from "./src/middleware/error.middleware.js";
+import AppError from "./src/utils/AppError.js";
+
 /* Health check */
 app.get("/", (req, res) => {
   res.send("Food Delivery Backend Running");
 });
 
-/* Global error handler */
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ message: "Internal server error" });
+/* Catch undefined routes */
+app.all(/(.*)/, (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
+
+/* Global error handler */
+app.use(errorHandler);
 
 /* Server */
 const PORT = 3000;

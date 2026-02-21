@@ -158,18 +158,20 @@ const UpiPending = () => {
   /* ─── SUCCESS screen ─────────────────────────────────── */
   if (status === STATUS.SUCCESS) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex flex-col items-center justify-center p-6">
-        <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
-            <CheckCircle2 className="w-10 h-10 text-green-500" />
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-950 dark:to-gray-900 flex flex-col items-center justify-center p-6 transition-colors duration-300">
+        <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-2xl p-10 max-w-md w-full text-center">
+          <div className="w-20 h-20 bg-green-100 dark:bg-green-900/40 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6 animate-bounce shadow-inner border border-green-200 dark:border-green-800">
+            <CheckCircle2 className="w-10 h-10 text-green-500 dark:text-green-400" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-black text-gray-900 dark:text-white mb-2 tracking-tight">
             Payment Successful!
           </h1>
-          <p className="text-gray-500 mb-1">
+          <p className="text-gray-500 dark:text-gray-400 mb-1 font-medium">
             ₹{amountRupees} paid successfully
           </p>
-          <p className="text-sm text-gray-400">Redirecting to your orders…</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500 mt-6 animate-pulse">
+            Redirecting to your orders…
+          </p>
         </div>
       </div>
     );
@@ -178,15 +180,19 @@ const UpiPending = () => {
   /* ─── FAILED / CANCELLED screen ─────────────────────── */
   if (status === STATUS.FAILED) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex flex-col items-center justify-center p-6">
-        <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
-          <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <XCircle className="w-10 h-10 text-red-500" />
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 dark:from-gray-950 dark:to-gray-900 flex flex-col items-center justify-center p-6 transition-colors duration-300">
+        <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-2xl p-10 max-w-md w-full text-center">
+          <div className="w-20 h-20 bg-red-100 dark:bg-red-900/30 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6 shadow-inner border border-red-200 dark:border-red-900/50">
+            <XCircle className="w-10 h-10 text-red-500 dark:text-red-400" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Payment Not Completed
+          <h1 className="text-2xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">
+            Payment Failed
           </h1>
-          <p className="text-sm text-gray-500 mb-8">{errMsg}</p>
+          <div className="bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 rounded-2xl p-4 mb-8">
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium">
+              {errMsg}
+            </p>
+          </div>
 
           <div className="flex flex-col gap-3">
             <button
@@ -196,15 +202,15 @@ const UpiPending = () => {
                 setElapsed(0);
                 openRazorpayModal();
               }}
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl transition-colors"
+              className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-extrabold py-3.5 rounded-xl transition-all shadow-md shadow-orange-500/20 active:scale-95 uppercase tracking-widest text-xs"
             >
               Retry Payment
             </button>
             <button
               onClick={() => navigate("/payment")}
-              className="w-full border-2 border-gray-200 hover:border-gray-300 text-gray-600 font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
+              className="w-full border-2 border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 text-gray-600 dark:text-gray-300 font-extrabold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 active:scale-95 uppercase tracking-widest text-xs"
             >
-              <ArrowLeft className="w-4 h-4" /> Choose Different Method
+              <ArrowLeft className="w-4 h-4" /> Change Method
             </button>
           </div>
         </div>
@@ -214,42 +220,53 @@ const UpiPending = () => {
 
   /* ─── WAITING / PENDING screen ───────────────────────── */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 flex flex-col items-center justify-center p-6">
-      <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6 dark:bg-gray-950 transition-colors duration-300 relative overflow-hidden">
+      {/* Decorative ambient background */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/20 dark:bg-orange-500/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/20 dark:bg-pink-500/10 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="bg-white/90 dark:bg-gray-900/80 backdrop-blur-2xl rounded-[2.5rem] border border-white/50 dark:border-gray-800/50 shadow-2xl p-8 sm:p-10 max-w-md w-full text-center relative z-10 transition-all duration-300">
         {/* Animated phone pulse */}
-        <div className="relative flex items-center justify-center mb-8">
-          <div className="absolute w-32 h-32 bg-orange-100 rounded-full animate-ping opacity-30" />
-          <div className="absolute w-24 h-24 bg-orange-200 rounded-full animate-ping opacity-40 delay-150" />
-          <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg z-10">
-            <Smartphone className="w-10 h-10 text-white" />
+        <div className="relative flex items-center justify-center mb-10 mt-4">
+          <div
+            className="absolute w-36 h-36 bg-orange-500/10 dark:bg-orange-500/20 border border-orange-500/20 dark:border-orange-500/30 rounded-full animate-ping delay-75"
+            style={{ animationDuration: "3s" }}
+          />
+          <div
+            className="absolute w-28 h-28 bg-pink-500/10 dark:bg-pink-500/20 border border-pink-500/20 dark:border-pink-500/30 rounded-full animate-ping delay-300"
+            style={{ animationDuration: "3s" }}
+          />
+
+          <div className="w-24 h-24 bg-gradient-to-br from-orange-500 to-pink-500 rounded-[2rem] flex items-center justify-center shadow-xl shadow-orange-500/30 z-10 rotate-3 transform hover:rotate-0 transition-transform duration-500">
+            <Smartphone className="w-12 h-12 text-white" strokeWidth={1.5} />
           </div>
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          UPI Request Sent!
+        <h1 className="text-3xl font-black text-gray-900 dark:text-white mb-2 tracking-tight">
+          Request Sent
         </h1>
-        <p className="text-gray-500 text-sm mb-1">
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-2 font-medium">
           A payment request of{" "}
-          <span className="font-bold text-gray-800">₹{amountRupees}</span> has
-          been sent.
+          <span className="font-bold text-gray-900 dark:text-gray-100 bg-orange-100 dark:bg-orange-500/20 px-2 py-0.5 rounded-md text-orange-600 dark:text-orange-400 ml-1">
+            ₹{amountRupees}
+          </span>
         </p>
-        <p className="text-gray-400 text-sm mb-8">
-          Please open your UPI app and approve the request to complete your
-          order.
+        <p className="text-gray-400 dark:text-gray-500 text-xs mb-8 max-w-[250px] mx-auto leading-relaxed">
+          Open your UPI app and approve the request to complete your order.
         </p>
 
         {/* UPI app icons */}
-        <div className="flex justify-center gap-5 mb-8">
+        <div className="flex justify-center gap-4 sm:gap-6 mb-10">
           {UPI_APPS.map(({ name, logo }) => (
-            <div key={name} className="flex flex-col items-center gap-1">
-              <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-100 shadow-sm bg-white p-1">
+            <div key={name} className="flex flex-col items-center gap-2 group">
+              <div className="w-14 h-14 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800/80 shadow-sm bg-white dark:bg-white p-2 group-hover:scale-110 group-hover:shadow-md group-hover:border-orange-200 transition-all duration-300">
                 <img
                   src={logo}
                   alt={name}
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-[10px] text-gray-400 font-medium">
+              <span className="text-[11px] text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
                 {name}
               </span>
             </div>
@@ -257,31 +274,17 @@ const UpiPending = () => {
         </div>
 
         {/* Waiting indicator */}
-        <div className="flex items-center justify-center gap-2 text-orange-500 mb-6">
-          <Loader2 className="w-4 h-4 animate-spin" />
-          <span className="text-sm font-medium">
-            Waiting for payment… {elapsed}s
+        <div className="flex items-center justify-center gap-3 text-orange-500 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 py-3 px-6 rounded-2xl inline-flex mx-auto mb-8 border border-orange-100 dark:border-orange-500/20 backdrop-blur-sm">
+          <Loader2 className="w-5 h-5 animate-spin" />
+          <span className="text-sm font-bold tracking-wide">
+            Waiting for payment...{" "}
+            <span className="w-6 inline-block text-left opacity-70">
+              {elapsed}s
+            </span>
           </span>
         </div>
 
-        {/* Steps */}
-        <div className="bg-orange-50 rounded-2xl p-4 text-left space-y-3 mb-8">
-          {[
-            { n: 1, text: "Open your UPI app (PhonePe, GPay, Paytm, etc.)" },
-            { n: 2, text: "Check for the FoodHub payment request" },
-            { n: 3, text: "Approve the ₹" + amountRupees + " request" },
-            { n: 4, text: "Your order will be confirmed automatically" },
-          ].map(({ n, text }) => (
-            <div key={n} className="flex items-start gap-3">
-              <div className="w-6 h-6 rounded-full bg-orange-500 text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
-                {n}
-              </div>
-              <p className="text-sm text-gray-600">{text}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           <button
             onClick={() => {
               setStatus(STATUS.WAITING);
@@ -289,15 +292,15 @@ const UpiPending = () => {
               setElapsed(0);
               openRazorpayModal();
             }}
-            className="w-full border-2 border-orange-400 text-orange-500 hover:bg-orange-50 font-bold py-3 rounded-xl transition-colors text-sm"
+            className="w-full border-2 border-gray-200 dark:border-gray-800 hover:border-orange-500 dark:hover:border-orange-500 text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400 font-extrabold py-3.5 rounded-xl transition-all text-xs uppercase tracking-widest active:scale-95"
           >
             Reopen Payment Modal
           </button>
           <button
             onClick={() => navigate("/payment")}
-            className="text-sm text-gray-400 hover:text-gray-600 transition-colors py-2"
+            className="text-xs font-bold text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors py-2 uppercase tracking-wider flex items-center justify-center gap-1 mx-auto mt-2"
           >
-            ← Try a different payment method
+            ← Try different method
           </button>
         </div>
       </div>

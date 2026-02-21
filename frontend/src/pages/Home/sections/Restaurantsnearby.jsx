@@ -1,59 +1,64 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchRestaurants,
   resetRestaurants,
 } from "../../../redux/slices/restaurantSlice";
-import { Star, Clock, MapPin, ChevronDown } from "lucide-react";
+import { Star, Clock, MapPin, ChevronDown, Check, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const RestaurantsNearby = () => {
   const [sortBy, setSortBy] = useState("relevance");
   const [showSortMenu, setShowSortMenu] = useState(false);
+  const dropdownRef = useRef(null);
 
   const dispatch = useDispatch();
-  // Get state from Redux
   const { items, loading, hasNextPage, currentPage } = useSelector(
     (state) => state.restaurants,
   );
 
-  // Reset and fetch restaurants on mount to ensure we show exactly 12
   useEffect(() => {
     dispatch(resetRestaurants());
     dispatch(fetchRestaurants({ page: 1, limit: 12 }));
   }, [dispatch]);
 
+  // Click outside listener for dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowSortMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleLoadMore = () => {
     if (!loading && hasNextPage) {
-      // Fetch the next page (currentPage + 1)
       dispatch(fetchRestaurants({ page: currentPage + 1, limit: 12 }));
     }
   };
 
-  // Remove duplicates and map backend data to match frontend structure
   const restaurants = useMemo(() => {
-    // Remove duplicates based on _id
     const uniqueItems = items.reduce((acc, current) => {
-      const exists = acc.find((item) => item._id === current._id);
-      if (!exists) {
-        acc.push(current);
-      }
+      if (!acc.find((item) => item._id === current._id)) acc.push(current);
       return acc;
     }, []);
 
-    // Map to component format
     return uniqueItems.map((restaurant) => ({
       id: restaurant._id,
       name: restaurant.name,
       image: restaurant.coverImage,
       rating: restaurant.avgRating || 0,
       time: `${restaurant.minDeliveryTime}-${restaurant.maxDeliveryTime} mins`,
-      cuisine: "", // You can add this field to your backend model if needed
+      cuisine: restaurant.cuisines
+        ? restaurant.cuisines.join(", ")
+        : "Multi Cuisine",
       location: restaurant.address
         ? `${restaurant.address.area}, ${restaurant.address.city}`
         : "",
       badge: "NEW",
-      badgeColor: "bg-orange-500",
     }));
   }, [items]);
 
@@ -65,139 +70,156 @@ const RestaurantsNearby = () => {
   ];
 
   return (
-    <div className="w-full bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="w-full bg-gray-50 dark:bg-[#0B0C10] min-h-screen transition-colors duration-300 relative py-12">
+      {/* Glow Effects */}
+      <div className="absolute top-40 left-0 w-96 h-96 bg-pink-500/5 dark:bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-40 right-0 w-96 h-96 bg-orange-500/5 dark:bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Header Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-            Restaurants with online food delivery in Delhi
-          </h1>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 border-b border-gray-200 dark:border-gray-800 pb-6">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight">
+              Restaurants Nearby
+            </h1>
+            <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mt-2 flex items-center gap-1.5">
+              <MapPin className="w-4 h-4 text-orange-500" /> Discover the best
+              food near you
+            </p>
+          </div>
 
           {/* Sort Dropdown */}
-          <div className="relative inline-block">
+          <div className="relative inline-block" ref={dropdownRef}>
             <button
               onClick={() => setShowSortMenu(!showSortMenu)}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-200 font-medium"
+              className="flex items-center gap-3 px-5 py-3 border-2 border-gray-200 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-900 hover:border-orange-500 dark:hover:border-orange-500 transition-all duration-300 text-gray-900 dark:text-white font-bold shadow-sm"
             >
-              Sort By
-              <ChevronDown size={18} />
+              <span className="text-gray-500 dark:text-gray-400 font-semibold">
+                Sort By
+              </span>
+              {sortOptions.find((o) => o.value === sortBy)?.label ||
+                "Relevance"}
+              <ChevronDown
+                size={18}
+                className={`transition-transform duration-300 ${showSortMenu ? "rotate-180 text-orange-500" : "text-gray-400"}`}
+              />
             </button>
 
             {/* Dropdown Menu */}
-            {showSortMenu && (
-              <div className="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-10">
-                {sortOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => {
-                      setSortBy(option.value);
-                      setShowSortMenu(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-                      sortBy === option.value
-                        ? "bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 font-semibold"
-                        : "text-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            )}
+            <AnimatePresence>
+              {showSortMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  className="absolute top-full right-0 mt-3 w-56 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl z-20 overflow-hidden"
+                >
+                  {sortOptions.map((option) => {
+                    const isActive = sortBy === option.value;
+                    return (
+                      <button
+                        key={option.value}
+                        onClick={() => {
+                          setSortBy(option.value);
+                          setShowSortMenu(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-5 py-3.5 transition-all text-sm font-bold ${isActive ? "bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-500" : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"}`}
+                      >
+                        {option.label}
+                        {isActive && (
+                          <Check className="w-4 h-4" strokeWidth={3} />
+                        )}
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
         {/* Restaurants Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {restaurants.map((restaurant, index) => (
-            <Link key={restaurant.id} to={`/restaurant/${restaurant.id}`}>
-              <div
-                key={restaurant.id}
-                className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group border border-transparent dark:border-gray-700"
-                style={{
-                  animation: `fadeInUp 0.5s ease-out ${index * 0.05}s backwards`,
-                }}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
+              key={restaurant.id}
+            >
+              <Link
+                to={`/restaurant/${restaurant.id}`}
+                className="block relative group h-full"
               >
-                <style>{`
-                @keyframes fadeInUp {
-                  from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                  }
-                  to {
-                    opacity: 1;
-                    transform: translateY(0);
-                  }
-                }
-              `}</style>
+                <div className="absolute -inset-0.5 bg-gradient-to-tr from-orange-500 via-pink-500 to-purple-500 rounded-[2rem] opacity-0 group-hover:opacity-100 blur transition duration-500" />
+                <div className="relative h-full bg-white dark:bg-gray-900 rounded-[2rem] overflow-hidden border border-gray-100 dark:border-gray-800/60 shadow-md transition-all duration-300 group-hover:border-transparent flex flex-col">
+                  {/* Image Area */}
+                  <div className="relative h-48 overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0">
+                    <img
+                      src={restaurant.image}
+                      alt={restaurant.name}
+                      loading="lazy"
+                      className="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent opacity-80" />
 
-                {/* Image Container with Badge */}
-                <div className="relative h-40 overflow-hidden bg-gray-200 dark:bg-gray-700">
-                  <img
-                    src={restaurant.image}
-                    alt={restaurant.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    loading="lazy"
-                  />
+                    {/* Badge */}
+                    <div className="absolute top-4 left-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[10px] font-black tracking-widest px-3 py-1.5 rounded-lg shadow-lg">
+                      {restaurant.badge}
+                    </div>
 
-                  {/* Badge */}
-                  <div
-                    className={`absolute bottom-0 left-0 right-0 ${restaurant.badgeColor} text-white py-2 px-3 text-xs font-bold`}
-                  >
-                    {restaurant.badge}
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-3">
-                  {/* Restaurant Name */}
-                  <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 line-clamp-1">
-                    {restaurant.name}
-                  </h3>
-
-                  {/* Rating and Time */}
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="flex items-center gap-1">
-                      <Star
-                        size={14}
-                        className="text-green-600 dark:text-green-500 fill-green-600 dark:fill-green-500"
-                      />
-                      <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                        {restaurant.rating}
-                      </span>
-                      <span className="text-xs text-gray-600 dark:text-gray-400">
-                        • {restaurant.time}
-                      </span>
+                    <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                      <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 shadow-xl flex items-center gap-1.5">
+                        <Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
+                        <span className="font-extrabold text-gray-900 dark:text-white text-sm">
+                          {restaurant.rating}
+                        </span>
+                      </div>
+                      <div className="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl text-white flex items-center gap-1.5 font-bold text-xs border border-white/10">
+                        <Clock className="w-3.5 h-3.5 text-orange-400" />{" "}
+                        {restaurant.time}
+                      </div>
                     </div>
                   </div>
 
-                  {/* Cuisine */}
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-1">
-                    {restaurant.description}
-                  </p>
+                  {/* Content Area */}
+                  <div className="p-5 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2 line-clamp-1 group-hover:text-orange-500 transition-colors">
+                        {restaurant.name}
+                      </h3>
+                      <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">
+                        {restaurant.cuisine}
+                      </p>
+                    </div>
 
-                  {/* Location */}
-                  <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                    <MapPin size={12} />
-                    <span className="line-clamp-1">{restaurant.location}</span>
+                    <div className="pt-4 border-t border-dashed border-gray-200 dark:border-gray-800 flex items-center text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wide">
+                      <MapPin className="w-3.5 h-3.5 mr-1" />{" "}
+                      {restaurant.location}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </motion.div>
           ))}
         </div>
 
-        {/* Load More */}
-        {hasNextPage && (
-          <div className="flex justify-center mt-12">
+        {/* Load More Area */}
+        {loading && (
+          <div className="flex justify-center mt-12 mb-4">
+            <Loader2 className="w-10 h-10 animate-spin text-orange-500" />
+          </div>
+        )}
+
+        {!loading && hasNextPage && (
+          <div className="flex justify-center mt-16">
             <button
               onClick={handleLoadMore}
-              disabled={loading}
-              className={`px-8 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:border-orange-500 dark:hover:border-orange-500 hover:text-orange-500 dark:hover:text-orange-500 transition-colors duration-200 bg-transparent ${
-                loading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className="px-8 py-4 bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 font-bold rounded-2xl hover:border-orange-500 dark:hover:border-orange-500 hover:text-orange-500 dark:hover:text-orange-500 transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20 active:scale-95 tracking-wide uppercase text-sm flex items-center gap-2"
             >
-              {loading ? "Loading..." : "Load More Restaurants"}
+              Load More Options
             </button>
           </div>
         )}

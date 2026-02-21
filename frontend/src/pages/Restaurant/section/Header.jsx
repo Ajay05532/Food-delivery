@@ -162,7 +162,10 @@ const Header = ({ restaurant }) => {
               className="fixed inset-0 bg-black/95 z-[200] backdrop-blur-sm"
               onClick={() => setShowGallery(false)}
             />
-            <div className="fixed inset-0 z-[210] flex items-center justify-center p-4">
+            <div
+              className="fixed inset-0 z-[210] flex items-center justify-center p-4"
+              onClick={() => setShowGallery(false)}
+            >
               <button
                 onClick={() => setShowGallery(false)}
                 className="absolute top-4 right-4 bg-white/10 backdrop-blur-sm rounded-full p-2.5 text-white hover:bg-white/20 transition-colors z-10"

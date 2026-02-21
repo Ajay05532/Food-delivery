@@ -1,167 +1,179 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
-  Facebook,
-  Instagram,
-  Twitter,
-  Linkedin,
-  Mail,
-  Phone,
+  Utensils,
   MapPin,
+  Phone,
+  Mail,
+  Twitter,
+  Instagram,
+  Facebook,
+  Youtube,
+  ArrowRight,
+  Shield,
+  Zap,
+  Star,
 } from "lucide-react";
 
-const FooterLink = ({ title, links }) => (
-  <div className="flex flex-col">
-    <h4 className="font-bold text-lg text-gray-900 mb-4">{title}</h4>
-    {links.map((link, index) => (
-      <a
-        key={index}
-        href={link.url || "#"}
-        className="text-gray-600 hover:text-orange-500 transition-colors duration-200 mb-2 text-sm"
-      >
-        {link.text}
-      </a>
-    ))}
-  </div>
-);
-
 const Footer = () => {
-  const companyLinks = [
-    { text: "About Us", url: "#" },
-    { text: "Careers", url: "#" },
-    { text: "Contact", url: "#" },
-    { text: "Blog", url: "#" },
+  const navigate = useNavigate();
+
+  const colLinks = {
+    Company: ["About Us", "Careers", "Blog", "Press Kit"],
+    Discover: ["Restaurants", "Top Picks", "Offers", "New Arrivals"],
+    Partner: [
+      "Add Restaurant",
+      "Become a Rider",
+      "Business Account",
+      "Partner Portal",
+    ],
+    Legal: [
+      "Privacy Policy",
+      "Terms of Service",
+      "Cookie Policy",
+      "Refund Policy",
+    ],
+  };
+
+  const socials = [
+    { Icon: Twitter, label: "Twitter" },
+    { Icon: Instagram, label: "Instagram" },
+    { Icon: Facebook, label: "Facebook" },
+    { Icon: Youtube, label: "YouTube" },
   ];
 
-  const partnerLinks = [
-    { text: "Add Restaurant", url: "#" },
-    { text: "Become a Rider", url: "#" },
-    { text: "Business Account", url: "#" },
-    { text: "Partner Portal", url: "#" },
-  ];
-
-  const legalLinks = [
-    { text: "Terms & Conditions", url: "#" },
-    { text: "Privacy Policy", url: "#" },
-    { text: "Cookie Policy", url: "#" },
-    { text: "Refund Policy", url: "#" },
-  ];
-
-  const helpLinks = [
-    { text: "FAQ", url: "#" },
-    { text: "Order Status", url: "#" },
-    { text: "Payment Options", url: "#" },
-    { text: "Delivery Info", url: "#" },
+  const badges = [
+    { Icon: Shield, text: "100% Secure" },
+    { Icon: Zap, text: "Fast Delivery" },
+    { Icon: Star, text: "4.8★ Rated" },
   ];
 
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-          {/* Company Info - Spans 2 columns on large screens */}
-          <div className="lg:col-span-2">
-            <h2 className="text-3xl font-bold text-orange-500 mb-4">
-              Food<span className="text-white">Delivery</span>
-            </h2>
-            <p className="text-gray-400 mb-4 text-sm leading-relaxed">
-              Your favorite food delivered fast, fresh, and hassle-free. Order
-              from the best restaurants in your area and enjoy delicious meals
-              at your doorstep.
-            </p>
+    <footer className="bg-gray-950 text-gray-300 border-t border-gray-800/50">
+      {/* Gradient accent bar */}
+      <div className="h-1 w-full bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600" />
 
-            {/* Contact Info */}
-            <div className="space-y-2 mb-6">
-              <div className="flex items-center gap-2 text-gray-400 text-sm">
-                <MapPin size={16} className="text-orange-500" />
-                <span>Delhi, India</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-400 text-sm">
-                <Phone size={16} className="text-orange-500" />
-                <span>+91 1800-123-4567</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-400 text-sm">
-                <Mail size={16} className="text-orange-500" />
-                <span>support@fooddelivery.com</span>
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 pt-14 pb-8">
+        {/* Main grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10 mb-12">
+          {/* Brand */}
+          <div className="lg:col-span-2 space-y-5">
+            <div
+              onClick={() => navigate("/")}
+              className="flex items-center gap-3 cursor-pointer group w-fit"
+            >
+              <motion.div
+                whileHover={{ rotate: 12, scale: 1.1 }}
+                className="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500 via-pink-500 to-purple-600 flex items-center justify-center shadow-lg shadow-orange-500/25"
+              >
+                <Utensils className="w-5 h-5 text-white" />
+              </motion.div>
+              <div>
+                <h2 className="text-xl font-extrabold bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-transparent">
+                  FoodHub
+                </h2>
+                <p className="text-[11px] text-gray-500 tracking-wide">
+                  Fast &amp; Fresh
+                </p>
               </div>
             </div>
 
-            {/* Social Media */}
-            <div className="flex gap-4">
-              <a
-                href="#"
-                className="bg-gray-800 p-2 rounded-full hover:bg-orange-500 transition-colors duration-200"
-                aria-label="Facebook"
-              >
-                <Facebook size={20} />
-              </a>
-              <a
-                href="#"
-                className="bg-gray-800 p-2 rounded-full hover:bg-orange-500 transition-colors duration-200"
-                aria-label="Instagram"
-              >
-                <Instagram size={20} />
-              </a>
-              <a
-                href="#"
-                className="bg-gray-800 p-2 rounded-full hover:bg-orange-500 transition-colors duration-200"
-                aria-label="Twitter"
-              >
-                <Twitter size={20} />
-              </a>
-              <a
-                href="#"
-                className="bg-gray-800 p-2 rounded-full hover:bg-orange-500 transition-colors duration-200"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={20} />
-              </a>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Order from the best local restaurants and get it delivered hot to
+              your door — in minutes.
+            </p>
+
+            <div className="space-y-2 text-sm text-gray-400">
+              {[
+                { Icon: MapPin, t: "123 Food Street, Mumbai, MH 400001" },
+                { Icon: Phone, t: "+91 98765 43210" },
+                { Icon: Mail, t: "support@foodhub.in" },
+              ].map(({ Icon, t }) => (
+                <div key={t} className="flex items-center gap-2.5">
+                  <Icon className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                  <span>{t}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Socials */}
+            <div className="flex gap-2 pt-1">
+              {socials.map(({ Icon, label }) => (
+                <motion.a
+                  key={label}
+                  href="#"
+                  aria-label={label}
+                  whileHover={{ scale: 1.15, y: -2 }}
+                  className="w-9 h-9 rounded-xl bg-gray-800 hover:bg-gradient-to-br hover:from-orange-500 hover:to-pink-500 flex items-center justify-center text-gray-400 hover:text-white transition-colors duration-300 shadow-sm"
+                >
+                  <Icon className="w-4 h-4" />
+                </motion.a>
+              ))}
             </div>
           </div>
 
-          {/* Links Columns */}
-          <FooterLink title="Company" links={companyLinks} />
-          <FooterLink title="Partner With Us" links={partnerLinks} />
-          <FooterLink title="Legal" links={legalLinks} />
+          {/* Link columns */}
+          {Object.entries(colLinks).map(([title, items]) => (
+            <div key={title}>
+              <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-4">
+                {title}
+              </h4>
+              <ul className="space-y-2.5">
+                {items.map((item) => (
+                  <li key={item}>
+                    <button className="text-sm text-gray-400 hover:text-orange-400 transition-colors duration-200 flex items-center gap-1 group">
+                      <span>{item}</span>
+                      <ArrowRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        {/* Newsletter Section */}
-        <div className="mt-12 pt-8 border-t border-gray-800">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        {/* Newsletter */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-500/10 via-pink-500/10 to-purple-600/10 border border-white/5 p-6 mb-10">
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl" />
+          <div className="relative flex flex-col md:flex-row items-center gap-4 justify-between">
             <div>
-              <h4 className="font-bold text-xl mb-2">
-                Subscribe to our Newsletter
-              </h4>
-              <p className="text-gray-400 text-sm">
-                Get exclusive deals and updates delivered to your inbox
+              <h3 className="text-white font-bold text-lg">
+                Get exclusive deals 🎉
+              </h3>
+              <p className="text-gray-400 text-sm mt-0.5">
+                Subscribe and never miss a promo.
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full md:w-auto">
               <input
                 type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-orange-500 text-white placeholder-gray-500"
+                placeholder="your@email.com"
+                className="flex-1 md:w-60 px-4 py-2.5 bg-gray-900/80 border border-gray-700 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
               />
-              <button className="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors duration-200">
+              <button className="px-5 py-2.5 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-xl hover:from-orange-600 hover:to-pink-600 hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-300 text-sm whitespace-nowrap hover:scale-105">
                 Subscribe
               </button>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-8 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-400 text-sm">
-            © 2025 FoodDelivery. All rights reserved.
+        {/* Bottom */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-t border-gray-800/60 pt-6">
+          <p className="text-xs text-gray-500">
+            © {new Date().getFullYear()} FoodHub Technologies Pvt. Ltd. All
+            rights reserved.
           </p>
-          <div className="flex gap-6 text-sm text-gray-400">
-            <a href="#" className="hover:text-orange-500 transition-colors">
-              Help Center
-            </a>
-            <a href="#" className="hover:text-orange-500 transition-colors">
-              Accessibility
-            </a>
-            <a href="#" className="hover:text-orange-500 transition-colors">
-              Sitemap
-            </a>
+          <div className="flex items-center gap-4">
+            {badges.map(({ Icon, text }) => (
+              <div
+                key={text}
+                className="flex items-center gap-1.5 text-xs text-gray-500"
+              >
+                <Icon className="w-3.5 h-3.5 text-orange-400" />
+                <span>{text}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

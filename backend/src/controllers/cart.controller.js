@@ -23,16 +23,6 @@ const addToCart = async (req, res) => {
     const { menuItemId, name, image, category, price, quantity, restaurantId } =
       req.body;
 
-    console.log("📥 Add to cart request:", {
-      menuItemId,
-      name,
-      category,
-      price,
-      quantity,
-      restaurantId,
-      userId: req.user?.id,
-    });
-
     // Validate required fields
     if (
       !menuItemId ||
@@ -98,12 +88,7 @@ const addToCart = async (req, res) => {
 
     res.status(200).json({ message: "Item added to cart successfully", cart });
   } catch (error) {
-    console.error("❌ Error adding to cart:", error);
-    console.error("Error stack:", error.stack);
-    console.error("Error message:", error.message);
-    res
-      .status(500)
-      .json({ message: "Internal server error", error: error.message });
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 };
 
@@ -139,7 +124,6 @@ const updateCartItem = async (req, res) => {
 
     res.status(200).json({ message: "Cart item updated successfully", cart });
   } catch (error) {
-    console.error("Error updating cart item:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -155,7 +139,6 @@ const clearCart = async (req, res) => {
 
     res.status(200).json({ message: "Cart cleared successfully" });
   } catch (error) {
-    console.error("Error clearing cart:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -1,239 +1,308 @@
-import React, { useState } from "react";
-import { X, Copy, Check } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import {
+  X,
+  Copy,
+  Check,
+  Ticket,
+  Loader2,
+  AlertCircle,
+  Tag,
+} from "lucide-react";
+import {
+  getCouponsForRestaurant,
+  applyCouponCode,
+} from "../../../services/coupon.service";
 
-const CouponModal = ({ isOpen, onClose, onApplyCoupon, appliedCoupon }) => {
-  const [couponCode, setCouponCode] = useState("");
-  const [copiedId, setCopiedId] = useState(null);
+const EMOJI = { PERCENTAGE: "⚡", FLAT: "🎟️" };
 
-  const coupons = [
-    {
-      id: 1,
-      code: "PARTY",
-      title: "PARTY",
-      description: "Get FLAT 15% off",
-      details:
-        "Use Code PARTY and get FLAT 15% off on order above Rs.1500. No Upper Limit.",
-      minOrder: 1500,
-      discount: "15%",
-      icon: "🎉",
-    },
-    {
-      id: 2,
-      code: "CELEBRATIONS",
-      title: "CELEBRATIONS",
-      description: "Get Flat Rs.200 off",
-      details: "Use code CELEBRATION & get ₹200 off on orders above ₹969",
-      minOrder: 969,
-      discount: "₹200",
-      icon: "🎊",
-    },
-    {
-      id: 3,
-      code: "STUDENTDEAL",
-      title: "STUDENTDEAL",
-      description: "Get Flat Rs. 150 off",
-      details: "Use code STUDENTDEAL & get flat ₹150 off orders above ₹649",
-      minOrder: 649,
-      discount: "₹150",
-      icon: "🎓",
-    },
-    {
-      id: 4,
-      code: "SWIGGY50",
-      title: "SWIGGY50",
-      description: "Flat 50% off",
-      details: "Use code SWIGGY50 & get 50% off on orders above ₹199",
-      minOrder: 199,
-      discount: "50%",
-      icon: "⚡",
-    },
-    {
-      id: 5,
-      code: "FOODFEST",
-      title: "FOODFEST",
-      description: "Get ₹100 off",
-      details: "Use code FOODFEST & get ₹100 off on all orders",
-      minOrder: 0,
-      discount: "₹100",
-      icon: "🍔",
-    },
-  ];
+const CouponModal = ({
+  isOpen,
+  onClose,
+  onApplyCoupon,
+  appliedCoupon,
+  restaurantId,
+  orderAmount,
+}) => {
+  const [manualCode, setManualCode] = useState("");
+  const [coupons, setCoupons] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [applying, setApplying] = useState(null); // coupon code being applied
+  const [error, setError] = useState("");
 
-  const handleCopyCode = (code) => {
-    navigator.clipboard.writeText(code);
-    setCopiedId(code);
-    setTimeout(() => setCopiedId(null), 2000);
-  };
+  /* ── Fetch real coupons from backend ──────────────── */
+  useEffect(() => {
+    if (!isOpen || !restaurantId) return;
+    setLoading(true);
+    setError("");
+    getCouponsForRestaurant(restaurantId)
+      .then((res) => setCoupons(res.data || []))
+      .catch(() => setError("Failed to load coupons"))
+      .finally(() => setLoading(false));
+  }, [isOpen, restaurantId]);
 
-  const handleApplyCoupon = (coupon) => {
-    onApplyCoupon(coupon);
-    setCouponCode("");
-    onClose();
-  };
-
-  const handleManualApply = () => {
-    const found = coupons.find(
-      (c) => c.code.toLowerCase() === couponCode.toLowerCase(),
-    );
-    if (found) {
-      handleApplyCoupon(found);
+  /* ── Apply a coupon by calling the backend ──────── */
+  const applyCode = async (code) => {
+    if (!code.trim()) return;
+    setApplying(code);
+    setError("");
+    try {
+      const res = await applyCouponCode({
+        code: code.trim().toUpperCase(),
+        restaurantId,
+        orderAmount,
+      });
+      if (res.success) {
+        onApplyCoupon(res.data); // pass { couponId, code, discountAmount, finalAmount, ... }
+        onClose();
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Invalid or expired coupon");
+    } finally {
+      setApplying(null);
     }
+  };
+
+  const handleRemove = () => {
+    onApplyCoupon(null);
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
     <>
-      {/* Dark Overlay */}
-      <div
-        className={`fixed inset-0 bg-black/50 z-[100] transition-opacity duration-300
-        ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-        onClick={onClose}
-      />
+      {/* Overlay */}
+      <div className="fixed inset-0 bg-black/50 z-[100]" onClick={onClose} />
 
       {/* Right Drawer */}
       <div
-        className={`fixed right-0 top-0 h-full bg-white dark:bg-gray-800 z-[110] shadow-2xl w-full max-w-md overflow-y-auto transform transition-transform duration-300 ease-in-out
-        ${isOpen ? "translate-x-0" : "translate-x-full"}`}
-        style={{
-          animation: "slideInRight 0.3s ease-out",
-        }}
+        className="fixed right-0 top-0 h-full bg-white dark:bg-gray-800 z-[110] shadow-2xl w-full max-w-md overflow-y-auto"
+        style={{ animation: "slideInRight 0.25s ease-out" }}
         onClick={(e) => e.stopPropagation()}
       >
         <style>{`
           @keyframes slideInRight {
-            from {
-              transform: translateX(100%);
-            }
-            to {
-              transform: translateX(0);
-            }
+            from { transform: translateX(100%); }
+            to   { transform: translateX(0); }
           }
         `}</style>
+
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 transition-colors duration-300">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            Apply Coupon
-          </h2>
+        <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
+          <div className="flex items-center gap-2">
+            <Ticket className="text-orange-500 w-5 h-5" />
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              Apply Coupon
+            </h2>
+          </div>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
           >
-            <X size={24} className="text-gray-600 dark:text-gray-300" />
+            <X size={22} className="text-gray-600 dark:text-gray-300" />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-4">
-          {/* Manual Coupon Entry */}
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+        <div className="p-5 space-y-5">
+          {/* Applied coupon banner */}
+          {appliedCoupon && (
+            <div className="flex items-center justify-between bg-green-50 dark:bg-green-900/20 border border-green-400 rounded-xl px-4 py-3">
+              <div className="flex items-center gap-2 text-green-700 dark:text-green-400">
+                <Check className="w-4 h-4" />
+                <span className="font-bold text-sm">{appliedCoupon.code}</span>
+                <span className="text-sm">
+                  — saving ₹{appliedCoupon.discountAmount}
+                </span>
+              </div>
+              <button
+                onClick={handleRemove}
+                className="text-xs font-bold text-red-500 hover:text-red-600"
+              >
+                REMOVE
+              </button>
+            </div>
+          )}
+
+          {/* Manual code input */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               Enter coupon code
             </label>
             <div className="flex gap-2">
               <input
                 type="text"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                placeholder="Enter coupon code"
-                className="flex-1 px-4 py-2 border-2 border-gray-200 dark:border-gray-600 rounded-lg focus:border-orange-500 focus:outline-none bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                value={manualCode}
+                onChange={(e) => {
+                  setManualCode(e.target.value.toUpperCase());
+                  setError("");
+                }}
+                onKeyDown={(e) => e.key === "Enter" && applyCode(manualCode)}
+                placeholder="e.g. SAVE50"
+                className="flex-1 px-4 py-2.5 border-2 border-gray-200 dark:border-gray-600 rounded-lg focus:border-orange-500 focus:outline-none bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 text-sm"
               />
               <button
-                onClick={handleManualApply}
-                className="px-6 py-2 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 transition-colors"
+                onClick={() => applyCode(manualCode)}
+                disabled={!manualCode.trim() || !!applying}
+                className="px-5 py-2 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 disabled:opacity-60 transition-colors text-sm flex items-center gap-1.5"
               >
+                {applying === manualCode ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : null}
                 APPLY
               </button>
             </div>
+
+            {/* Error */}
+            {error && (
+              <div className="flex items-center gap-2 mt-2 text-red-600 dark:text-red-400 text-sm">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                {error}
+              </div>
+            )}
           </div>
 
-          {/* Available Coupons */}
-          <div>
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4">
-              AVAILABLE COUPONS
-            </h3>
-            <div className="space-y-3">
-              {coupons.map((coupon) => {
-                const isApplied = appliedCoupon?.code === coupon.code;
-
-                return (
-                  <div
-                    key={coupon.id}
-                    className={`border-2 rounded-lg p-4 transition-all ${
-                      isApplied
-                        ? "border-orange-500 bg-orange-50 dark:bg-orange-900/20"
-                        : "border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-500/50 bg-white dark:bg-gray-800"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex items-center gap-3 flex-1">
-                        <span className="text-2xl">{coupon.icon}</span>
-                        <div>
-                          <p className="font-bold text-gray-900 dark:text-white">
-                            {coupon.title}
-                          </p>
-                          <p className="text-sm text-orange-600 dark:text-orange-500 font-semibold">
-                            {coupon.description}
-                          </p>
-                        </div>
-                      </div>
-                      {isApplied && (
-                        <div className="flex items-center gap-1 bg-orange-500 text-white px-3 py-1 rounded text-xs font-bold">
-                          <Check size={14} />
-                          Applied
-                        </div>
-                      )}
-                    </div>
-
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
-                      {coupon.details}
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <div className="text-xs text-gray-500 dark:text-gray-500">
-                        {coupon.minOrder > 0 ? (
-                          <>Min order: ₹{coupon.minOrder}</>
-                        ) : (
-                          <>No minimum order</>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => {
-                          handleCopyCode(coupon.code);
-                          if (!isApplied) {
-                            handleApplyCoupon(coupon);
-                          }
-                        }}
-                        className={`flex items-center gap-1 px-3 py-1.5 rounded text-xs font-bold transition-colors ${
-                          isApplied
-                            ? "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 cursor-default"
-                            : "bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 hover:bg-orange-200 dark:hover:bg-orange-900/50"
-                        }`}
-                      >
-                        {copiedId === coupon.code ? (
-                          <>
-                            <Check size={14} />
-                            Copied
-                          </>
-                        ) : (
-                          <>
-                            <Copy size={14} />
-                            {isApplied ? "Applied" : "Apply"}
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
+          {/* Divider */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200 dark:border-gray-700" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-white dark:bg-gray-800 px-3 text-xs text-gray-400 font-semibold uppercase tracking-widest">
+                Available Coupons
+              </span>
             </div>
           </div>
 
-          {/* Info */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mt-4">
-            <p className="text-xs text-blue-800 dark:text-blue-300">
-              💡 <strong>Tip:</strong> You can apply only one coupon per order.
-              Choose the one that gives you the maximum savings!
+          {/* Coupon list */}
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="w-8 h-8 animate-spin text-orange-400" />
+            </div>
+          ) : coupons.length === 0 ? (
+            <div className="text-center py-10 text-gray-400">
+              <Tag className="w-10 h-10 mx-auto mb-2 opacity-30" />
+              <p className="text-sm">
+                No coupons available for this restaurant
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {coupons
+                .filter((c) => c.isActive)
+                .map((coupon) => {
+                  const isApplied = appliedCoupon?.code === coupon.code;
+                  const isExpired =
+                    coupon.expiresAt && new Date() > new Date(coupon.expiresAt);
+                  const discountLabel =
+                    coupon.discountType === "PERCENTAGE"
+                      ? `${coupon.discountValue}% off${coupon.maxDiscount ? ` (max ₹${coupon.maxDiscount})` : ""}`
+                      : `Flat ₹${coupon.discountValue} off`;
+
+                  return (
+                    <div
+                      key={coupon._id}
+                      className={`border-2 rounded-xl p-4 transition-all ${
+                        isApplied
+                          ? "border-orange-500 bg-orange-50 dark:bg-orange-900/20"
+                          : isExpired
+                            ? "border-gray-200 bg-gray-50 dark:bg-gray-900 opacity-60"
+                            : "border-gray-200 dark:border-gray-700 hover:border-orange-300 bg-white dark:bg-gray-800"
+                      }`}
+                    >
+                      {/* Top row */}
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">
+                            {EMOJI[coupon.discountType] || "🎟️"}
+                          </span>
+                          <div>
+                            <p className="font-bold text-gray-900 dark:text-white text-sm tracking-wide">
+                              {coupon.code}
+                            </p>
+                            <p className="text-orange-600 dark:text-orange-400 text-xs font-semibold">
+                              {discountLabel}
+                            </p>
+                          </div>
+                        </div>
+                        {isApplied && (
+                          <span className="flex items-center gap-1 bg-orange-500 text-white px-2 py-0.5 rounded text-xs font-bold">
+                            <Check size={12} /> Applied
+                          </span>
+                        )}
+                        {isExpired && (
+                          <span className="text-xs text-red-500 font-semibold">
+                            Expired
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Description */}
+                      {coupon.description && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 pl-7">
+                          {coupon.description}
+                        </p>
+                      )}
+
+                      {/* Footer */}
+                      <div className="flex items-center justify-between pl-7">
+                        <div className="text-xs text-gray-400 space-x-2">
+                          {coupon.minOrderAmount > 0 && (
+                            <span>Min: ₹{coupon.minOrderAmount}</span>
+                          )}
+                          {coupon.expiresAt && !isExpired && (
+                            <span>
+                              Expires:{" "}
+                              {new Date(coupon.expiresAt).toLocaleDateString(
+                                "en-IN",
+                                {
+                                  day: "numeric",
+                                  month: "short",
+                                },
+                              )}
+                            </span>
+                          )}
+                          {coupon.usageLimit && (
+                            <span>
+                              {coupon.usageLimit - coupon.usedCount} uses left
+                            </span>
+                          )}
+                        </div>
+
+                        {!isExpired && (
+                          <button
+                            onClick={() =>
+                              isApplied
+                                ? handleRemove()
+                                : applyCode(coupon.code)
+                            }
+                            disabled={!!applying}
+                            className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                              isApplied
+                                ? "bg-red-50 text-red-500 hover:bg-red-100"
+                                : "bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 hover:bg-orange-200"
+                            }`}
+                          >
+                            {applying === coupon.code ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : isApplied ? (
+                              "Remove"
+                            ) : (
+                              "Apply"
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          )}
+
+          {/* Tip */}
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-3">
+            <p className="text-xs text-blue-700 dark:text-blue-300">
+              💡 <strong>Tip:</strong> Only one coupon can be applied per order.
+              Coupons are linked to this restaurant only.
             </p>
           </div>
         </div>

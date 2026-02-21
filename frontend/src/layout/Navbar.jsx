@@ -198,7 +198,9 @@ const Navbar = ({ onLoginClick }) => {
                   </p>
                 </div>
                 <div className="py-2">
-                  <button className="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 hover:text-orange-600 transition-all duration-200">
+                  <button className="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 hover:text-orange-600 transition-all duration-200"
+                    onClick={() => navigate("/orders")}
+                  >
                     My Orders
                   </button>
                   <button className="w-full text-left px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-orange-50 hover:to-pink-50 dark:hover:from-gray-800 dark:hover:to-gray-800 hover:text-orange-600 transition-all duration-200">

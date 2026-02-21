@@ -1,28 +1,23 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/orders";
-
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-};
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const createOrder = async (orderData) => {
-  const response = await axios.post(API_URL, orderData, {
+  const response = await axios.post(`${API_URL}/orders`, orderData, {
     withCredentials: true,
-    ...getAuthHeaders(),
   });
   return response.data;
 };
 
 export const getUserOrders = async () => {
-  const response = await axios.get(API_URL, {
-    withCredentials: true,
-    ...getAuthHeaders(),
-  });
-  return response.data;
+  try {
+    const response = await axios.get(`${API_URL}/orders`, {
+      withCredentials: true,
+    });
+    console.log("response.data:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    throw error;
+  }
 };

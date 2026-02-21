@@ -3,7 +3,7 @@ import Cart from "../models/cart.model.js";
 
 export const createOrder = async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.user._id;
     const { address, paymentMethod } = req.body;
 
     // 1. Get user's cart
@@ -21,24 +21,28 @@ export const createOrder = async (req, res) => {
       0,
     );
 
-    // 3. Create Order
+    // 3. Create Order — preserve name, price, quantity for order history
     const newOrder = await Order.create({
       user: userId,
       restaurant: cart.restaurant,
       items: cart.items.map((item) => ({
-        menuItemId: item.menuItemId,
+        menuId: item.menuItemId,
         name: item.name,
-        image: item.image,
         price: item.price,
         quantity: item.quantity,
       })),
-      totalAmount,
-      address,
+      pricing: {
+        grandTotal: totalAmount,
+      },
+      deliveryAddress: address,
       paymentMethod: paymentMethod || "COD",
     });
 
-    // 4. Clear Cart
-    await Cart.findOneAndDelete({ user: userId });
+    // 4. Clear Cart — only for COD (payment is instant).
+    // For ONLINE/UPI, cart is cleared after payment verification.
+    if (!paymentMethod || paymentMethod === "COD") {
+      await Cart.findOneAndDelete({ user: userId });
+    }
 
     res.status(201).json({
       success: true,
@@ -57,10 +61,14 @@ export const createOrder = async (req, res) => {
 
 export const getUserOrders = async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.user._id; // auth middleware sets req.user as the full User document
 
     const orders = await Order.find({ user: userId })
-      .populate("restaurant", "name coverImage address")
+      .populate({
+        path: "restaurant",
+        select: "name coverImage address",
+        populate: { path: "address", select: "area city street" },
+      })
       .sort({ createdAt: -1 });
 
     res.status(200).json({
@@ -72,6 +80,7 @@ export const getUserOrders = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch orders",
+      data: [],
       error: error.message,
     });
   }

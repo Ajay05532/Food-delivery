@@ -31,10 +31,7 @@ const Layout = () => {
   return (
     <>
       <Navbar onLoginClick={() => setAuthOpen(true)} />
-
-      {/* Routed pages render here */}
       <Outlet />
-
       <AuthDrawer open={authOpen} onClose={() => setAuthOpen(false)} />
     </>
   );

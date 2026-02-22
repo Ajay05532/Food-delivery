@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_BACKEND_URL;
+const API_URL = `${import.meta.env.VITE_BACKEND_URL}/api`;
 
 export const createOrder = async (orderData) => {
   const response = await axios.post(`${API_URL}/orders`, orderData, {

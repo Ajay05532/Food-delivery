@@ -61,7 +61,7 @@ const Navbar = ({ onLoginClick }) => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/logout`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`,
         {},
         { withCredentials: true },
       );

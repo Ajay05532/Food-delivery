@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
+const API_BASE_URL = `${import.meta.env.VITE_BACKEND_URL}/api`;
 
 // Check if user is authenticated
 export const checkAuth = createAsyncThunk(

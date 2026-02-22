@@ -14,7 +14,7 @@ const Layout = () => {
     const restoreSession = async () => {
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/me`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/auth/me`,
           {
             withCredentials: true,
           },

@@ -29,7 +29,7 @@ const Login = ({ switchToSignup, onClose, onSuccess }) => {
 
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
         { phone },
         { withCredentials: true },
       );

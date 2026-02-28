@@ -11,7 +11,6 @@ export const getRestaurants = async (page = 1, limit = 20) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching restaurants:", error);
     throw error;
   }
 };
@@ -23,7 +22,6 @@ export const getRestaurantById = async (restaurantId) => {
     );
     return response.data.data; // Return the restaurant object from data.data
   } catch (error) {
-    console.error("Error fetching restaurant:", error);
     throw error;
   }
 };
@@ -33,7 +31,6 @@ export const getMenu = async (restaurantId) => {
     const menuItem = await axios.get(`${API_BASE_URL}/menu/${restaurantId}`);
     return menuItem.data;
   } catch (error) {
-    console.error("Error fetching menu:", error);
     throw error;
   }
 };

@@ -6,10 +6,10 @@ const API_URL = `${import.meta.env.VITE_BACKEND_URL}/api`;
  * Step 1 — Call backend to create a Razorpay order.
  * Returns { razorpayOrderId, amount, currency, paymentId }
  */
-export const createRazorpayOrder = async ({ amount, orderId }) => {
+export const createRazorpayOrder = async ({ amount }) => {
   const response = await axios.post(
     `${API_URL}/payment/create-payment`,
-    { amount, orderId },
+    { amount },
     { withCredentials: true },
   );
   return response.data;

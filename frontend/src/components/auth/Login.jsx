@@ -5,7 +5,7 @@ import { Phone, ArrowRight, Loader2 } from "lucide-react";
 import axios from "axios";
 
 const Login = ({ switchToSignup, onClose, onSuccess }) => {
-  const [phone, setPhone] = useState("9162384894");
+  const [phone, setPhone] = useState("");
   const [success, setSuccess] = useState("");
 
   const dispatch = useDispatch();
@@ -36,8 +36,9 @@ const Login = ({ switchToSignup, onClose, onSuccess }) => {
 
       setSuccess("OTP sent successfully!");
 
+      const devOtp = res.data?.devOtp || null;
       setTimeout(() => {
-        if (onSuccess) onSuccess(phone);
+        if (onSuccess) onSuccess(phone, devOtp);
       }, 1000);
     } catch (err) {
       dispatch(
@@ -46,7 +47,6 @@ const Login = ({ switchToSignup, onClose, onSuccess }) => {
             "Something went wrong. Please try again.",
         ),
       );
-      console.error(err);
     } finally {
       dispatch(setLoading(false));
     }

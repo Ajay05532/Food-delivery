@@ -68,7 +68,6 @@ const Navbar = ({ onLoginClick }) => {
       dispatch(logout());
       navigate("/");
     } catch (err) {
-      console.error("Logout Failed: ", err);
       // Still clear Redux state even if there's an error
       dispatch(logout());
       navigate("/");
@@ -178,7 +177,9 @@ const Navbar = ({ onLoginClick }) => {
                 <div className="w-7 h-7 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
                   <CircleUserRound className="h-4 w-4 text-white" />
                 </div>
-                <span className="hidden lg:inline">{user.name}</span>
+                <span className="hidden lg:inline">
+                  {user.name?.split(" ")[0]}
+                </span>
                 <ChevronDown className="h-4 w-4 group-hover:rotate-180 transition-transform duration-300" />
               </button>
 

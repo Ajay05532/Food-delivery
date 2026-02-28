@@ -8,6 +8,7 @@ import Otp from "./Otp";
 const AuthDrawer = ({ open, onClose }) => {
   const [mode, setMode] = useState("login");
   const [phone, setPhone] = useState("");
+  const [devOtp, setDevOtp] = useState(null);
 
   return (
     <AnimatePresence>
@@ -88,8 +89,9 @@ const AuthDrawer = ({ open, onClose }) => {
                   {mode === "login" ? (
                     <Login
                       switchToSignup={() => setMode("signup")}
-                      onSuccess={(p) => {
+                      onSuccess={(p, otp) => {
                         setPhone(p);
+                        setDevOtp(otp || null);
                         setMode("otp");
                       }}
                       onClose={onClose}
@@ -97,14 +99,15 @@ const AuthDrawer = ({ open, onClose }) => {
                   ) : mode === "signup" ? (
                     <SignUp
                       switchToLogin={() => setMode("login")}
-                      onSuccess={(p) => {
+                      onSuccess={(p, otp) => {
                         setPhone(p);
+                        setDevOtp(otp || null);
                         setMode("otp");
                       }}
                       onClose={onClose}
                     />
                   ) : (
-                    <Otp phone={phone} onSuccess={onClose} />
+                    <Otp phone={phone} devOtp={devOtp} onSuccess={onClose} />
                   )}
                 </motion.div>
               </AnimatePresence>

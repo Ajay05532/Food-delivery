@@ -66,7 +66,9 @@ const CheckoutNavbar = ({ onLoginClick }) => {
                     {user.name?.charAt(0).toUpperCase()}
                   </span>
                 </div>
-                <span className="hidden lg:inline">{user.name}</span>
+                <span className="hidden lg:inline">
+                  {user.name?.split(" ")[0]}
+                </span>
                 <ChevronDown className="h-4 w-4 group-hover:rotate-180 transition-transform duration-300" />
               </button>
 

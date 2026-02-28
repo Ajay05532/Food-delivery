@@ -14,6 +14,8 @@ const Restaurant = () => {
 
   // Fetch restaurant and menu data when component mounts
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     const fetchData = async () => {
       if (!id) return;
 
@@ -30,7 +32,6 @@ const Restaurant = () => {
         setRestaurant(restaurantData);
         setMenuItems(menuData);
       } catch (err) {
-        console.error("Error fetching restaurant data:", err);
         setError(
           err.response?.data?.message ||
             "Failed to load restaurant. Please try again later.",

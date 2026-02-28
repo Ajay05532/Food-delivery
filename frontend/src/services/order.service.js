@@ -14,10 +14,8 @@ export const getUserOrders = async () => {
     const response = await axios.get(`${API_URL}/orders`, {
       withCredentials: true,
     });
-    console.log("response.data:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Error fetching orders:", error);
     throw error;
   }
 };

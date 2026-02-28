@@ -53,35 +53,8 @@ const Payment = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderError, setOrderError] = useState(null);
 
-  const [upiList, setUpiList] = useState([
-    {
-      id: "upi_phonepe",
-      title: "9162384894@ybl",
-      icon: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/phonepe-icon.png",
-      recommended: true,
-      type: "image",
-    },
-    {
-      id: "upi_gpay",
-      title: "7903800656@axl",
-      icon: (
-        <div className="font-extrabold text-blue-600 text-[10px] tracking-wider">
-          GPay
-        </div>
-      ),
-      type: "component",
-    },
-  ]);
-  const [cardList, setCardList] = useState([
-    {
-      id: "card_bob",
-      title: "Bank of Baroda Debit",
-      subtitle: "**** 5692",
-      icon: (
-        <CreditCard className="w-6 h-6 text-slate-700 dark:text-gray-300" />
-      ),
-    },
-  ]);
+  const [upiList, setUpiList] = useState([]);
+  const [cardList, setCardList] = useState([]);
 
   const handleAddUPI = (id) => {
     setUpiList([
@@ -154,15 +127,8 @@ const Payment = () => {
           "Failed to load Razorpay SDK. Check your internet connection.",
         );
 
-      const foodOrder = await dispatch(
-        placeOrder({ address: deliveryAddress, paymentMethod: "ONLINE" }),
-      ).unwrap();
-      if (!foodOrder?._id)
-        throw new Error("Could not create order. Please try again.");
-
       const rzpData = await createRazorpayOrder({
         amount: finalAmount,
-        orderId: foodOrder._id,
       });
 
       navigate("/payment/upi-pending", {
@@ -171,7 +137,7 @@ const Payment = () => {
           amount: rzpData.amount,
           currency: rzpData.currency || "INR",
           paymentId: rzpData.paymentId,
-          foodOrderId: foodOrder._id,
+          deliveryAddress,
           restaurantName,
           userInfo: {
             name: user?.name || "",
@@ -181,7 +147,6 @@ const Payment = () => {
         },
       });
     } catch (err) {
-      console.error("Razorpay error:", err);
       setOrderError(err?.message || "Payment failed. Please try again.");
     } finally {
       setIsProcessing(false);

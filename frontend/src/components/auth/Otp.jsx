@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser, setError, setLoading } from "../../redux/slices/userSlice";
 import { ArrowRight, ShieldCheck, Loader2 } from "lucide-react";
 import axios from "axios";
-const Otp = ({ phone, onSuccess }) => {
+const Otp = ({ phone, devOtp, onSuccess }) => {
   const [otp, setOtp] = useState("");
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.user);
@@ -68,6 +68,13 @@ const Otp = ({ phone, onSuccess }) => {
           </span>
         </p>
       </div>
+
+      {devOtp && (
+        <div className="mb-6 px-4 py-3 bg-yellow-50 dark:bg-yellow-500/10 border-l-4 border-yellow-400 text-yellow-800 dark:text-yellow-300 text-sm rounded-r-lg">
+          <span className="font-bold">🛠 Dev Mode — Your OTP: </span>
+          <span className="font-black text-lg tracking-widest">{devOtp}</span>
+        </div>
+      )}
 
       {error && (
         <div className="mb-6 px-4 py-3 bg-red-50 dark:bg-red-500/10 border-l-4 border-red-500 text-red-700 dark:text-red-400 text-sm font-bold rounded-r-lg">

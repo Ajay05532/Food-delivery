@@ -9,38 +9,27 @@ const generateToken = (userID) => {
 };
 
 const sendOtp = async (phone) => {
-  // Use a static OTP for development to prevent Fast2SMS wallet depletion
-  const otp = "123456";
+  // Generate a secure 6-digit OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
   // Store OTP in Redis (5 min expiry)
   await redisClient.setex(`otp:${phone}`, 300, otp);
 
-  console.log(`[DEV] OTP for ${phone} is ${otp}`);
-
-  /* 
-  // Temporarily commented out Fast2SMS to save wallet balance
+  // Send SMS via Fast2SMS (OTP route — no DLT registration needed)
   try {
-    const response = await axios.post(
-      "https://www.fast2sms.com/dev/bulkV2",
-      {
-        route: "q",
-        message: `Your FoodHub OTP is ${otp}.\n It is valid for 5 minutes.\n Do not share this code with anyone.`,
-        language: "english",
-        flash: 0,
+    await axios.get("https://www.fast2sms.com/dev/bulkV2", {
+      params: {
+        authorization: process.env.FAST2SMS_KEY,
+        variables_values: otp,
+        route: "otp",
         numbers: phone,
       },
-      {
-        headers: {
-          authorization: process.env.FAST2SMS_KEY,
-        },
-      },
-    );
-
-    console.log("Fast2SMS Response:", response.data);
+    });
   } catch (error) {
-    console.error("Failed to send SMS:", error.response?.data || error.message);
+    throw new Error("Failed to send OTP. Please try again.");
   }
-  */
+
+  return null;
 };
 /* Registration Controller */
 
@@ -57,7 +46,7 @@ const register = async (req, res) => {
         .json({ message: "User with this phone number already exists" });
     }
 
-    await sendOtp(phone);
+    const devOtp = await sendOtp(phone);
 
     const pendingUserData = JSON.stringify({
       name,
@@ -66,10 +55,14 @@ const register = async (req, res) => {
     });
     await redisClient.setex(`pending_user:${phone}`, 300, pendingUserData);
 
-    res.status(200).json({ message: "OTP sent successfully. Please verify." });
+    res.status(200).json({
+      message: "OTP sent successfully. Please verify.",
+      ...(devOtp && { devOtp }),
+    });
   } catch (error) {
-    console.error("Error registering user:", error);
-    res.status(500).json({ message: "Server error from register" });
+    res
+      .status(500)
+      .json({ message: error.message || "Server error from register" });
   }
 };
 
@@ -86,12 +79,16 @@ const login = async (req, res) => {
         .json({ message: "User does not exist. Please register first." });
     }
 
-    await sendOtp(phone);
+    const devOtp = await sendOtp(phone);
 
-    res.status(200).json({ message: "OTP sent successfully. Please verify." });
+    res.status(200).json({
+      message: "OTP sent successfully. Please verify.",
+      ...(devOtp && { devOtp }),
+    });
   } catch (error) {
-    console.error("Error logging in user:", error);
-    res.status(500).json({ message: "Server error from login" });
+    res
+      .status(500)
+      .json({ message: error.message || "Server error from login" });
   }
 };
 
@@ -153,8 +150,9 @@ const verifyOtp = async (req, res) => {
 
     res.status(200).json({ message: "OTP verified successfully", user });
   } catch (error) {
-    console.error("Error verifying OTP:", error);
-    res.status(500).json({ message: "Server error from verifyOtp" });
+    res
+      .status(500)
+      .json({ message: error.message || "Server error from verifyOtp" });
   }
 };
 
@@ -167,8 +165,9 @@ const logout = async (req, res) => {
     });
     res.status(200).json({ message: "User logout successfully" });
   } catch (error) {
-    console.error("Error registering user:", error);
-    res.status(500).json({ message: "Server error fromm logout" });
+    res
+      .status(500)
+      .json({ message: error.message || "Server error from logout" });
   }
 };
 
@@ -185,8 +184,9 @@ const getMe = async (req, res) => {
     }
     res.status(200).json({ user });
   } catch (error) {
-    console.error("Error getting user:", error);
-    res.status(500).json({ message: "Server error from getMe" });
+    res
+      .status(500)
+      .json({ message: error.message || "Server error from getMe" });
   }
 };
 

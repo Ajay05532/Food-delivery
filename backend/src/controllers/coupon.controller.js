@@ -51,7 +51,6 @@ export const createCoupon = async (req, res) => {
         message: `Coupon code "${req.body.code?.toUpperCase()}" already exists`,
       });
     }
-    console.error("createCoupon Error:", error);
     res
       .status(500)
       .json({ success: false, message: "Failed to create coupon" });
@@ -70,7 +69,6 @@ export const getCouponsByRestaurant = async (req, res) => {
     });
     res.status(200).json({ success: true, data: coupons });
   } catch (error) {
-    console.error("getCouponsByRestaurant Error:", error);
     res
       .status(500)
       .json({ success: false, message: "Failed to fetch coupons" });
@@ -120,12 +118,10 @@ export const applyCoupon = async (req, res) => {
     }
 
     if (coupon.usageLimit !== null && coupon.usedCount >= coupon.usageLimit) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "This coupon has reached its usage limit",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "This coupon has reached its usage limit",
+      });
     }
 
     if (orderAmount < coupon.minOrderAmount) {
@@ -175,7 +171,6 @@ export const applyCoupon = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("applyCoupon Error:", error);
     res.status(500).json({ success: false, message: "Failed to apply coupon" });
   }
 };
@@ -202,7 +197,6 @@ export const markCouponUsed = async (req, res) => {
 
     res.status(200).json({ success: true, message: "Coupon marked as used" });
   } catch (error) {
-    console.error("markCouponUsed Error:", error);
     res
       .status(500)
       .json({ success: false, message: "Failed to mark coupon as used" });
@@ -239,7 +233,6 @@ export const updateCoupon = async (req, res) => {
     }
     res.status(200).json({ success: true, data: coupon });
   } catch (error) {
-    console.error("updateCoupon Error:", error);
     res
       .status(500)
       .json({ success: false, message: "Failed to update coupon" });
@@ -260,7 +253,6 @@ export const deleteCoupon = async (req, res) => {
     }
     res.status(200).json({ success: true, message: "Coupon deleted" });
   } catch (error) {
-    console.error("deleteCoupon Error:", error);
     res
       .status(500)
       .json({ success: false, message: "Failed to delete coupon" });

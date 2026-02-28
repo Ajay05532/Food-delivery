@@ -50,7 +50,6 @@ export const createOrder = async (req, res) => {
       data: newOrder,
     });
   } catch (error) {
-    console.error("Create Order Error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to place order",
@@ -76,7 +75,6 @@ export const getUserOrders = async (req, res) => {
       data: orders,
     });
   } catch (error) {
-    console.error("Get User Orders Error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch orders",

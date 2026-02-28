@@ -22,7 +22,7 @@ const app = express();
 /* CORS */
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: ["http://localhost:5173", process.env.FRONTEND_URL],
     credentials: true,
   }),
 );
@@ -60,7 +60,7 @@ app.all(/(.*)/, (req, res, next) => {
 app.use(errorHandler);
 
 /* Server */
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`✓ Server running on port ${PORT}`);
+  // server started
 });

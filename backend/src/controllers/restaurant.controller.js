@@ -36,8 +36,6 @@ export const getRestaurants = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("❌ Error in getRestaurants:", error.message);
-    console.error("Stack:", error.stack);
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -75,7 +73,6 @@ export const getRestaurantById = async (req, res) => {
       data: restaurant,
     });
   } catch (error) {
-    console.error("❌ Error in getRestaurantById:", error.message);
     res.status(500).json({
       success: false,
       message: "Internal server error",

@@ -23,22 +23,21 @@ const getRazorpay = () => {
  */
 export const createPayment = async (req, res) => {
   try {
-    const { amount, orderId } = req.body;
+    const { amount } = req.body;
 
-    if (!amount || !orderId) {
+    if (!amount) {
       return res
         .status(400)
-        .json({ success: false, message: "amount and orderId are required" });
+        .json({ success: false, message: "amount is required" });
     }
 
     const razorpayOrder = await getRazorpay().orders.create({
       amount: Math.round(amount * 100), // paise
       currency: "INR",
-      receipt: `rcpt_${orderId}`.slice(0, 40),
+      receipt: `rcpt_${Date.now()}`.slice(0, 40),
     });
 
     const payment = await Payment.create({
-      orderId,
       userId: req.user._id,
       amount,
       razorpayOrderId: razorpayOrder.id,
@@ -53,7 +52,6 @@ export const createPayment = async (req, res) => {
       paymentId: payment._id,
     });
   } catch (error) {
-    console.error("createPayment Error:", error);
     res
       .status(500)
       .json({ success: false, message: "Failed to create payment order" });
@@ -99,6 +97,9 @@ export const verifyPayment = async (req, res) => {
     payment.razorpayPaymentId = razorpayPaymentId;
     payment.razorpaySignature = razorpaySignature;
     payment.status = "paid";
+    if (foodOrderId) {
+      payment.orderId = foodOrderId;
+    }
     await payment.save();
 
     // 4. Update the food Order's paymentStatus → SUCCESS
@@ -118,7 +119,6 @@ export const verifyPayment = async (req, res) => {
       paymentId: payment._id,
     });
   } catch (error) {
-    console.error("verifyPayment Error:", error);
     res
       .status(500)
       .json({ success: false, message: "Failed to verify payment" });

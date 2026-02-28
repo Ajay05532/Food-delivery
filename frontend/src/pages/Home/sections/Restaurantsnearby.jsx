@@ -158,7 +158,15 @@ const RestaurantsNearby = () => {
                   {/* Image Area */}
                   <div className="relative h-48 overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0">
                     <img
-                      src={restaurant.image}
+                      src={
+                        restaurant.image ||
+                        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop"
+                      }
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop";
+                      }}
                       alt={restaurant.name}
                       loading="lazy"
                       className="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-700 ease-in-out"

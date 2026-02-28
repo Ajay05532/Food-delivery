@@ -20,13 +20,12 @@ connectRedis();
 const app = express();
 
 /* CORS */
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://food-delivery-psi-eight-24.vercel.app"
-  ],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", process.env.FRONTEND_URL],
+    credentials: true,
+  }),
+);
 
 /* Core middleware */
 app.use(cookieParser());
@@ -61,7 +60,7 @@ app.all(/(.*)/, (req, res, next) => {
 app.use(errorHandler);
 
 /* Server */
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`✓ Server running on port ${PORT}`);
+  // server started
 });

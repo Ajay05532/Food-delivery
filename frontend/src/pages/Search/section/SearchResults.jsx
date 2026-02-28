@@ -36,7 +36,7 @@ const SearchResults = ({ searchQuery }) => {
         setRestaurants(data.restaurants || []);
         setDishes(data.items || []);
       } catch (err) {
-        console.error("Search failed", err);
+        // search failed silently
       } finally {
         setLoading(false);
       }
@@ -194,7 +194,15 @@ const SearchResults = ({ searchQuery }) => {
                       <div className="flex flex-col items-center gap-2 relative w-[130px] shrink-0">
                         <div className="w-full h-[130px] rounded-3xl overflow-hidden bg-gray-100 dark:bg-gray-800 shadow-inner group-hover:shadow-md transition-shadow relative">
                           <img
-                            src={dish.image}
+                            src={
+                              dish.image ||
+                              "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop"
+                            }
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src =
+                                "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop";
+                            }}
                             alt={dish.name}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           />
@@ -230,7 +238,15 @@ const SearchResults = ({ searchQuery }) => {
                   >
                     <div className="w-28 h-28 rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0 relative">
                       <img
-                        src={restaurant.coverImage}
+                        src={
+                          restaurant.coverImage ||
+                          "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop"
+                        }
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop";
+                        }}
                         alt={restaurant.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />

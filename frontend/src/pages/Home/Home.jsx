@@ -1,11 +1,15 @@
-import React from 'react'
-import Hero from './sections/Hero'
-import Footer from '../../layout/footer'
-import Catagory from './sections/Catagory'
-import TopRestaurants from './sections/Toprestaurants'
-import Restaurantsnearby from './sections/Restaurantsnearby'
+import React, { useEffect } from "react";
+import Hero from "./sections/Hero";
+import Footer from "../../layout/footer";
+import Catagory from "./sections/Catagory";
+import TopRestaurants from "./sections/Toprestaurants";
+import Restaurantsnearby from "./sections/Restaurantsnearby";
 
 const Home = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div>
       <Hero />
@@ -14,7 +18,7 @@ const Home = () => {
       <Restaurantsnearby />
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

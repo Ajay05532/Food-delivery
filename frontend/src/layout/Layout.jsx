@@ -24,7 +24,7 @@ const Layout = () => {
           dispatch(setUser(res.data.user));
         }
       } catch (err) {
-        console.error("Session restore failed", err);
+        // session not found or expired, ignore silently
       }
     };
 

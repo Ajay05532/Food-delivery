@@ -27,7 +27,13 @@ const Header = ({ restaurant }) => {
       ? data.gallery
       : data.coverImage
         ? [data.coverImage]
-        : data.galleryImages || [data.bannerImage];
+        : data.galleryImages?.length > 0
+          ? data.galleryImages
+          : data.bannerImage
+            ? [data.bannerImage]
+            : [
+                "https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&h=600&fit=crop",
+              ];
 
   const prev = () =>
     setCurrentImageIndex((i) => (i === 0 ? galleryImages.length - 1 : i - 1));

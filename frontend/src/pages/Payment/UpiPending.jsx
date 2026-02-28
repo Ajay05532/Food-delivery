@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { placeOrder } from "../../redux/slices/orderSlice";
 import { clearCart, clearCartAsync } from "../../redux/slices/cartSlice";
 import {
   loadRazorpayScript,
@@ -41,13 +42,12 @@ const UpiPending = () => {
   const dispatch = useDispatch();
   const { state } = useLocation();
 
-  // State passed from Payment.jsx: { razorpayOrderId, amount, currency, paymentId, foodOrderId, restaurantName }
   const {
     razorpayOrderId,
     amount, // in paise
     currency = "INR",
     paymentId,
-    foodOrderId,
+    deliveryAddress,
     restaurantName,
     userInfo = {},
   } = state || {};
@@ -115,21 +115,35 @@ const UpiPending = () => {
 
       handler: async (response) => {
         try {
+          // 1. Create the final order now that payment is approved
+          const foodOrder = await dispatch(
+            placeOrder({ address: deliveryAddress, paymentMethod: "ONLINE" }),
+          ).unwrap();
+
+          if (!foodOrder?._id) {
+            throw new Error("Payment succeeded but order creation failed.");
+          }
+
+          // 2. Verify the payment and link the new orderId
           await verifyRazorpayPayment({
             razorpayOrderId: response.razorpay_order_id,
             razorpayPaymentId: response.razorpay_payment_id,
             razorpaySignature: response.razorpay_signature,
-            foodOrderId,
+            foodOrderId: foodOrder._id,
           });
           setStatus(STATUS.SUCCESS);
           dispatch(clearCart()); // sync Redux UI — backend already deleted cart from DB
           // Navigate after 2s so user sees success screen
           setTimeout(() => navigate("/orders", { replace: true }), 2000);
-        } catch {
+        } catch (err) {
+          const backendError =
+            typeof err === "string"
+              ? err
+              : err?.response?.data?.message ||
+                err?.message ||
+                "Payment verification failed. Contact support if amount was deducted.";
           setStatus(STATUS.FAILED);
-          setErrMsg(
-            "Payment verification failed. Contact support if amount was deducted.",
-          );
+          setErrMsg(backendError);
         }
       },
 

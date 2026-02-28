@@ -33,8 +33,9 @@ const SignUp = ({ switchToLogin, onClose, onSuccess }) => {
 
       setSuccess("Account saved! Sending OTP...");
 
+      const devOtp = res.data?.devOtp || null;
       setTimeout(() => {
-        if (onSuccess) onSuccess(phone);
+        if (onSuccess) onSuccess(phone, devOtp);
       }, 1000);
     } catch (err) {
       dispatch(
@@ -43,7 +44,6 @@ const SignUp = ({ switchToLogin, onClose, onSuccess }) => {
             "Something went wrong. Please try again.",
         ),
       );
-      console.error(err);
     } finally {
       dispatch(setLoading(false));
     }

@@ -32,17 +32,6 @@ export const useCart = () => {
   ====================== */
 
   const addToCart = (item) => {
-    console.log("🎯 addToCart received item:", item);
-    console.log("🔍 item properties:", {
-      id: item.id,
-      _id: item._id,
-      name: item.name,
-      price: item.price,
-      restaurantId: item.restaurantId,
-      restaurantName: item.restaurantName,
-      category: item.category,
-    });
-
     if (!item.restaurantId) {
       return { success: false };
     }
@@ -65,7 +54,7 @@ export const useCart = () => {
       quantity: 1,
       restaurantId: item.restaurantId,
       restaurantName: item.restaurantName,
-      };
+    };
 
     // optimistic update
     dispatch(addToCartLocal(payload));
@@ -116,8 +105,6 @@ export const useCart = () => {
   ====================== */
 
   const clearCartAndAddItem = (item) => {
-    console.log("🔄 Clearing cart and adding item from new restaurant:", item);
-
     // 🔹 FRONTEND NORMALIZATION
     const payload = {
       id: item.id, // frontend id (for cart state)

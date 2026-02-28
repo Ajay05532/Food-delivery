@@ -7,7 +7,6 @@ export const searchService = {
       const response = await axios.get(`${API_BASE_URL}/search?q=${query}`);
       return response.data;
     } catch (error) {
-      console.error("Error searching:", error);
       throw error;
     }
   },

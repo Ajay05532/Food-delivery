@@ -22,7 +22,6 @@ const getCart = async (req, res) => {
 
     res.status(200).json(cart);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -188,7 +187,6 @@ const removeFromCart = async (req, res) => {
       .status(200)
       .json({ message: "Item removed from cart successfully", cart });
   } catch (error) {
-    console.error("Error removing from cart:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

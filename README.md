@@ -92,7 +92,6 @@ Create a `.env` file inside `backend/` and add:
 Server will run at:
 
     http://localhost:5000
-    RAZORPAY_KEY_ID=your_razorpay_key_id
 
 ------------------------------------------------------------------------
 
@@ -111,6 +110,7 @@ Server will run at:
 Create `.env` inside frontend:
 
     VITE_API_URL=http://localhost:5000
+    RAZORPAY_KEY_ID=your_razorpay_key_id
 
 ### 4️⃣ Start Frontend
 
@@ -173,4 +173,5 @@ https://github.com/user-attachments/assets/1a183cb5-fb66-4c3a-a3db-356fa64ff3d8
 
 **Ajay**\
 B.Tech Computer Science
+
 

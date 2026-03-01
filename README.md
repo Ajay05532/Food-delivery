@@ -1,4 +1,10 @@
+
+
 # 🍔 Food Delivery Web Application
+
+<img width="1440" height="900" alt="Screenshot 2026-03-01 at 8 28 58 PM" src="https://github.com/user-attachments/assets/ee609303-0a20-430f-b242-396430b9e19d" />
+
+------------------------------------------------------------------------
 
 A full-stack **Food Delivery Application** that allows users to browse meals, add items to cart, place orders, and manage deliveries in real time.
 This project demonstrates modern web development using a **React frontend**, **Node.js/Express backend**, and **MongoDB database** with secure authentication and RESTful APIs.
@@ -138,7 +144,11 @@ Open two terminals:
 
 Add screenshots in a `screenshots/` folder and link like:
 
-<img width="1440" height="900" alt="Screenshot 2026-03-01 at 8 28 58 PM" src="https://github.com/user-attachments/assets/ee609303-0a20-430f-b242-396430b9e19d" />
+
+<div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+    <img width="600" alt="Screenshot 2026-02-04 at 10 34 26 PM" src="https://github.com/user-attachments/assets/0c357ab2-0567-4bbe-a20d-9710f9a6f4b4" />
+    <img width="600" alt="Screenshot 2026-02-04 at 2 09 28 PM" src="https://github.com/user-attachments/assets/66fe437b-8226-4c3e-a0e8-7005ddaf25fb" />
+</div>
 
 ------------------------------------------------------------------------
 
@@ -149,16 +159,6 @@ https://github.com/user-attachments/assets/1a183cb5-fb66-4c3a-a3db-356fa64ff3d8
 
 ------------------------------------------------------------------------
 
-## 🔐 Environment Variables
-
-  Variable       Description
-  -------------- ---------------------------
-  MONGO_URI      MongoDB connection string
-  JWT_SECRET     Secret key
-  PORT           Backend port
-  VITE_API_URL   Backend URL for frontend
-
-------------------------------------------------------------------------
 
 ## 📦 Future Improvements
 
@@ -173,3 +173,4 @@ https://github.com/user-attachments/assets/1a183cb5-fb66-4c3a-a3db-356fa64ff3d8
 
 **Ajay**\
 B.Tech Computer Science
+
